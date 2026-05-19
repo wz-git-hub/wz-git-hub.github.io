@@ -23,19 +23,6 @@
       </tags>
   </entry>
   <entry>
-    <title>python输入实物码记录网卡IP及MAC地址</title>
-    <url>/posts/a6/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="python输入实物码记录网卡IP及MAC地址"><a href="#python输入实物码记录网卡IP及MAC地址" class="headerlink" title="python输入实物码记录网卡IP及MAC地址"></a>python输入实物码记录网卡IP及MAC地址</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> psutil</span><br><span class="line"><span class="keyword">import</span> pymysql</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">insent_db</span>(<span class="params">adapter, mac, ipv4, swcode, sent_time</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        db = pymysql.connect(host=<span class="string">&quot;10.103.50.147&quot;</span>, port=<span class="number">3306</span>, user=<span class="string">&quot;crrcuser&quot;</span>, password=<span class="string">&quot;abc.123456&quot;</span>, database=<span class="string">&quot;gsdata&quot;</span>,</span><br><span class="line">                             charset=<span class="string">&quot;utf8&quot;</span>)</span><br><span class="line">        cursor= db.cursor()</span><br><span class="line">        db.ping(reconnect=<span class="literal">True</span>)</span><br><span class="line">        new_list_1 = []</span><br><span class="line">        tup_1 = (adapter, mac, ipv4, swcode, sent_time)</span><br><span class="line">        new_list_1.append(tup_1)</span><br><span class="line">        sql = <span class="string">&quot;insert into MAC_Collect(adapter, mac, ipv4, swcode, sent_time) values(%s, %s, %s, %s, %s)&quot;</span></span><br><span class="line">        cursor.executemany(sql, new_list_1)</span><br><span class="line">        db.commit()<span class="comment"># 提交数据库执行</span></span><br><span class="line">        cursor.close()</span><br><span class="line">        db.close()</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">return</span> sys.exc_info()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">PrintNetIfAddr</span>():</span><br><span class="line">  <span class="string">&quot;&quot;&quot; 打印多网卡 mac 和 ip 信息 &quot;&quot;&quot;</span></span><br><span class="line">  swcode = <span class="built_in">input</span>(<span class="string">&quot;请输入实物码（实物码以SW开头）:&quot;</span>)</span><br><span class="line">  <span class="keyword">if</span> swcode[:<span class="number">2</span>] != <span class="string">&quot;SW&quot;</span> <span class="keyword">and</span> swcode[:<span class="number">2</span>] != <span class="string">&quot;sw&quot;</span>:</span><br><span class="line">      <span class="built_in">print</span>(<span class="string">&quot;实物码输入错误，请输入正确实物码（实物码以SW开头）！&quot;</span>)</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">  dic = psutil.net_if_addrs()</span><br><span class="line">  <span class="keyword">for</span> adapter <span class="keyword">in</span> dic:</span><br><span class="line">      snicList = dic[adapter]</span><br><span class="line">      mac = <span class="string">&#x27;无 mac 地址&#x27;</span></span><br><span class="line">      ipv4 = <span class="string">&#x27;无 ipv4 地址&#x27;</span></span><br><span class="line">      <span class="keyword">for</span> snic <span class="keyword">in</span> snicList:</span><br><span class="line">          <span class="keyword">if</span> snic.family.name <span class="keyword">in</span> &#123;<span class="string">&#x27;AF_LINK&#x27;</span>, <span class="string">&#x27;AF_PACKET&#x27;</span>&#125;:</span><br><span class="line">              mac = snic.address</span><br><span class="line">          <span class="keyword">elif</span> snic.family.name == <span class="string">&#x27;AF_INET&#x27;</span>:</span><br><span class="line">              ipv4 = snic.address</span><br><span class="line">      <span class="keyword">if</span> mac == <span class="string">&#x27;无 mac 地址&#x27;</span>:</span><br><span class="line">          <span class="keyword">continue</span></span><br><span class="line">      <span class="keyword">if</span> <span class="string">&quot;蓝牙&quot;</span> <span class="keyword">in</span> adapter:</span><br><span class="line">          <span class="keyword">continue</span></span><br><span class="line">      <span class="keyword">if</span> ipv4[:<span class="number">2</span>] != <span class="string">&quot;10&quot;</span>:</span><br><span class="line">          <span class="keyword">continue</span></span><br><span class="line">      sent_time = datetime.datetime.now().strftime(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span><br><span class="line">      insent_db_str = insent_db(adapter, mac, ipv4, swcode, sent_time)</span><br><span class="line">      <span class="keyword">if</span> insent_db_str:</span><br><span class="line">          <span class="keyword">return</span> insent_db_str</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          <span class="built_in">print</span>(<span class="string">&quot;成功上传数据：&quot;</span>,<span class="string">&#x27;%s, %s, %s, %s, %s&#x27;</span> % (adapter, mac, ipv4, swcode, sent_time))</span><br><span class="line">          <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;内网没有符合要求的MAC&quot;</span></span><br><span class="line">pro_end = PrintNetIfAddr()</span><br><span class="line"><span class="keyword">if</span> pro_end:</span><br><span class="line">    <span class="built_in">print</span>(pro_end)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;失败，按下任意键以退出程序&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;成功，按下任意键以退出程序&quot;</span>)</span><br><span class="line"><span class="built_in">input</span>()</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>分享</category>
-      </categories>
-      <tags>
-        <tag>分享</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>python基于cv2图像超分辨率重建</title>
     <url>/posts/a5/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="python基于cv2图像超分辨率重建"><a href="#python基于cv2图像超分辨率重建" class="headerlink" title="python基于cv2图像超分辨率重建"></a>python基于cv2图像超分辨率重建</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">img_chuli_plt2</span>():</span><br><span class="line">    <span class="keyword">import</span> cv2</span><br><span class="line">    <span class="keyword">import</span> random</span><br><span class="line">    <span class="comment"># import imutils</span></span><br><span class="line">    <span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 彩色图像每个像素值是[x,y,z], 灰度图像每个像素值便是一个np.uint8</span></span><br><span class="line">    path = <span class="string">&#x27;./img/0.jpg&#x27;</span> <span class="comment"># 路径图片</span></span><br><span class="line">    image = cv2.imread(path)</span><br><span class="line">    gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 图像大小调整</span></span><br><span class="line">    ori_h, ori_w = image.shape[:<span class="number">2</span>]</span><br><span class="line">    height, width = gray_img.shape[:<span class="number">2</span>]</span><br><span class="line">    image = cv2.resize(image, (<span class="built_in">int</span>(ori_w / ori_h * <span class="number">400</span>), <span class="number">400</span>), interpolation=cv2.INTER_CUBIC)</span><br><span class="line">    gray_img = cv2.resize(gray_img, (<span class="built_in">int</span>(width / height * <span class="number">400</span>), <span class="number">400</span>), interpolation=cv2.INTER_CUBIC)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a&lt;0 and b=0: 图像的亮区域变暗，暗区域变亮</span></span><br><span class="line">    a, b = -<span class="number">0.5</span>, <span class="number">0</span></span><br><span class="line">    new_img1 = np.ones((gray_img.shape[<span class="number">0</span>], gray_img.shape[<span class="number">1</span>]), dtype=np.uint8)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(new_img1.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(new_img1.shape[<span class="number">1</span>]):</span><br><span class="line">            new_img1[i][j] = gray_img[i][j] * a + b</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a&gt;1: 增强图像的对比度,图像看起来更加清晰</span></span><br><span class="line">    a, b = <span class="number">1.5</span>, <span class="number">20</span></span><br><span class="line">    new_img2 = np.ones((gray_img.shape[<span class="number">0</span>], gray_img.shape[<span class="number">1</span>]), dtype=np.uint8)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(new_img2.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(new_img2.shape[<span class="number">1</span>]):</span><br><span class="line">            <span class="keyword">if</span> gray_img[i][j] * a + b &gt; <span class="number">255</span>:</span><br><span class="line">                new_img2[i][j] = <span class="number">255</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                new_img2[i][j] = gray_img[i][j] * a + b</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a&lt;1: 减小了图像的对比度, 图像看起来变暗</span></span><br><span class="line">    a, b = <span class="number">0.5</span>, <span class="number">0</span></span><br><span class="line">    new_img3 = np.ones((gray_img.shape[<span class="number">0</span>], gray_img.shape[<span class="number">1</span>]), dtype=np.uint8)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(new_img3.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(new_img3.shape[<span class="number">1</span>]):</span><br><span class="line">            new_img3[i][j] = gray_img[i][j] * a + b</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a=1且b≠0, 图像整体的灰度值上移或者下移, 也就是图像整体变亮或者变暗, 不会改变图像的对比度</span></span><br><span class="line">    a, b = <span class="number">1</span>, -<span class="number">50</span></span><br><span class="line">    new_img4 = np.ones((gray_img.shape[<span class="number">0</span>], gray_img.shape[<span class="number">1</span>]), dtype=np.uint8)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(new_img4.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(new_img4.shape[<span class="number">1</span>]):</span><br><span class="line">            pix = gray_img[i][j] * a + b</span><br><span class="line">            <span class="keyword">if</span> pix &gt; <span class="number">255</span>:</span><br><span class="line">                new_img4[i][j] = <span class="number">255</span></span><br><span class="line">            <span class="keyword">elif</span> pix &lt; <span class="number">0</span>:</span><br><span class="line">                new_img4[i][j] = <span class="number">0</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                new_img4[i][j] = pix</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a=-1, b=255, 图像翻转</span></span><br><span class="line">    new_img5 = <span class="number">255</span> - gray_img</span><br><span class="line"></span><br><span class="line">    cv2.imshow(<span class="string">&#x27;origin&#x27;</span>, image)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;gray&#x27;</span>, gray_img)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a&lt;0 and b=0&#x27;</span>, new_img1)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a&gt;1 and b&gt;=0&#x27;</span>,new_img2)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a&lt;1 and b&gt;=0&#x27;</span>,new_img3)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a=1 and b&gt;&lt;0&#x27;</span>,new_img4)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a=-1 and b=255&#x27;</span>,new_img5)</span><br><span class="line">    <span class="keyword">if</span> cv2.waitKey(<span class="number">0</span>) == <span class="number">27</span>:</span><br><span class="line">        cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
@@ -49,27 +36,34 @@
       </tags>
   </entry>
   <entry>
-    <title>xLog+Crossbell区块链</title>
-    <url>/posts/a1/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><ul>
-<li>起因</li>
-<li>技术人员的方法</li>
-<li>从IPFS直接访问</li>
-<li>更好的永久存储</li>
-<li>感想</li>
-</ul>
-<h1 id="xLog，Crossbell区块链"><a href="#xLog，Crossbell区块链" class="headerlink" title="xLog，Crossbell区块链"></a>xLog，Crossbell区块链</h1><p>最近偶然看到了一个很有意思的东西，叫<a href="https://xlog.app/">xLog</a>，大概试了试，这是在一条叫Crossbell的区块链上使用智能合约操作和存储元数据，并把实际数据存到IPFS上的项目。看了一眼还挺有意思，就在上面搭了一个自己的另一个<a href="https://demo.xlog.app/">博客</a>，另外他们还使用这套方案写了一个类似Twitter的社交系统，也叫Crossbell，非常的人性化，可以说是把Web3真正的带给了普通用户。至于怎么搭他们的项目成员写了篇教程，5分钟就能搭好在<a href="https://song.xlog.app/5m-zh">Web3的博客</a>。<br>不过使用xLog那就不是技术人员的事了，而是让一个不怎么懂电脑的人来做的事情了。另外他们宣称数据是“Permanently stored on the blockchain”这一点我不太认同，要是说存到了Web3成为了其他人无法修改的数据，这倒是没什么问题，但是存到IPFS上只要没有被Pin，就有可能在节点GC的过程中永远消失。另外我其实对区块链接触不多，不清楚能不能完整的同步他们的链，如果不能那就是私链了，那样元数据也不能永久保留了……所以我只能说这个平台是Web3，可以保证不因为审查而404，但是不能在时间的长河中保留信息。</p>
-<h1 id="技术人员的方法"><a href="#技术人员的方法" class="headerlink" title="技术人员的方法"></a>技术人员的方法</h1><p>所以作为技术人员，我的博客当然直接上IPFS那更好啦，因为他们的平台毕竟可定制性不高，而且好多组件不知道有没有可替代性，比如以太坊JSON-RPC，不过他们的服务好像是都开源了，只要这个链可以被同步，能搭属于自己的RPC那倒是问题不大。<br>直接用IPFS客户端直接上传是最原生的办法，但是我不喜欢在自己电脑上安一堆莫名其妙的软件，像我现在写博客都是直接在Github或者Gitlab上写好然后直接用之前提到的静态页面服务商一次性部署好。所以我也希望能有一个类似的服务商能帮我把我的博客上传到IPFS上。最后我找到的服务商就是<a href="https://www.4everland.org/">4EVERLAND</a>。它可以绑定Git仓库并监听变化，当有变化的时候就会自动部署到IPFS上，并且他们提供免费的Gateway来直接访问在IPFS上的内容，非常的不错。不过有个问题就是不知道什么原因，它的部署模板里面没有Jekyll的语句，然后前端还不能自定义……所以只能靠抓包的方式来修改成自己想要的部署语句。</p>
-<h1 id="从IPFS直接访问"><a href="#从IPFS直接访问" class="headerlink" title="从IPFS直接访问"></a>从IPFS直接访问</h1><p>使用4everland部署完之后直接访问当然也很好，但是总感觉和其他服务商差不多，谁知道它读取网页到底是从自己服务器上还是IPFS网络上读取呢？所以我还想整个更好的方式从IPFS上读取，也能证明它确实在IPFS上了。<br>直接通过Gateway去访问我的博客当然也没问题，但是每次部署的时候CID是会变化的，那这样我想访问也不方便啊……后来我听说可以把CID用一种叫dnslink的方式记录到DNS里，这样就能通过固定又好记的方式来访问。不过那时候我不知道怎么访问dnslink记录的网站……而且每次部署CID会变，那部署完我还要更新我的DNS记录啊？后来我查了查原来还有一种叫IPNS的东西，看了一眼4everland的控制台，原来每个网站它也会生成一个固定的IPNS，然后用dnslink可以指向IPNS。那如何访问呢？IPFS又没有一个IP地址，光TXT记录肯定不够的吧？后来我才知道原来要用CNAME解析到Gateway才能访问，设置之后每次访问Gateway就会自动解析在TXT记录里的dnslink了。这不比xLog自由度高？不过我这个没办法存评论数据，可能xLog的特色就是社交吧，毕竟他们的主项目Crossbell就是主打的社交。希望可以整一个单独的插件，专门用他们的网络来为我这种静态博客提供评论功能，也是一个不错的选择（毕竟ETH公链上的手续费太贵啦😂）。</p>
-<h1 id="更好的永久存储"><a href="#更好的永久存储" class="headerlink" title="更好的永久存储"></a>更好的永久存储</h1><p>前面我说过，IPFS只能防止篡改，但不是作为永久存储的方案，上公链当然是也一种永久存储的方案但是成本太高了我付不起。后来我了解到一种叫做Arweave的东西可以永久存储你的数据，不过这不是免费的，想存得要付AR币到链上才可以。还好4EVERLAND提供了一些免费上传到AR网络的额度，非常的不错，这样我以后每次上传我会把地址写到Github的Releases里面，进一步的提高我博客永久存储的可能性。<br>另外我还听说似乎还有一种叫做ZeroNet的东西也是通过分布式的方式存储数据，据群友所说也能在一定程度上永久存储。不过我试了试访问实在是太困难了😂，而且现在程序也不在维护了，所以也就放弃了。</p>
-<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><p>Web3真是发展的越来越好了，希望能有更多的人参与其中，一起创建不受管束的网络吧。（还有实现我Forever计划😝）<br>不过说来我也挺担心那个Crossbell（就是xLog用的链）的项目，作为不受监管的平台只要知名度上来肯定会被滥用到死，希望他们能活得更长一些吧。</p>
+    <title>分享网盘及存储</title>
+    <url>/posts/a3/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="分享一个我正在用的网盘"><a href="#分享一个我正在用的网盘" class="headerlink" title="分享一个我正在用的网盘"></a>分享一个我正在用的网盘</h1><p><strong>就是大名鼎鼎微软的OneDrive</strong><br>话说国内的网盘市场已经被百度网盘垄断了<br>百度网盘不付费的话，下载速度没得说，慢的一比<br>唯一的好处就是资源多<br>大家都在百度上分享链接<br>例如，<a href="http://www.yunpangou.com/">云盘狗</a><br>百度大而不倒</p>
+<hr>
+<h2 id="OneDrive"><a href="#OneDrive" class="headerlink" title="OneDrive"></a>OneDrive</h2><p>OneDrive好处就是有Office365，办公同步真方便<br>然后空间巨大，不限速<br>一定要taobao买一个商用版的，个人版的被墙了<br>找一个销量好的，5T空间也就20块<br>我买了一个25T的<br>然后用了RaiDrive_1.8.0挂载到个人电脑上<br>注意了一定要RaiDrive_1.8.0，不然没有写权限</p>
+<hr>
+<h2 id="OneDrive可以做私人网盘"><a href="#OneDrive可以做私人网盘" class="headerlink" title="OneDrive可以做私人网盘"></a>OneDrive可以做私人网盘</h2><p>搜索私人网盘搭建，网络上一堆堆攻略。<br>按照之前的经验来看，需要云服务器，开个新账户阿里腾讯云，买三年很便宜，博主都已经玩过一遍了。<br>推荐：Cloudreve</p>
+<hr>
+<h2 id="Web3存储"><a href="#Web3存储" class="headerlink" title="Web3存储"></a>Web3存储</h2><p>前几年Web3大爆发的时候，Web3存储横空出世，File这个cx币，刚出来的时候起飞上天，被称为以太之后的币⚪第三次创新革命。<br>从叙事上来说，Web3存储有些亮点，AR（arweave）通过简化数字世界 <strong>一次付款</strong>, <strong>永远存储</strong> ，数据可以维持200年，比只能维持20年的web2，超出一个数量级。<br>到底是画饼，还是确实，只能拭目以待了。Web3的世界起飞和爆炸往往都在几个瞬间。</p>
 ]]></content>
       <categories>
-        <category>Docs文檔</category>
+        <category>分享</category>
       </categories>
       <tags>
-        <tag>区块链</tag>
-        <tag>web3</tag>
+        <tag>分享</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>python输入实物码记录网卡IP及MAC地址</title>
+    <url>/posts/a6/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="python输入实物码记录网卡IP及MAC地址"><a href="#python输入实物码记录网卡IP及MAC地址" class="headerlink" title="python输入实物码记录网卡IP及MAC地址"></a>python输入实物码记录网卡IP及MAC地址</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> psutil</span><br><span class="line"><span class="keyword">import</span> pymysql</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">insent_db</span>(<span class="params">adapter, mac, ipv4, swcode, sent_time</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        db = pymysql.connect(host=<span class="string">&quot;10.103.50.147&quot;</span>, port=<span class="number">3306</span>, user=<span class="string">&quot;crrcuser&quot;</span>, password=<span class="string">&quot;abc.123456&quot;</span>, database=<span class="string">&quot;gsdata&quot;</span>,</span><br><span class="line">                             charset=<span class="string">&quot;utf8&quot;</span>)</span><br><span class="line">        cursor= db.cursor()</span><br><span class="line">        db.ping(reconnect=<span class="literal">True</span>)</span><br><span class="line">        new_list_1 = []</span><br><span class="line">        tup_1 = (adapter, mac, ipv4, swcode, sent_time)</span><br><span class="line">        new_list_1.append(tup_1)</span><br><span class="line">        sql = <span class="string">&quot;insert into MAC_Collect(adapter, mac, ipv4, swcode, sent_time) values(%s, %s, %s, %s, %s)&quot;</span></span><br><span class="line">        cursor.executemany(sql, new_list_1)</span><br><span class="line">        db.commit()<span class="comment"># 提交数据库执行</span></span><br><span class="line">        cursor.close()</span><br><span class="line">        db.close()</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">return</span> sys.exc_info()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">PrintNetIfAddr</span>():</span><br><span class="line">  <span class="string">&quot;&quot;&quot; 打印多网卡 mac 和 ip 信息 &quot;&quot;&quot;</span></span><br><span class="line">  swcode = <span class="built_in">input</span>(<span class="string">&quot;请输入实物码（实物码以SW开头）:&quot;</span>)</span><br><span class="line">  <span class="keyword">if</span> swcode[:<span class="number">2</span>] != <span class="string">&quot;SW&quot;</span> <span class="keyword">and</span> swcode[:<span class="number">2</span>] != <span class="string">&quot;sw&quot;</span>:</span><br><span class="line">      <span class="built_in">print</span>(<span class="string">&quot;实物码输入错误，请输入正确实物码（实物码以SW开头）！&quot;</span>)</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">  dic = psutil.net_if_addrs()</span><br><span class="line">  <span class="keyword">for</span> adapter <span class="keyword">in</span> dic:</span><br><span class="line">      snicList = dic[adapter]</span><br><span class="line">      mac = <span class="string">&#x27;无 mac 地址&#x27;</span></span><br><span class="line">      ipv4 = <span class="string">&#x27;无 ipv4 地址&#x27;</span></span><br><span class="line">      <span class="keyword">for</span> snic <span class="keyword">in</span> snicList:</span><br><span class="line">          <span class="keyword">if</span> snic.family.name <span class="keyword">in</span> &#123;<span class="string">&#x27;AF_LINK&#x27;</span>, <span class="string">&#x27;AF_PACKET&#x27;</span>&#125;:</span><br><span class="line">              mac = snic.address</span><br><span class="line">          <span class="keyword">elif</span> snic.family.name == <span class="string">&#x27;AF_INET&#x27;</span>:</span><br><span class="line">              ipv4 = snic.address</span><br><span class="line">      <span class="keyword">if</span> mac == <span class="string">&#x27;无 mac 地址&#x27;</span>:</span><br><span class="line">          <span class="keyword">continue</span></span><br><span class="line">      <span class="keyword">if</span> <span class="string">&quot;蓝牙&quot;</span> <span class="keyword">in</span> adapter:</span><br><span class="line">          <span class="keyword">continue</span></span><br><span class="line">      <span class="keyword">if</span> ipv4[:<span class="number">2</span>] != <span class="string">&quot;10&quot;</span>:</span><br><span class="line">          <span class="keyword">continue</span></span><br><span class="line">      sent_time = datetime.datetime.now().strftime(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span><br><span class="line">      insent_db_str = insent_db(adapter, mac, ipv4, swcode, sent_time)</span><br><span class="line">      <span class="keyword">if</span> insent_db_str:</span><br><span class="line">          <span class="keyword">return</span> insent_db_str</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          <span class="built_in">print</span>(<span class="string">&quot;成功上传数据：&quot;</span>,<span class="string">&#x27;%s, %s, %s, %s, %s&#x27;</span> % (adapter, mac, ipv4, swcode, sent_time))</span><br><span class="line">          <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;内网没有符合要求的MAC&quot;</span></span><br><span class="line">pro_end = PrintNetIfAddr()</span><br><span class="line"><span class="keyword">if</span> pro_end:</span><br><span class="line">    <span class="built_in">print</span>(pro_end)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;失败，按下任意键以退出程序&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;成功，按下任意键以退出程序&quot;</span>)</span><br><span class="line"><span class="built_in">input</span>()</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>分享</category>
+      </categories>
+      <tags>
+        <tag>分享</tag>
       </tags>
   </entry>
   <entry>
@@ -113,24 +107,6 @@
       </tags>
   </entry>
   <entry>
-    <title>分享网盘及存储</title>
-    <url>/posts/a3/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="分享一个我正在用的网盘"><a href="#分享一个我正在用的网盘" class="headerlink" title="分享一个我正在用的网盘"></a>分享一个我正在用的网盘</h1><p><strong>就是大名鼎鼎微软的OneDrive</strong><br>话说国内的网盘市场已经被百度网盘垄断了<br>百度网盘不付费的话，下载速度没得说，慢的一比<br>唯一的好处就是资源多<br>大家都在百度上分享链接<br>例如，<a href="http://www.yunpangou.com/">云盘狗</a><br>百度大而不倒</p>
-<hr>
-<h2 id="OneDrive"><a href="#OneDrive" class="headerlink" title="OneDrive"></a>OneDrive</h2><p>OneDrive好处就是有Office365，办公同步真方便<br>然后空间巨大，不限速<br>一定要taobao买一个商用版的，个人版的被墙了<br>找一个销量好的，5T空间也就20块<br>我买了一个25T的<br>然后用了RaiDrive_1.8.0挂载到个人电脑上<br>注意了一定要RaiDrive_1.8.0，不然没有写权限</p>
-<hr>
-<h2 id="OneDrive可以做私人网盘"><a href="#OneDrive可以做私人网盘" class="headerlink" title="OneDrive可以做私人网盘"></a>OneDrive可以做私人网盘</h2><p>搜索私人网盘搭建，网络上一堆堆攻略。<br>按照之前的经验来看，需要云服务器，开个新账户阿里腾讯云，买三年很便宜，博主都已经玩过一遍了。<br>推荐：Cloudreve</p>
-<hr>
-<h2 id="Web3存储"><a href="#Web3存储" class="headerlink" title="Web3存储"></a>Web3存储</h2><p>前几年Web3大爆发的时候，Web3存储横空出世，File这个cx币，刚出来的时候起飞上天，被称为以太之后的币⚪第三次创新革命。<br>从叙事上来说，Web3存储有些亮点，AR（arweave）通过简化数字世界 <strong>一次付款</strong>, <strong>永远存储</strong> ，数据可以维持200年，比只能维持20年的web2，超出一个数量级。<br>到底是画饼，还是确实，只能拭目以待了。Web3的世界起飞和爆炸往往都在几个瞬间。</p>
-]]></content>
-      <categories>
-        <category>分享</category>
-      </categories>
-      <tags>
-        <tag>分享</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>记录十几年的折腾资产之路（三）——续</title>
     <url>/posts/zt3-1/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（三）——续"><a href="#记录十几年的折腾资产之路（三）——续" class="headerlink" title="记录十几年的折腾资产之路（三）——续"></a>记录十几年的折腾资产之路（三）——续</h1><h2 id="今天就简单聊一聊数藏第一人吧"><a href="#今天就简单聊一聊数藏第一人吧" class="headerlink" title="今天就简单聊一聊数藏第一人吧"></a>今天就简单聊一聊数藏第一人吧</h2><p>国内数藏圈虽然圈子不大，但是创造神话。臭名昭著的18先生的很多传奇故事。18先生（柏松先生）这个名号在数藏圈也是无人不知无人不晓，更是很多割友心目中的数藏第一人。  </p>
@@ -141,50 +117,6 @@
 <p>那个时候他的影响力至今无人能敌，18先生也不愧是数藏第一人。<br>后来因为分蛋糕问题，18先生很遗憾的离开了1b，同时加入了42这个新台子，一样的谱写了一番新高度。再之后18先生创立了新台子名为十八数藏，在数藏圈再次炸裂来袭，运粮鼠1元一只上线，最高暴涨到8000元+，8000多倍的利润，能有谁可以做到啊?</p>
 <p>虽然数藏圈的热度正在慢慢下降，但是围绕18先生的话题还在不断上涨，割友们对18先生也是爱恨交加。<br>18先生是第一个提出2.0置换玩法，在数藏环境不佳的情况下仍旧能保持日交易额千万以上，相对18先生抛弃的1b当时在低估的时候日均交易额也只有几万元，说不定还是左手倒右手。</p>
 <p>18先生传奇的经历不止这些，他的神话自1b始，尚未终结。2024年18据说又联合了国家队搞什么数字资产，音乐版权，重回巅峰不知道是不是梦。</p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>回忆录</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录十几年的折腾资产之路（二）</title>
-    <url>/posts/zt2/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（二）"><a href="#记录十几年的折腾资产之路（二）" class="headerlink" title="记录十几年的折腾资产之路（二）"></a>记录十几年的折腾资产之路（二）</h1><h2 id="2019-2021，国外投资阶段"><a href="#2019-2021，国外投资阶段" class="headerlink" title="2019-2021，国外投资阶段"></a>2019-2021，国外投资阶段</h2><ul>
-<li>2019年我对A股没了信心，做了两件事</li>
-</ul>
-<ol>
-<li>无意中发现了美港股，因为用东方财富，看到了东财国际版的广告，抱着试一试的态度，打开了一扇门。网上学了一圈，发现国内著名的软件富途牛牛已经进军美港股几年了。</li>
-<li>2019年底重返币圈，玩了美港股不过瘾，想着多几个赛道。更早之前几百块也玩过币，但当时一门心思玩A股，2019年底又想起币圈。</li>
-</ol>
-<h3 id="港股打新，美港交易"><a href="#港股打新，美港交易" class="headerlink" title="港股打新，美港交易"></a>港股打新，美港交易</h3><ul>
-<li>阿里巴巴重回港股，当时给港股打新添了一把火。我记得应该是东财上看到了，才入了这个坑。港股打新特色是可以融资，其次是暗盘交易。记得阿里融了资中了几签，利润有好几千呢，我一下子沸腾了，全部all in，港股打新真的是赚过一笔的。</li>
-<li>但港股打新的节奏是比较慢的，要选优质的新股，不然容易破发，周期长要等机会。我不甘寂寞，当时看了美港走势天天涨，忍不住还是冲进去。我依稀记得当时最火的是新能源汽车，特斯拉，蔚来，小鹏等，后来不幸碰到疫情，美股史诗级跌熔断，熔断了几次，亏了一些，想起真是令人唏嘘。</li>
-</ul>
-<h3 id="币圈"><a href="#币圈" class="headerlink" title="币圈"></a>币圈</h3><ul>
-<li>当时最火的是defi抵押借贷，还有流动挖矿，新概念天天吹，吹的我也着了魔，又把钱拿出来一部分，前后用defi借贷，一口气拿了快三十多个以太（依稀记得260u以上的成本），意淫着起飞。结果天天跌，没多久跌了两三成，卧槽，心里滴血。</li>
-<li>疫情来了，币圈和美股有同步，不同的是币圈只用了一个晚上。我清楚的记得是一个寒风阵阵的傍晚，暴跌，3k大饼，80u的以太都看到过，仓位都快到脚脖子了。紧接着第二天行情也没太起来，恐怖的是defi抵押借贷快触及平仓线，那样就爆仓归零了，连忙又拿应急的钱买了5千rmb的以太。</li>
-<li>之后对币圈有点灰心了，亏了几万，也不舍得割肉，但神奇的也是，疫情的时候那么恐慌，币价却没怎么再跌。我套了大半年，神奇的又回来了，后面nft爆火，我不干寂寞又卖了以太，玩别的去了，成功错过了21年币圈大牛。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>回忆录</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录十几年的折腾资产之路（四）</title>
-    <url>/posts/zt4/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（四）"><a href="#记录十几年的折腾资产之路（四）" class="headerlink" title="记录十几年的折腾资产之路（四）"></a>记录十几年的折腾资产之路（四）</h1><h2 id="2022-2023-01，数藏投资阶段"><a href="#2022-2023-01，数藏投资阶段" class="headerlink" title="2022-2023.01，数藏投资阶段"></a>2022-2023.01，数藏投资阶段</h2><h3 id="接着上回说ibox"><a href="#接着上回说ibox" class="headerlink" title="接着上回说ibox"></a>接着上回说ibox</h3><p>ibox在2022年5月迎来大牛市，但就是在5月十几号（具体日子记不清了），ibox泡沫太大了，迎来了大崩盘。消息面上18说有对手造谣中伤，盘面上ibox维持了几天藏品超高价格，官方还是发新品上演鸡生蛋钱生钱的老剧本，资金盘老玩法。ibox这个崩盘有多大呢？可以说刷新大家三观，我记得从下午开始阴跌，一直几个小时跌到傍晚，最夸张一个藏品的价格跌了90%以上，就是说原本1万的藏品跌到只值1千。而且在跌的过程中很少有反弹，我试着挂几个藏品，卖不出去，只有挂最低才能卖出，那样十分亏本。</p>
-<p>前面唯一艺术崩盘过50%以上，ibox跌了90%，慌了，18在各种群里面给大家打气，有藏品的没藏品都理智了，大家发现ibox的神话破灭了。我在ibox的藏品缩水了很多，心里面特别不甘，但是也没有办法。在藏品高位的时候，我其实设定过一个盈利目标，但是就差大概50%的样子。而且事后我反复复盘，我的投资风格就是长期，不然我早就清盘很多了，既然是这种风格，就很难卖在顶峰。哪个投资能精准逃顶呢？抄底和逃顶完全是碰运气的事情。</p>
-<p>在当时我寄希望ibox有一个二轮顶，因为做投资的都知道很多资产都有二轮顶。币圈出现了二轮顶，二轮比一轮还高一点。可惜快到9月份，ibox才小爆发了一下，这个小爆发没有持续多久，和之前的牛市相差太远了。</p>
-<p>ibox大崩盘之后，只有再隔天出现了最大的反弹，之后就一路阴跌，跌了一个月，官方坐不住了，出乎意料的是官方拿策划18开刀，因为我一直认为18算是ibox的王牌。当时18出走的说法众说纷纭啊，回头来看无外乎几种。一是分赃不均，18没有ibox的股份，个人认为这并非主要原因，后面的策划据说有股份但也退隐了；二是玩法理念不同，官方想趁热多发新品赚钱，而18想控制发新通缩拉盘；三和二有些类似，就是官方就是想换新策划用来拉盘拉人气，从后面来看ibox多次换策划，就是想用新人拉人气。总而言之，ibox迎来了新策划光头，光头在数藏圈当初也是风云人物，光头开创了数藏策划抖音拉盘的先例，当初也算是耳目一新。就因为光头抖音引流，一批人开始直播炒数藏，那时真是热闹，直播间里面成千上万人，弹幕也能刷起来。光头各种画大饼整活，有时候会有奇效，很多光头经典语录，当初数藏圈传了一遍又一遍。</p>
-<p>前面我说了ibox的小爆发在9月，光头当初的说法就是发大招了，大招就是老三样。一是拉新，玩法还是传承着18的，拉人送空投；二是打榜，老玩法，但是据光头说下了血本，第一名奖励玛莎拉蒂跑车；三是弄了抽奖游戏，消耗藏品抽藏品，跟合成出藏品一个道理，换汤不换药。</p>
-<p>我大约在ibox的小爆发后，终于失去了耐心，我认识到，ibox再不能重回巅峰了。当时ibox发出的新品比牛市的时候多出几倍，而市值相差很远，而光头还要继续发很多新藏品。我狠心基本上把值钱的都卖完了，只留下一些不值钱的老藏品。就这样，离开的时候也套现了几十万，ibox生涯宣告结束。</p>
 ]]></content>
       <categories>
         <category>Docs文檔</category>
@@ -235,6 +167,57 @@
       </categories>
       <tags>
         <tag>回忆录</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录十几年的折腾资产之路（二）</title>
+    <url>/posts/zt2/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（二）"><a href="#记录十几年的折腾资产之路（二）" class="headerlink" title="记录十几年的折腾资产之路（二）"></a>记录十几年的折腾资产之路（二）</h1><h2 id="2019-2021，国外投资阶段"><a href="#2019-2021，国外投资阶段" class="headerlink" title="2019-2021，国外投资阶段"></a>2019-2021，国外投资阶段</h2><ul>
+<li>2019年我对A股没了信心，做了两件事</li>
+</ul>
+<ol>
+<li>无意中发现了美港股，因为用东方财富，看到了东财国际版的广告，抱着试一试的态度，打开了一扇门。网上学了一圈，发现国内著名的软件富途牛牛已经进军美港股几年了。</li>
+<li>2019年底重返币圈，玩了美港股不过瘾，想着多几个赛道。更早之前几百块也玩过币，但当时一门心思玩A股，2019年底又想起币圈。</li>
+</ol>
+<h3 id="港股打新，美港交易"><a href="#港股打新，美港交易" class="headerlink" title="港股打新，美港交易"></a>港股打新，美港交易</h3><ul>
+<li>阿里巴巴重回港股，当时给港股打新添了一把火。我记得应该是东财上看到了，才入了这个坑。港股打新特色是可以融资，其次是暗盘交易。记得阿里融了资中了几签，利润有好几千呢，我一下子沸腾了，全部all in，港股打新真的是赚过一笔的。</li>
+<li>但港股打新的节奏是比较慢的，要选优质的新股，不然容易破发，周期长要等机会。我不甘寂寞，当时看了美港走势天天涨，忍不住还是冲进去。我依稀记得当时最火的是新能源汽车，特斯拉，蔚来，小鹏等，后来不幸碰到疫情，美股史诗级跌熔断，熔断了几次，亏了一些，想起真是令人唏嘘。</li>
+</ul>
+<h3 id="币圈"><a href="#币圈" class="headerlink" title="币圈"></a>币圈</h3><ul>
+<li>当时最火的是defi抵押借贷，还有流动挖矿，新概念天天吹，吹的我也着了魔，又把钱拿出来一部分，前后用defi借贷，一口气拿了快三十多个以太（依稀记得260u以上的成本），意淫着起飞。结果天天跌，没多久跌了两三成，卧槽，心里滴血。</li>
+<li>疫情来了，币圈和美股有同步，不同的是币圈只用了一个晚上。我清楚的记得是一个寒风阵阵的傍晚，暴跌，3k大饼，80u的以太都看到过，仓位都快到脚脖子了。紧接着第二天行情也没太起来，恐怖的是defi抵押借贷快触及平仓线，那样就爆仓归零了，连忙又拿应急的钱买了5千rmb的以太。</li>
+<li>之后对币圈有点灰心了，亏了几万，也不舍得割肉，但神奇的也是，疫情的时候那么恐慌，币价却没怎么再跌。我套了大半年，神奇的又回来了，后面nft爆火，我不干寂寞又卖了以太，玩别的去了，成功错过了21年币圈大牛。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>回忆录</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>xLog+Crossbell区块链</title>
+    <url>/posts/a1/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><ul>
+<li>起因</li>
+<li>技术人员的方法</li>
+<li>从IPFS直接访问</li>
+<li>更好的永久存储</li>
+<li>感想</li>
+</ul>
+<h1 id="xLog，Crossbell区块链"><a href="#xLog，Crossbell区块链" class="headerlink" title="xLog，Crossbell区块链"></a>xLog，Crossbell区块链</h1><p>最近偶然看到了一个很有意思的东西，叫<a href="https://xlog.app/">xLog</a>，大概试了试，这是在一条叫Crossbell的区块链上使用智能合约操作和存储元数据，并把实际数据存到IPFS上的项目。看了一眼还挺有意思，就在上面搭了一个自己的另一个<a href="https://demo.xlog.app/">博客</a>，另外他们还使用这套方案写了一个类似Twitter的社交系统，也叫Crossbell，非常的人性化，可以说是把Web3真正的带给了普通用户。至于怎么搭他们的项目成员写了篇教程，5分钟就能搭好在<a href="https://song.xlog.app/5m-zh">Web3的博客</a>。<br>不过使用xLog那就不是技术人员的事了，而是让一个不怎么懂电脑的人来做的事情了。另外他们宣称数据是“Permanently stored on the blockchain”这一点我不太认同，要是说存到了Web3成为了其他人无法修改的数据，这倒是没什么问题，但是存到IPFS上只要没有被Pin，就有可能在节点GC的过程中永远消失。另外我其实对区块链接触不多，不清楚能不能完整的同步他们的链，如果不能那就是私链了，那样元数据也不能永久保留了……所以我只能说这个平台是Web3，可以保证不因为审查而404，但是不能在时间的长河中保留信息。</p>
+<h1 id="技术人员的方法"><a href="#技术人员的方法" class="headerlink" title="技术人员的方法"></a>技术人员的方法</h1><p>所以作为技术人员，我的博客当然直接上IPFS那更好啦，因为他们的平台毕竟可定制性不高，而且好多组件不知道有没有可替代性，比如以太坊JSON-RPC，不过他们的服务好像是都开源了，只要这个链可以被同步，能搭属于自己的RPC那倒是问题不大。<br>直接用IPFS客户端直接上传是最原生的办法，但是我不喜欢在自己电脑上安一堆莫名其妙的软件，像我现在写博客都是直接在Github或者Gitlab上写好然后直接用之前提到的静态页面服务商一次性部署好。所以我也希望能有一个类似的服务商能帮我把我的博客上传到IPFS上。最后我找到的服务商就是<a href="https://www.4everland.org/">4EVERLAND</a>。它可以绑定Git仓库并监听变化，当有变化的时候就会自动部署到IPFS上，并且他们提供免费的Gateway来直接访问在IPFS上的内容，非常的不错。不过有个问题就是不知道什么原因，它的部署模板里面没有Jekyll的语句，然后前端还不能自定义……所以只能靠抓包的方式来修改成自己想要的部署语句。</p>
+<h1 id="从IPFS直接访问"><a href="#从IPFS直接访问" class="headerlink" title="从IPFS直接访问"></a>从IPFS直接访问</h1><p>使用4everland部署完之后直接访问当然也很好，但是总感觉和其他服务商差不多，谁知道它读取网页到底是从自己服务器上还是IPFS网络上读取呢？所以我还想整个更好的方式从IPFS上读取，也能证明它确实在IPFS上了。<br>直接通过Gateway去访问我的博客当然也没问题，但是每次部署的时候CID是会变化的，那这样我想访问也不方便啊……后来我听说可以把CID用一种叫dnslink的方式记录到DNS里，这样就能通过固定又好记的方式来访问。不过那时候我不知道怎么访问dnslink记录的网站……而且每次部署CID会变，那部署完我还要更新我的DNS记录啊？后来我查了查原来还有一种叫IPNS的东西，看了一眼4everland的控制台，原来每个网站它也会生成一个固定的IPNS，然后用dnslink可以指向IPNS。那如何访问呢？IPFS又没有一个IP地址，光TXT记录肯定不够的吧？后来我才知道原来要用CNAME解析到Gateway才能访问，设置之后每次访问Gateway就会自动解析在TXT记录里的dnslink了。这不比xLog自由度高？不过我这个没办法存评论数据，可能xLog的特色就是社交吧，毕竟他们的主项目Crossbell就是主打的社交。希望可以整一个单独的插件，专门用他们的网络来为我这种静态博客提供评论功能，也是一个不错的选择（毕竟ETH公链上的手续费太贵啦😂）。</p>
+<h1 id="更好的永久存储"><a href="#更好的永久存储" class="headerlink" title="更好的永久存储"></a>更好的永久存储</h1><p>前面我说过，IPFS只能防止篡改，但不是作为永久存储的方案，上公链当然是也一种永久存储的方案但是成本太高了我付不起。后来我了解到一种叫做Arweave的东西可以永久存储你的数据，不过这不是免费的，想存得要付AR币到链上才可以。还好4EVERLAND提供了一些免费上传到AR网络的额度，非常的不错，这样我以后每次上传我会把地址写到Github的Releases里面，进一步的提高我博客永久存储的可能性。<br>另外我还听说似乎还有一种叫做ZeroNet的东西也是通过分布式的方式存储数据，据群友所说也能在一定程度上永久存储。不过我试了试访问实在是太困难了😂，而且现在程序也不在维护了，所以也就放弃了。</p>
+<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><p>Web3真是发展的越来越好了，希望能有更多的人参与其中，一起创建不受管束的网络吧。（还有实现我Forever计划😝）<br>不过说来我也挺担心那个Crossbell（就是xLog用的链）的项目，作为不受监管的平台只要知名度上来肯定会被滥用到死，希望他们能活得更长一些吧。</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>区块链</tag>
+        <tag>web3</tag>
       </tags>
   </entry>
   <entry>
