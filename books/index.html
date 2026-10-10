@@ -70,6 +70,16 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
   transition:.15s;white-space:nowrap;
 }
 .back:hover{border-color:var(--accent);color:var(--accent-text)}
+.readnow{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 13px;border-radius:999px;
+  background:linear-gradient(135deg,var(--accent),#2b7fd4);
+  border:1px solid var(--accent);color:#fff;font-weight:600;font-size:12.5px;
+  transition:.15s;white-space:nowrap;
+}
+.readnow:hover{filter:brightness(1.08);color:#fff}
+.readnow .dot{width:6px;height:6px;border-radius:50%;background:#7dffb0;box-shadow:0 0 6px #7dffb0;flex:0 0 auto}
+.pacts a.btn,.pacts button.btn{display:inline-flex;align-items:center;gap:6px;line-height:1.2}
 .iconbtn{
   width:32px;height:32px;border-radius:9px;border:1px solid var(--border);
   background:var(--chipbg);cursor:pointer;display:flex;align-items:center;
@@ -236,6 +246,9 @@ main{max-width:var(--maxw);margin:0 auto;padding:20px}
       </div>
       <div class="spacer"></div>
       <div class="stats" id="stats">加载中…</div>
+      <a class="readnow" id="readnowTop" href="https://books.demo.fan" target="_blank" rel="noopener" title="打开完整在线书库（在线阅读 / 下载）">
+        <span class="dot"></span>在线阅读
+      </a>
       <a class="back" href="/">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         返回博客
@@ -284,14 +297,19 @@ main{max-width:var(--maxw);margin:0 auto;padding:20px}
         <div class="metas" id="mm"></div>
         <div class="psum" id="ms"></div>
         <div class="pacts">
-          <button class="btn primary" id="copyT">复制书名</button>
+          <a class="btn primary" id="readBtn" href="https://books.demo.fan" target="_blank" rel="noopener">📖 在线阅读</a>
+          <a class="btn" id="dlBtn" href="https://books.demo.fan" target="_blank" rel="noopener">⬇ 下载本书</a>
+        </div>
+        <div class="pacts">
+          <button class="btn" id="copyT">复制书名</button>
           <button class="btn" id="copyA">复制「书名 + 作者」</button>
         </div>
       </div>
     </div>
     <div class="note">
-      📖 本页是<b>书库目录</b>（封面墙 + 搜索），数据静态托管在 GitHub Pages。真实的
-      <b>在线阅读 / 下载</b>需要本机书库服务（<code>E:\yunpan_hub</code>）在线 —— 这部分暂未接入。
+      📖 本页是<b>书库目录</b>（封面墙 + 搜索），静态托管在 GitHub Pages；
+      <b>在线阅读 / 下载</b>由本机书库服务经 Cloudflare 隧道提供，入口：<code>books.demo.fan</code>。
+      若点开报错，说明本机书库服务（<code>E:\yunpan_hub</code> + 只读网关）当前离线。
     </div>
     <div class="pfoot">
       <span id="mid"></span>
@@ -307,6 +325,8 @@ main{max-width:var(--maxw);margin:0 auto;padding:20px}
   "use strict";
   var $ = function(id){ return document.getElementById(id); };
   var BATCH = 96;
+  /* 在线书库后端（本机书库经 Cloudflare 隧道暴露，只读网关） */
+  var READER = "https://books.demo.fan";
 
   /* ---------- theme：优先跟随博客(localStorage.theme)，否则跟随系统 ---------- */
   function pickTheme(){
@@ -458,6 +478,9 @@ main{max-width:var(--maxw);margin:0 auto;padding:20px}
     if (b.summary){ sm.textContent = b.summary; sm.className = "psum"; }
     else { sm.textContent = "（这本书没有收录简介）"; sm.className = "psum none"; }
     $("mid").textContent = "ID " + b.id;
+    var rb = $("readBtn"), db = $("dlBtn");
+    if (rb) rb.href = READER + "/api/read/" + encodeURIComponent(b.id);
+    if (db) db.href = READER + "/api/download/" + encodeURIComponent(b.id);
     $("mask").classList.add("on");
     document.body.style.overflow = "hidden";
     if (history.replaceState) history.replaceState(null, "", "#" + b.id);
