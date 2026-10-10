@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.demo.fan/about/</loc>
+    
+    <lastmod>2026-05-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.demo.fan/posts/zt4/</loc>
     
     <lastmod>2026-05-19</lastmod>
@@ -83,15 +92,6 @@
   </url>
   
   <url>
-    <loc>https://blog.demo.fan/about/</loc>
-    
-    <lastmod>2026-05-19</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.demo.fan/tags/</loc>
     
     <lastmod>2026-05-19</lastmod>
@@ -139,7 +139,7 @@
 
   <url>
     <loc>https://blog.demo.fan/</loc>
-    <lastmod>2026-05-19</lastmod>
+    <lastmod>2026-10-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -147,35 +147,35 @@
   
   <url>
     <loc>https://blog.demo.fan/tags/ForeverBlog/</loc>
-    <lastmod>2026-05-19</lastmod>
+    <lastmod>2026-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.demo.fan/tags/%E5%88%86%E4%BA%AB/</loc>
-    <lastmod>2026-05-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.demo.fan/tags/%E5%9B%9E%E5%BF%86%E5%BD%95/</loc>
-    <lastmod>2026-05-19</lastmod>
+    <lastmod>2026-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.demo.fan/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/</loc>
-    <lastmod>2026-05-19</lastmod>
+    <lastmod>2026-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.demo.fan/tags/web3/</loc>
-    <lastmod>2026-05-19</lastmod>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.demo.fan/tags/%E5%9B%9E%E5%BF%86%E5%BD%95/</loc>
+    <lastmod>2026-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -184,14 +184,14 @@
   
   <url>
     <loc>https://blog.demo.fan/categories/Docs%E6%96%87%E6%AA%94/</loc>
-    <lastmod>2026-05-19</lastmod>
+    <lastmod>2026-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.demo.fan/categories/%E5%88%86%E4%BA%AB/</loc>
-    <lastmod>2026-05-19</lastmod>
+    <lastmod>2026-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>

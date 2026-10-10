@@ -36,21 +36,27 @@
       </tags>
   </entry>
   <entry>
-    <title>分享网盘及存储</title>
-    <url>/posts/a3/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="分享一个我正在用的网盘"><a href="#分享一个我正在用的网盘" class="headerlink" title="分享一个我正在用的网盘"></a>分享一个我正在用的网盘</h1><p><strong>就是大名鼎鼎微软的OneDrive</strong><br>话说国内的网盘市场已经被百度网盘垄断了<br>百度网盘不付费的话，下载速度没得说，慢的一比<br>唯一的好处就是资源多<br>大家都在百度上分享链接<br>例如，<a href="http://www.yunpangou.com/">云盘狗</a><br>百度大而不倒</p>
-<hr>
-<h2 id="OneDrive"><a href="#OneDrive" class="headerlink" title="OneDrive"></a>OneDrive</h2><p>OneDrive好处就是有Office365，办公同步真方便<br>然后空间巨大，不限速<br>一定要taobao买一个商用版的，个人版的被墙了<br>找一个销量好的，5T空间也就20块<br>我买了一个25T的<br>然后用了RaiDrive_1.8.0挂载到个人电脑上<br>注意了一定要RaiDrive_1.8.0，不然没有写权限</p>
-<hr>
-<h2 id="OneDrive可以做私人网盘"><a href="#OneDrive可以做私人网盘" class="headerlink" title="OneDrive可以做私人网盘"></a>OneDrive可以做私人网盘</h2><p>搜索私人网盘搭建，网络上一堆堆攻略。<br>按照之前的经验来看，需要云服务器，开个新账户阿里腾讯云，买三年很便宜，博主都已经玩过一遍了。<br>推荐：Cloudreve</p>
-<hr>
-<h2 id="Web3存储"><a href="#Web3存储" class="headerlink" title="Web3存储"></a>Web3存储</h2><p>前几年Web3大爆发的时候，Web3存储横空出世，File这个cx币，刚出来的时候起飞上天，被称为以太之后的币⚪第三次创新革命。<br>从叙事上来说，Web3存储有些亮点，AR（arweave）通过简化数字世界 <strong>一次付款</strong>, <strong>永远存储</strong> ，数据可以维持200年，比只能维持20年的web2，超出一个数量级。<br>到底是画饼，还是确实，只能拭目以待了。Web3的世界起飞和爆炸往往都在几个瞬间。</p>
+    <title>xLog+Crossbell区块链</title>
+    <url>/posts/a1/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><ul>
+<li>起因</li>
+<li>技术人员的方法</li>
+<li>从IPFS直接访问</li>
+<li>更好的永久存储</li>
+<li>感想</li>
+</ul>
+<h1 id="xLog，Crossbell区块链"><a href="#xLog，Crossbell区块链" class="headerlink" title="xLog，Crossbell区块链"></a>xLog，Crossbell区块链</h1><p>最近偶然看到了一个很有意思的东西，叫<a href="https://xlog.app/">xLog</a>，大概试了试，这是在一条叫Crossbell的区块链上使用智能合约操作和存储元数据，并把实际数据存到IPFS上的项目。看了一眼还挺有意思，就在上面搭了一个自己的另一个<a href="https://demo.xlog.app/">博客</a>，另外他们还使用这套方案写了一个类似Twitter的社交系统，也叫Crossbell，非常的人性化，可以说是把Web3真正的带给了普通用户。至于怎么搭他们的项目成员写了篇教程，5分钟就能搭好在<a href="https://song.xlog.app/5m-zh">Web3的博客</a>。<br>不过使用xLog那就不是技术人员的事了，而是让一个不怎么懂电脑的人来做的事情了。另外他们宣称数据是“Permanently stored on the blockchain”这一点我不太认同，要是说存到了Web3成为了其他人无法修改的数据，这倒是没什么问题，但是存到IPFS上只要没有被Pin，就有可能在节点GC的过程中永远消失。另外我其实对区块链接触不多，不清楚能不能完整的同步他们的链，如果不能那就是私链了，那样元数据也不能永久保留了……所以我只能说这个平台是Web3，可以保证不因为审查而404，但是不能在时间的长河中保留信息。</p>
+<h1 id="技术人员的方法"><a href="#技术人员的方法" class="headerlink" title="技术人员的方法"></a>技术人员的方法</h1><p>所以作为技术人员，我的博客当然直接上IPFS那更好啦，因为他们的平台毕竟可定制性不高，而且好多组件不知道有没有可替代性，比如以太坊JSON-RPC，不过他们的服务好像是都开源了，只要这个链可以被同步，能搭属于自己的RPC那倒是问题不大。<br>直接用IPFS客户端直接上传是最原生的办法，但是我不喜欢在自己电脑上安一堆莫名其妙的软件，像我现在写博客都是直接在Github或者Gitlab上写好然后直接用之前提到的静态页面服务商一次性部署好。所以我也希望能有一个类似的服务商能帮我把我的博客上传到IPFS上。最后我找到的服务商就是<a href="https://www.4everland.org/">4EVERLAND</a>。它可以绑定Git仓库并监听变化，当有变化的时候就会自动部署到IPFS上，并且他们提供免费的Gateway来直接访问在IPFS上的内容，非常的不错。不过有个问题就是不知道什么原因，它的部署模板里面没有Jekyll的语句，然后前端还不能自定义……所以只能靠抓包的方式来修改成自己想要的部署语句。</p>
+<h1 id="从IPFS直接访问"><a href="#从IPFS直接访问" class="headerlink" title="从IPFS直接访问"></a>从IPFS直接访问</h1><p>使用4everland部署完之后直接访问当然也很好，但是总感觉和其他服务商差不多，谁知道它读取网页到底是从自己服务器上还是IPFS网络上读取呢？所以我还想整个更好的方式从IPFS上读取，也能证明它确实在IPFS上了。<br>直接通过Gateway去访问我的博客当然也没问题，但是每次部署的时候CID是会变化的，那这样我想访问也不方便啊……后来我听说可以把CID用一种叫dnslink的方式记录到DNS里，这样就能通过固定又好记的方式来访问。不过那时候我不知道怎么访问dnslink记录的网站……而且每次部署CID会变，那部署完我还要更新我的DNS记录啊？后来我查了查原来还有一种叫IPNS的东西，看了一眼4everland的控制台，原来每个网站它也会生成一个固定的IPNS，然后用dnslink可以指向IPNS。那如何访问呢？IPFS又没有一个IP地址，光TXT记录肯定不够的吧？后来我才知道原来要用CNAME解析到Gateway才能访问，设置之后每次访问Gateway就会自动解析在TXT记录里的dnslink了。这不比xLog自由度高？不过我这个没办法存评论数据，可能xLog的特色就是社交吧，毕竟他们的主项目Crossbell就是主打的社交。希望可以整一个单独的插件，专门用他们的网络来为我这种静态博客提供评论功能，也是一个不错的选择（毕竟ETH公链上的手续费太贵啦😂）。</p>
+<h1 id="更好的永久存储"><a href="#更好的永久存储" class="headerlink" title="更好的永久存储"></a>更好的永久存储</h1><p>前面我说过，IPFS只能防止篡改，但不是作为永久存储的方案，上公链当然是也一种永久存储的方案但是成本太高了我付不起。后来我了解到一种叫做Arweave的东西可以永久存储你的数据，不过这不是免费的，想存得要付AR币到链上才可以。还好4EVERLAND提供了一些免费上传到AR网络的额度，非常的不错，这样我以后每次上传我会把地址写到Github的Releases里面，进一步的提高我博客永久存储的可能性。<br>另外我还听说似乎还有一种叫做ZeroNet的东西也是通过分布式的方式存储数据，据群友所说也能在一定程度上永久存储。不过我试了试访问实在是太困难了😂，而且现在程序也不在维护了，所以也就放弃了。</p>
+<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><p>Web3真是发展的越来越好了，希望能有更多的人参与其中，一起创建不受管束的网络吧。（还有实现我Forever计划😝）<br>不过说来我也挺担心那个Crossbell（就是xLog用的链）的项目，作为不受监管的平台只要知名度上来肯定会被滥用到死，希望他们能活得更长一些吧。</p>
 ]]></content>
       <categories>
-        <category>分享</category>
+        <category>Docs文檔</category>
       </categories>
       <tags>
-        <tag>分享</tag>
+        <tag>区块链</tag>
+        <tag>web3</tag>
       </tags>
   </entry>
   <entry>
@@ -107,22 +113,21 @@
       </tags>
   </entry>
   <entry>
-    <title>记录十几年的折腾资产之路（三）——续</title>
-    <url>/posts/zt3-1/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（三）——续"><a href="#记录十几年的折腾资产之路（三）——续" class="headerlink" title="记录十几年的折腾资产之路（三）——续"></a>记录十几年的折腾资产之路（三）——续</h1><h2 id="今天就简单聊一聊数藏第一人吧"><a href="#今天就简单聊一聊数藏第一人吧" class="headerlink" title="今天就简单聊一聊数藏第一人吧"></a>今天就简单聊一聊数藏第一人吧</h2><p>国内数藏圈虽然圈子不大，但是创造神话。臭名昭著的18先生的很多传奇故事。18先生（柏松先生）这个名号在数藏圈也是无人不知无人不晓，更是很多割友心目中的数藏第一人。  </p>
-<p>“啦啦啦，气氛搞起来”是18先生在群里最常说的口头禅，在整个数藏圈最能搞气氛的也是他。<br>听说18先生最早是在b圈搞合约出身，被1b老板邀请加入了1b，那个时候1b的狰单价还只是几百块，谁能想到18先生加入后被炒到30w呢，狰自己应该也想不到吧，这无疑是一个造富神话。</p>
-<p>数藏时代的造富机会，18先生首创了优先购、合成、空投等套娃玩法，还吸纳币圈的玩法井结合数藏圈的独特性进行了玩法升级，曾经一手将1b带到了99亿市值（由于当时没有实时的看盘软件，所以这个数字是估量），日交易额猜测最高达7亿元以上。</p>
-<p>不得不说那时候的数藏圈像一场灿烂的烟花秀，起势迅猛而热烈，也是寄托了无数割友暴富梦。</p>
-<p>当初一个盲盒的赋能图都能卖到6万多元，无数大户蜂拥而至来数藏圈大浪淘金。还记得起名字的有林斌、杨文斌、辛德勒、阿达、余欢喜、水境先生等人，在社群内疯狂CX，发布截图带着各位割友们彻底疯狂。当时一张sorry大帝价值有1800元之高，一张N卡最高炒到1万元以上，凡是18先生在群里提到的某个藏品，都能瞬间10万退市。</p>
-<p>那个时候他的影响力至今无人能敌，18先生也不愧是数藏第一人。<br>后来因为分蛋糕问题，18先生很遗憾的离开了1b，同时加入了42这个新台子，一样的谱写了一番新高度。再之后18先生创立了新台子名为十八数藏，在数藏圈再次炸裂来袭，运粮鼠1元一只上线，最高暴涨到8000元+，8000多倍的利润，能有谁可以做到啊?</p>
-<p>虽然数藏圈的热度正在慢慢下降，但是围绕18先生的话题还在不断上涨，割友们对18先生也是爱恨交加。<br>18先生是第一个提出2.0置换玩法，在数藏环境不佳的情况下仍旧能保持日交易额千万以上，相对18先生抛弃的1b当时在低估的时候日均交易额也只有几万元，说不定还是左手倒右手。</p>
-<p>18先生传奇的经历不止这些，他的神话自1b始，尚未终结。2024年18据说又联合了国家队搞什么数字资产，音乐版权，重回巅峰不知道是不是梦。</p>
+    <title>分享网盘及存储</title>
+    <url>/posts/a3/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="分享一个我正在用的网盘"><a href="#分享一个我正在用的网盘" class="headerlink" title="分享一个我正在用的网盘"></a>分享一个我正在用的网盘</h1><p><strong>就是大名鼎鼎微软的OneDrive</strong><br>话说国内的网盘市场已经被百度网盘垄断了<br>百度网盘不付费的话，下载速度没得说，慢的一比<br>唯一的好处就是资源多<br>大家都在百度上分享链接<br>例如，<a href="http://www.yunpangou.com/">云盘狗</a><br>百度大而不倒</p>
+<hr>
+<h2 id="OneDrive"><a href="#OneDrive" class="headerlink" title="OneDrive"></a>OneDrive</h2><p>OneDrive好处就是有Office365，办公同步真方便<br>然后空间巨大，不限速<br>一定要taobao买一个商用版的，个人版的被墙了<br>找一个销量好的，5T空间也就20块<br>我买了一个25T的<br>然后用了RaiDrive_1.8.0挂载到个人电脑上<br>注意了一定要RaiDrive_1.8.0，不然没有写权限</p>
+<hr>
+<h2 id="OneDrive可以做私人网盘"><a href="#OneDrive可以做私人网盘" class="headerlink" title="OneDrive可以做私人网盘"></a>OneDrive可以做私人网盘</h2><p>搜索私人网盘搭建，网络上一堆堆攻略。<br>按照之前的经验来看，需要云服务器，开个新账户阿里腾讯云，买三年很便宜，博主都已经玩过一遍了。<br>推荐：Cloudreve</p>
+<hr>
+<h2 id="Web3存储"><a href="#Web3存储" class="headerlink" title="Web3存储"></a>Web3存储</h2><p>前几年Web3大爆发的时候，Web3存储横空出世，File这个cx币，刚出来的时候起飞上天，被称为以太之后的币⚪第三次创新革命。<br>从叙事上来说，Web3存储有些亮点，AR（arweave）通过简化数字世界 <strong>一次付款</strong>, <strong>永远存储</strong> ，数据可以维持200年，比只能维持20年的web2，超出一个数量级。<br>到底是画饼，还是确实，只能拭目以待了。Web3的世界起飞和爆炸往往都在几个瞬间。</p>
 ]]></content>
       <categories>
-        <category>Docs文檔</category>
+        <category>分享</category>
       </categories>
       <tags>
-        <tag>回忆录</tag>
+        <tag>分享</tag>
       </tags>
   </entry>
   <entry>
@@ -170,6 +175,25 @@
       </tags>
   </entry>
   <entry>
+    <title>记录十几年的折腾资产之路（三）——续</title>
+    <url>/posts/zt3-1/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（三）——续"><a href="#记录十几年的折腾资产之路（三）——续" class="headerlink" title="记录十几年的折腾资产之路（三）——续"></a>记录十几年的折腾资产之路（三）——续</h1><h2 id="今天就简单聊一聊数藏第一人吧"><a href="#今天就简单聊一聊数藏第一人吧" class="headerlink" title="今天就简单聊一聊数藏第一人吧"></a>今天就简单聊一聊数藏第一人吧</h2><p>国内数藏圈虽然圈子不大，但是创造神话。臭名昭著的18先生的很多传奇故事。18先生（柏松先生）这个名号在数藏圈也是无人不知无人不晓，更是很多割友心目中的数藏第一人。  </p>
+<p>“啦啦啦，气氛搞起来”是18先生在群里最常说的口头禅，在整个数藏圈最能搞气氛的也是他。<br>听说18先生最早是在b圈搞合约出身，被1b老板邀请加入了1b，那个时候1b的狰单价还只是几百块，谁能想到18先生加入后被炒到30w呢，狰自己应该也想不到吧，这无疑是一个造富神话。</p>
+<p>数藏时代的造富机会，18先生首创了优先购、合成、空投等套娃玩法，还吸纳币圈的玩法井结合数藏圈的独特性进行了玩法升级，曾经一手将1b带到了99亿市值（由于当时没有实时的看盘软件，所以这个数字是估量），日交易额猜测最高达7亿元以上。</p>
+<p>不得不说那时候的数藏圈像一场灿烂的烟花秀，起势迅猛而热烈，也是寄托了无数割友暴富梦。</p>
+<p>当初一个盲盒的赋能图都能卖到6万多元，无数大户蜂拥而至来数藏圈大浪淘金。还记得起名字的有林斌、杨文斌、辛德勒、阿达、余欢喜、水境先生等人，在社群内疯狂CX，发布截图带着各位割友们彻底疯狂。当时一张sorry大帝价值有1800元之高，一张N卡最高炒到1万元以上，凡是18先生在群里提到的某个藏品，都能瞬间10万退市。</p>
+<p>那个时候他的影响力至今无人能敌，18先生也不愧是数藏第一人。<br>后来因为分蛋糕问题，18先生很遗憾的离开了1b，同时加入了42这个新台子，一样的谱写了一番新高度。再之后18先生创立了新台子名为十八数藏，在数藏圈再次炸裂来袭，运粮鼠1元一只上线，最高暴涨到8000元+，8000多倍的利润，能有谁可以做到啊?</p>
+<p>虽然数藏圈的热度正在慢慢下降，但是围绕18先生的话题还在不断上涨，割友们对18先生也是爱恨交加。<br>18先生是第一个提出2.0置换玩法，在数藏环境不佳的情况下仍旧能保持日交易额千万以上，相对18先生抛弃的1b当时在低估的时候日均交易额也只有几万元，说不定还是左手倒右手。</p>
+<p>18先生传奇的经历不止这些，他的神话自1b始，尚未终结。2024年18据说又联合了国家队搞什么数字资产，音乐版权，重回巅峰不知道是不是梦。</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>回忆录</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>记录十几年的折腾资产之路（二）</title>
     <url>/posts/zt2/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（二）"><a href="#记录十几年的折腾资产之路（二）" class="headerlink" title="记录十几年的折腾资产之路（二）"></a>记录十几年的折腾资产之路（二）</h1><h2 id="2019-2021，国外投资阶段"><a href="#2019-2021，国外投资阶段" class="headerlink" title="2019-2021，国外投资阶段"></a>2019-2021，国外投资阶段</h2><ul>
@@ -194,30 +218,6 @@
       </categories>
       <tags>
         <tag>回忆录</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>xLog+Crossbell区块链</title>
-    <url>/posts/a1/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><ul>
-<li>起因</li>
-<li>技术人员的方法</li>
-<li>从IPFS直接访问</li>
-<li>更好的永久存储</li>
-<li>感想</li>
-</ul>
-<h1 id="xLog，Crossbell区块链"><a href="#xLog，Crossbell区块链" class="headerlink" title="xLog，Crossbell区块链"></a>xLog，Crossbell区块链</h1><p>最近偶然看到了一个很有意思的东西，叫<a href="https://xlog.app/">xLog</a>，大概试了试，这是在一条叫Crossbell的区块链上使用智能合约操作和存储元数据，并把实际数据存到IPFS上的项目。看了一眼还挺有意思，就在上面搭了一个自己的另一个<a href="https://demo.xlog.app/">博客</a>，另外他们还使用这套方案写了一个类似Twitter的社交系统，也叫Crossbell，非常的人性化，可以说是把Web3真正的带给了普通用户。至于怎么搭他们的项目成员写了篇教程，5分钟就能搭好在<a href="https://song.xlog.app/5m-zh">Web3的博客</a>。<br>不过使用xLog那就不是技术人员的事了，而是让一个不怎么懂电脑的人来做的事情了。另外他们宣称数据是“Permanently stored on the blockchain”这一点我不太认同，要是说存到了Web3成为了其他人无法修改的数据，这倒是没什么问题，但是存到IPFS上只要没有被Pin，就有可能在节点GC的过程中永远消失。另外我其实对区块链接触不多，不清楚能不能完整的同步他们的链，如果不能那就是私链了，那样元数据也不能永久保留了……所以我只能说这个平台是Web3，可以保证不因为审查而404，但是不能在时间的长河中保留信息。</p>
-<h1 id="技术人员的方法"><a href="#技术人员的方法" class="headerlink" title="技术人员的方法"></a>技术人员的方法</h1><p>所以作为技术人员，我的博客当然直接上IPFS那更好啦，因为他们的平台毕竟可定制性不高，而且好多组件不知道有没有可替代性，比如以太坊JSON-RPC，不过他们的服务好像是都开源了，只要这个链可以被同步，能搭属于自己的RPC那倒是问题不大。<br>直接用IPFS客户端直接上传是最原生的办法，但是我不喜欢在自己电脑上安一堆莫名其妙的软件，像我现在写博客都是直接在Github或者Gitlab上写好然后直接用之前提到的静态页面服务商一次性部署好。所以我也希望能有一个类似的服务商能帮我把我的博客上传到IPFS上。最后我找到的服务商就是<a href="https://www.4everland.org/">4EVERLAND</a>。它可以绑定Git仓库并监听变化，当有变化的时候就会自动部署到IPFS上，并且他们提供免费的Gateway来直接访问在IPFS上的内容，非常的不错。不过有个问题就是不知道什么原因，它的部署模板里面没有Jekyll的语句，然后前端还不能自定义……所以只能靠抓包的方式来修改成自己想要的部署语句。</p>
-<h1 id="从IPFS直接访问"><a href="#从IPFS直接访问" class="headerlink" title="从IPFS直接访问"></a>从IPFS直接访问</h1><p>使用4everland部署完之后直接访问当然也很好，但是总感觉和其他服务商差不多，谁知道它读取网页到底是从自己服务器上还是IPFS网络上读取呢？所以我还想整个更好的方式从IPFS上读取，也能证明它确实在IPFS上了。<br>直接通过Gateway去访问我的博客当然也没问题，但是每次部署的时候CID是会变化的，那这样我想访问也不方便啊……后来我听说可以把CID用一种叫dnslink的方式记录到DNS里，这样就能通过固定又好记的方式来访问。不过那时候我不知道怎么访问dnslink记录的网站……而且每次部署CID会变，那部署完我还要更新我的DNS记录啊？后来我查了查原来还有一种叫IPNS的东西，看了一眼4everland的控制台，原来每个网站它也会生成一个固定的IPNS，然后用dnslink可以指向IPNS。那如何访问呢？IPFS又没有一个IP地址，光TXT记录肯定不够的吧？后来我才知道原来要用CNAME解析到Gateway才能访问，设置之后每次访问Gateway就会自动解析在TXT记录里的dnslink了。这不比xLog自由度高？不过我这个没办法存评论数据，可能xLog的特色就是社交吧，毕竟他们的主项目Crossbell就是主打的社交。希望可以整一个单独的插件，专门用他们的网络来为我这种静态博客提供评论功能，也是一个不错的选择（毕竟ETH公链上的手续费太贵啦😂）。</p>
-<h1 id="更好的永久存储"><a href="#更好的永久存储" class="headerlink" title="更好的永久存储"></a>更好的永久存储</h1><p>前面我说过，IPFS只能防止篡改，但不是作为永久存储的方案，上公链当然是也一种永久存储的方案但是成本太高了我付不起。后来我了解到一种叫做Arweave的东西可以永久存储你的数据，不过这不是免费的，想存得要付AR币到链上才可以。还好4EVERLAND提供了一些免费上传到AR网络的额度，非常的不错，这样我以后每次上传我会把地址写到Github的Releases里面，进一步的提高我博客永久存储的可能性。<br>另外我还听说似乎还有一种叫做ZeroNet的东西也是通过分布式的方式存储数据，据群友所说也能在一定程度上永久存储。不过我试了试访问实在是太困难了😂，而且现在程序也不在维护了，所以也就放弃了。</p>
-<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><p>Web3真是发展的越来越好了，希望能有更多的人参与其中，一起创建不受管束的网络吧。（还有实现我Forever计划😝）<br>不过说来我也挺担心那个Crossbell（就是xLog用的链）的项目，作为不受监管的平台只要知名度上来肯定会被滥用到死，希望他们能活得更长一些吧。</p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>区块链</tag>
-        <tag>web3</tag>
       </tags>
   </entry>
   <entry>
