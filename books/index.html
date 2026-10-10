@@ -479,7 +479,7 @@ main{max-width:var(--maxw);margin:0 auto;padding:20px}
     else { sm.textContent = "（这本书没有收录简介）"; sm.className = "psum none"; }
     $("mid").textContent = "ID " + b.id;
     var rb = $("readBtn"), db = $("dlBtn");
-    if (rb) rb.href = READER + "/api/read/" + encodeURIComponent(b.id);
+    if (rb) rb.href = READER + "/reader?id=" + encodeURIComponent(b.id);
     if (db) db.href = READER + "/api/download/" + encodeURIComponent(b.id);
     $("mask").classList.add("on");
     document.body.style.overflow = "hidden";
