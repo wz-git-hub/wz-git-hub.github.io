@@ -215,15 +215,43 @@ main{max-width:var(--maxw);margin:0 auto;padding:18px 20px 60px}
 .note code{font-size:11.5px}
 
 @media (max-width:760px){
-  .topin{padding:9px 14px}
-  main{padding:14px 14px 50px}
+  .topin{padding:8px 12px}
+  main{padding:12px 12px 46px}
   .brand .sub,.stats{display:none}
   #feed{grid-template-columns:1fr}
-  .hotstrip{grid-template-columns:1fr 1fr}
+  .hotstrip{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
   .card .thumb{width:82px;height:58px}
+  .status{padding:7px 10px;margin-bottom:10px;font-size:12px}
+  .secttl{margin:2px 0 8px}
+
+  /* 头部紧凑化：搜索框与日期选择同排，频道 chips 单行横向滑动。
+     原布局在手机上会折成 7 行（chips 占 4 行），sticky 头部近半屏，
+     热榜被压在下面并从头部的半透明底透出来 —— 即“浮在上方”。 */
+  .top{
+    position:-webkit-sticky;position:sticky;
+    background:var(--bg);            /* 手机端改为不透明，杜绝内容透出 */
+  }
+  .row1{gap:8px}
+  .row2{gap:8px;margin-top:8px}
+  .row2 .spacer{display:none}
+  .search{order:1;flex:1 1 130px;min-width:0;max-width:100%}
+  select.sel{order:2;flex:0 0 auto;max-width:44%}
+  .chips{
+    order:3;flex:1 1 100%;
+    flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;padding-bottom:2px;
+  }
+  .chips::-webkit-scrollbar{display:none}
+  .chip{padding:5px 10px;font-size:12px}
 }
 @media (max-width:480px){
   .hotstrip{grid-template-columns:1fr}
+  .hot{padding:9px 10px;gap:9px}
+  .hot .ht{font-size:13px}
+  .card .ttl{font-size:13.5px}
+  .card .abs{-webkit-line-clamp:2}
+  main{padding:10px 10px 44px}
 }
 </style>
 </head>
@@ -401,10 +429,21 @@ main{max-width:var(--maxw);margin:0 auto;padding:18px 20px 60px}
   function abs(p){ return p ? (BASE + p) : ""; }
 
   /* ---------- 渲染 ---------- */
+  /* 打开阅读页：优先站内阅读（需要 item_id），缺失时退回原文链接 */
+  function openArticle(id, origin){
+    var iid = id || "";
+    var u = iid ? (BASE + "/article?id=" + encodeURIComponent(iid)) : (origin || "");
+    if (!u) return;
+    window.open(u, "_blank", "noopener");
+  }
+
   function hotHTML(it, i){
     var rk = i + 1;
     var cls = rk === 1 ? "top" : (rk === 2 ? "t2" : (rk === 3 ? "t3" : ""));
-    return '<article class="hot" data-id="' + esc(it.item_id) + '" title="' + esc(it.title) + '">' +
+    /* 热榜行来自 hot_snapshot，item_id 可能为空 —— 兼容 cluster_id，并保留原文链接兜底 */
+    var id = it.item_id || it.cluster_id || "";
+    return '<article class="hot" data-id="' + esc(id) + '" data-orig="' + esc(it.origin_url || "") +
+      '" title="' + esc(it.title) + '">' +
       '<span class="rk ' + cls + '">' + rk + '</span>' +
       '<span class="ht">' + esc(it.title) + '</span>' +
       '<span class="hv">' + esc(hotLabel(it.hot_value)) + '</span>' +
@@ -431,7 +470,8 @@ main{max-width:var(--maxw);margin:0 auto;padding:18px 20px 60px}
       ago(it.item_time || it.first_seen),
       it.comments_count ? it.comments_count + " 评论" : ""
     ].filter(Boolean).join(" · ");
-    return '<article class="card" data-id="' + esc(it.item_id) + '">' +
+    return '<article class="card" data-id="' + esc(it.item_id || "") +
+      '" data-orig="' + esc(it.origin_url || "") + '">' +
       '<div class="body">' +
         '<div class="ttl">' + esc(it.title) + '</div>' +
         (it.abstract ? '<div class="abs">' + esc(it.abstract) + '</div>' : '') +
@@ -564,12 +604,12 @@ main{max-width:var(--maxw);margin:0 auto;padding:18px 20px 60px}
   $("feed").addEventListener("click", function(e){
     var c = e.target.closest ? e.target.closest(".card") : null;
     if (!c) return;
-    window.open(BASE + "/article?id=" + encodeURIComponent(c.getAttribute("data-id")), "_blank", "noopener");
+    openArticle(c.getAttribute("data-id"), c.getAttribute("data-orig"));
   });
   $("hotstrip").addEventListener("click", function(e){
     var c = e.target.closest ? e.target.closest(".hot") : null;
     if (!c) return;
-    window.open(BASE + "/article?id=" + encodeURIComponent(c.getAttribute("data-id")), "_blank", "noopener");
+    openArticle(c.getAttribute("data-id"), c.getAttribute("data-orig"));
   });
 
   var qEl = $("q"), qTimer = null;
