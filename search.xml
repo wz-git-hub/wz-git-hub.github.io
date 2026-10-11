@@ -1,41 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>ForeverBlog</title>
-    <url>/posts/1/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="Forever-Blog"><a href="#Forever-Blog" class="headerlink" title="Forever Blog"></a>Forever Blog</h1><h2 id="一想起永久，我就想起王菲的歌"><a href="#一想起永久，我就想起王菲的歌" class="headerlink" title="一想起永久，我就想起王菲的歌"></a>一想起永久，我就想起王菲的歌</h2><p><strong>有时候有时候 我会相信一切有尽头 相聚离开都有时候 没有什么会永垂不朽</strong></p>
-<ul>
-<li>我不能避免死亡，我害怕死后什么都没有留下来。</li>
-<li>作为默默无闻的一人，没有什么闪耀，慢慢的也过了创造奇迹的年纪，我的世界一片黑暗。</li>
-</ul>
-<h2 id="想来想去，只能用老本行，科技改变命运"><a href="#想来想去，只能用老本行，科技改变命运" class="headerlink" title="想来想去，只能用老本行，科技改变命运!"></a>想来想去，只能用老本行，科技改变命运!</h2><ol>
-<li>曾经看过一个老美电影，就是一个极客得了绝症，为了家人，然后把自己的意识上传网络，让自己完全活在了网络中，家人还可以和网络中的极客对话。有一段时间有新闻说，可以使用AI重建去世亲人，我觉得都是同一类事情。</li>
-<li>现阶段我只懂一些鸡肋IT，就做一个简简单单的Forever Blog吧，后面再慢慢完善下去！</li>
-<li>现在我一个人更新Blog，以后可能会告诉家人，可以合力把Blog更起来。既然是Forever Blog，能子子孙孙的更新下去，也是奇迹呢。</li>
-</ol>
-<p><strong>作为永生博客，我简单的想法就是百年之后，博客仍然可以运行，哈哈😝，这样就可以让世人知道，曾经世上还有这人这事存在过!</strong></p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>ForeverBlog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>python基于cv2图像超分辨率重建</title>
-    <url>/posts/a5/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="python基于cv2图像超分辨率重建"><a href="#python基于cv2图像超分辨率重建" class="headerlink" title="python基于cv2图像超分辨率重建"></a>python基于cv2图像超分辨率重建</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">img_chuli_plt2</span>():</span><br><span class="line">    <span class="keyword">import</span> cv2</span><br><span class="line">    <span class="keyword">import</span> random</span><br><span class="line">    <span class="comment"># import imutils</span></span><br><span class="line">    <span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 彩色图像每个像素值是[x,y,z], 灰度图像每个像素值便是一个np.uint8</span></span><br><span class="line">    path = <span class="string">&#x27;./img/0.jpg&#x27;</span> <span class="comment"># 路径图片</span></span><br><span class="line">    image = cv2.imread(path)</span><br><span class="line">    gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 图像大小调整</span></span><br><span class="line">    ori_h, ori_w = image.shape[:<span class="number">2</span>]</span><br><span class="line">    height, width = gray_img.shape[:<span class="number">2</span>]</span><br><span class="line">    image = cv2.resize(image, (<span class="built_in">int</span>(ori_w / ori_h * <span class="number">400</span>), <span class="number">400</span>), interpolation=cv2.INTER_CUBIC)</span><br><span class="line">    gray_img = cv2.resize(gray_img, (<span class="built_in">int</span>(width / height * <span class="number">400</span>), <span class="number">400</span>), interpolation=cv2.INTER_CUBIC)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a&lt;0 and b=0: 图像的亮区域变暗，暗区域变亮</span></span><br><span class="line">    a, b = -<span class="number">0.5</span>, <span class="number">0</span></span><br><span class="line">    new_img1 = np.ones((gray_img.shape[<span class="number">0</span>], gray_img.shape[<span class="number">1</span>]), dtype=np.uint8)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(new_img1.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(new_img1.shape[<span class="number">1</span>]):</span><br><span class="line">            new_img1[i][j] = gray_img[i][j] * a + b</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a&gt;1: 增强图像的对比度,图像看起来更加清晰</span></span><br><span class="line">    a, b = <span class="number">1.5</span>, <span class="number">20</span></span><br><span class="line">    new_img2 = np.ones((gray_img.shape[<span class="number">0</span>], gray_img.shape[<span class="number">1</span>]), dtype=np.uint8)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(new_img2.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(new_img2.shape[<span class="number">1</span>]):</span><br><span class="line">            <span class="keyword">if</span> gray_img[i][j] * a + b &gt; <span class="number">255</span>:</span><br><span class="line">                new_img2[i][j] = <span class="number">255</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                new_img2[i][j] = gray_img[i][j] * a + b</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a&lt;1: 减小了图像的对比度, 图像看起来变暗</span></span><br><span class="line">    a, b = <span class="number">0.5</span>, <span class="number">0</span></span><br><span class="line">    new_img3 = np.ones((gray_img.shape[<span class="number">0</span>], gray_img.shape[<span class="number">1</span>]), dtype=np.uint8)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(new_img3.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(new_img3.shape[<span class="number">1</span>]):</span><br><span class="line">            new_img3[i][j] = gray_img[i][j] * a + b</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a=1且b≠0, 图像整体的灰度值上移或者下移, 也就是图像整体变亮或者变暗, 不会改变图像的对比度</span></span><br><span class="line">    a, b = <span class="number">1</span>, -<span class="number">50</span></span><br><span class="line">    new_img4 = np.ones((gray_img.shape[<span class="number">0</span>], gray_img.shape[<span class="number">1</span>]), dtype=np.uint8)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(new_img4.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(new_img4.shape[<span class="number">1</span>]):</span><br><span class="line">            pix = gray_img[i][j] * a + b</span><br><span class="line">            <span class="keyword">if</span> pix &gt; <span class="number">255</span>:</span><br><span class="line">                new_img4[i][j] = <span class="number">255</span></span><br><span class="line">            <span class="keyword">elif</span> pix &lt; <span class="number">0</span>:</span><br><span class="line">                new_img4[i][j] = <span class="number">0</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                new_img4[i][j] = pix</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a=-1, b=255, 图像翻转</span></span><br><span class="line">    new_img5 = <span class="number">255</span> - gray_img</span><br><span class="line"></span><br><span class="line">    cv2.imshow(<span class="string">&#x27;origin&#x27;</span>, image)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;gray&#x27;</span>, gray_img)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a&lt;0 and b=0&#x27;</span>, new_img1)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a&gt;1 and b&gt;=0&#x27;</span>,new_img2)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a&lt;1 and b&gt;=0&#x27;</span>,new_img3)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a=1 and b&gt;&lt;0&#x27;</span>,new_img4)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a=-1 and b=255&#x27;</span>,new_img5)</span><br><span class="line">    <span class="keyword">if</span> cv2.waitKey(<span class="number">0</span>) == <span class="number">27</span>:</span><br><span class="line">        cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>分享</category>
-      </categories>
-      <tags>
-        <tag>分享</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>xLog+Crossbell区块链</title>
     <url>/posts/a1/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><ul>
@@ -57,6 +22,28 @@
       <tags>
         <tag>区块链</tag>
         <tag>web3</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ForeverBlog</title>
+    <url>/posts/1/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="Forever-Blog"><a href="#Forever-Blog" class="headerlink" title="Forever Blog"></a>Forever Blog</h1><h2 id="一想起永久，我就想起王菲的歌"><a href="#一想起永久，我就想起王菲的歌" class="headerlink" title="一想起永久，我就想起王菲的歌"></a>一想起永久，我就想起王菲的歌</h2><p><strong>有时候有时候 我会相信一切有尽头 相聚离开都有时候 没有什么会永垂不朽</strong></p>
+<ul>
+<li>我不能避免死亡，我害怕死后什么都没有留下来。</li>
+<li>作为默默无闻的一人，没有什么闪耀，慢慢的也过了创造奇迹的年纪，我的世界一片黑暗。</li>
+</ul>
+<h2 id="想来想去，只能用老本行，科技改变命运"><a href="#想来想去，只能用老本行，科技改变命运" class="headerlink" title="想来想去，只能用老本行，科技改变命运!"></a>想来想去，只能用老本行，科技改变命运!</h2><ol>
+<li>曾经看过一个老美电影，就是一个极客得了绝症，为了家人，然后把自己的意识上传网络，让自己完全活在了网络中，家人还可以和网络中的极客对话。有一段时间有新闻说，可以使用AI重建去世亲人，我觉得都是同一类事情。</li>
+<li>现阶段我只懂一些鸡肋IT，就做一个简简单单的Forever Blog吧，后面再慢慢完善下去！</li>
+<li>现在我一个人更新Blog，以后可能会告诉家人，可以合力把Blog更起来。既然是Forever Blog，能子子孙孙的更新下去，也是奇迹呢。</li>
+</ol>
+<p><strong>作为永生博客，我简单的想法就是百年之后，博客仍然可以运行，哈哈😝，这样就可以让世人知道，曾经世上还有这人这事存在过!</strong></p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>ForeverBlog</tag>
       </tags>
   </entry>
   <entry>
@@ -113,15 +100,10 @@
       </tags>
   </entry>
   <entry>
-    <title>分享网盘及存储</title>
-    <url>/posts/a3/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="分享一个我正在用的网盘"><a href="#分享一个我正在用的网盘" class="headerlink" title="分享一个我正在用的网盘"></a>分享一个我正在用的网盘</h1><p><strong>就是大名鼎鼎微软的OneDrive</strong><br>话说国内的网盘市场已经被百度网盘垄断了<br>百度网盘不付费的话，下载速度没得说，慢的一比<br>唯一的好处就是资源多<br>大家都在百度上分享链接<br>例如，<a href="http://www.yunpangou.com/">云盘狗</a><br>百度大而不倒</p>
-<hr>
-<h2 id="OneDrive"><a href="#OneDrive" class="headerlink" title="OneDrive"></a>OneDrive</h2><p>OneDrive好处就是有Office365，办公同步真方便<br>然后空间巨大，不限速<br>一定要taobao买一个商用版的，个人版的被墙了<br>找一个销量好的，5T空间也就20块<br>我买了一个25T的<br>然后用了RaiDrive_1.8.0挂载到个人电脑上<br>注意了一定要RaiDrive_1.8.0，不然没有写权限</p>
-<hr>
-<h2 id="OneDrive可以做私人网盘"><a href="#OneDrive可以做私人网盘" class="headerlink" title="OneDrive可以做私人网盘"></a>OneDrive可以做私人网盘</h2><p>搜索私人网盘搭建，网络上一堆堆攻略。<br>按照之前的经验来看，需要云服务器，开个新账户阿里腾讯云，买三年很便宜，博主都已经玩过一遍了。<br>推荐：Cloudreve</p>
-<hr>
-<h2 id="Web3存储"><a href="#Web3存储" class="headerlink" title="Web3存储"></a>Web3存储</h2><p>前几年Web3大爆发的时候，Web3存储横空出世，File这个cx币，刚出来的时候起飞上天，被称为以太之后的币⚪第三次创新革命。<br>从叙事上来说，Web3存储有些亮点，AR（arweave）通过简化数字世界 <strong>一次付款</strong>, <strong>永远存储</strong> ，数据可以维持200年，比只能维持20年的web2，超出一个数量级。<br>到底是画饼，还是确实，只能拭目以待了。Web3的世界起飞和爆炸往往都在几个瞬间。</p>
+    <title>python基于cv2图像超分辨率重建</title>
+    <url>/posts/a5/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="python基于cv2图像超分辨率重建"><a href="#python基于cv2图像超分辨率重建" class="headerlink" title="python基于cv2图像超分辨率重建"></a>python基于cv2图像超分辨率重建</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">img_chuli_plt2</span>():</span><br><span class="line">    <span class="keyword">import</span> cv2</span><br><span class="line">    <span class="keyword">import</span> random</span><br><span class="line">    <span class="comment"># import imutils</span></span><br><span class="line">    <span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 彩色图像每个像素值是[x,y,z], 灰度图像每个像素值便是一个np.uint8</span></span><br><span class="line">    path = <span class="string">&#x27;./img/0.jpg&#x27;</span> <span class="comment"># 路径图片</span></span><br><span class="line">    image = cv2.imread(path)</span><br><span class="line">    gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 图像大小调整</span></span><br><span class="line">    ori_h, ori_w = image.shape[:<span class="number">2</span>]</span><br><span class="line">    height, width = gray_img.shape[:<span class="number">2</span>]</span><br><span class="line">    image = cv2.resize(image, (<span class="built_in">int</span>(ori_w / ori_h * <span class="number">400</span>), <span class="number">400</span>), interpolation=cv2.INTER_CUBIC)</span><br><span class="line">    gray_img = cv2.resize(gray_img, (<span class="built_in">int</span>(width / height * <span class="number">400</span>), <span class="number">400</span>), interpolation=cv2.INTER_CUBIC)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a&lt;0 and b=0: 图像的亮区域变暗，暗区域变亮</span></span><br><span class="line">    a, b = -<span class="number">0.5</span>, <span class="number">0</span></span><br><span class="line">    new_img1 = np.ones((gray_img.shape[<span class="number">0</span>], gray_img.shape[<span class="number">1</span>]), dtype=np.uint8)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(new_img1.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(new_img1.shape[<span class="number">1</span>]):</span><br><span class="line">            new_img1[i][j] = gray_img[i][j] * a + b</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a&gt;1: 增强图像的对比度,图像看起来更加清晰</span></span><br><span class="line">    a, b = <span class="number">1.5</span>, <span class="number">20</span></span><br><span class="line">    new_img2 = np.ones((gray_img.shape[<span class="number">0</span>], gray_img.shape[<span class="number">1</span>]), dtype=np.uint8)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(new_img2.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(new_img2.shape[<span class="number">1</span>]):</span><br><span class="line">            <span class="keyword">if</span> gray_img[i][j] * a + b &gt; <span class="number">255</span>:</span><br><span class="line">                new_img2[i][j] = <span class="number">255</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                new_img2[i][j] = gray_img[i][j] * a + b</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a&lt;1: 减小了图像的对比度, 图像看起来变暗</span></span><br><span class="line">    a, b = <span class="number">0.5</span>, <span class="number">0</span></span><br><span class="line">    new_img3 = np.ones((gray_img.shape[<span class="number">0</span>], gray_img.shape[<span class="number">1</span>]), dtype=np.uint8)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(new_img3.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(new_img3.shape[<span class="number">1</span>]):</span><br><span class="line">            new_img3[i][j] = gray_img[i][j] * a + b</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a=1且b≠0, 图像整体的灰度值上移或者下移, 也就是图像整体变亮或者变暗, 不会改变图像的对比度</span></span><br><span class="line">    a, b = <span class="number">1</span>, -<span class="number">50</span></span><br><span class="line">    new_img4 = np.ones((gray_img.shape[<span class="number">0</span>], gray_img.shape[<span class="number">1</span>]), dtype=np.uint8)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(new_img4.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(new_img4.shape[<span class="number">1</span>]):</span><br><span class="line">            pix = gray_img[i][j] * a + b</span><br><span class="line">            <span class="keyword">if</span> pix &gt; <span class="number">255</span>:</span><br><span class="line">                new_img4[i][j] = <span class="number">255</span></span><br><span class="line">            <span class="keyword">elif</span> pix &lt; <span class="number">0</span>:</span><br><span class="line">                new_img4[i][j] = <span class="number">0</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                new_img4[i][j] = pix</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a=-1, b=255, 图像翻转</span></span><br><span class="line">    new_img5 = <span class="number">255</span> - gray_img</span><br><span class="line"></span><br><span class="line">    cv2.imshow(<span class="string">&#x27;origin&#x27;</span>, image)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;gray&#x27;</span>, gray_img)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a&lt;0 and b=0&#x27;</span>, new_img1)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a&gt;1 and b&gt;=0&#x27;</span>,new_img2)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a&lt;1 and b&gt;=0&#x27;</span>,new_img3)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a=1 and b&gt;&lt;0&#x27;</span>,new_img4)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a=-1 and b=255&#x27;</span>,new_img5)</span><br><span class="line">    <span class="keyword">if</span> cv2.waitKey(<span class="number">0</span>) == <span class="number">27</span>:</span><br><span class="line">        cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>分享</category>
@@ -175,6 +157,24 @@
       </tags>
   </entry>
   <entry>
+    <title>分享网盘及存储</title>
+    <url>/posts/a3/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="分享一个我正在用的网盘"><a href="#分享一个我正在用的网盘" class="headerlink" title="分享一个我正在用的网盘"></a>分享一个我正在用的网盘</h1><p><strong>就是大名鼎鼎微软的OneDrive</strong><br>话说国内的网盘市场已经被百度网盘垄断了<br>百度网盘不付费的话，下载速度没得说，慢的一比<br>唯一的好处就是资源多<br>大家都在百度上分享链接<br>例如，<a href="http://www.yunpangou.com/">云盘狗</a><br>百度大而不倒</p>
+<hr>
+<h2 id="OneDrive"><a href="#OneDrive" class="headerlink" title="OneDrive"></a>OneDrive</h2><p>OneDrive好处就是有Office365，办公同步真方便<br>然后空间巨大，不限速<br>一定要taobao买一个商用版的，个人版的被墙了<br>找一个销量好的，5T空间也就20块<br>我买了一个25T的<br>然后用了RaiDrive_1.8.0挂载到个人电脑上<br>注意了一定要RaiDrive_1.8.0，不然没有写权限</p>
+<hr>
+<h2 id="OneDrive可以做私人网盘"><a href="#OneDrive可以做私人网盘" class="headerlink" title="OneDrive可以做私人网盘"></a>OneDrive可以做私人网盘</h2><p>搜索私人网盘搭建，网络上一堆堆攻略。<br>按照之前的经验来看，需要云服务器，开个新账户阿里腾讯云，买三年很便宜，博主都已经玩过一遍了。<br>推荐：Cloudreve</p>
+<hr>
+<h2 id="Web3存储"><a href="#Web3存储" class="headerlink" title="Web3存储"></a>Web3存储</h2><p>前几年Web3大爆发的时候，Web3存储横空出世，File这个cx币，刚出来的时候起飞上天，被称为以太之后的币⚪第三次创新革命。<br>从叙事上来说，Web3存储有些亮点，AR（arweave）通过简化数字世界 <strong>一次付款</strong>, <strong>永远存储</strong> ，数据可以维持200年，比只能维持20年的web2，超出一个数量级。<br>到底是画饼，还是确实，只能拭目以待了。Web3的世界起飞和爆炸往往都在几个瞬间。</p>
+]]></content>
+      <categories>
+        <category>分享</category>
+      </categories>
+      <tags>
+        <tag>分享</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>记录十几年的折腾资产之路（三）——续</title>
     <url>/posts/zt3-1/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（三）——续"><a href="#记录十几年的折腾资产之路（三）——续" class="headerlink" title="记录十几年的折腾资产之路（三）——续"></a>记录十几年的折腾资产之路（三）——续</h1><h2 id="今天就简单聊一聊数藏第一人吧"><a href="#今天就简单聊一聊数藏第一人吧" class="headerlink" title="今天就简单聊一聊数藏第一人吧"></a>今天就简单聊一聊数藏第一人吧</h2><p>国内数藏圈虽然圈子不大，但是创造神话。臭名昭著的18先生的很多传奇故事。18先生（柏松先生）这个名号在数藏圈也是无人不知无人不晓，更是很多割友心目中的数藏第一人。  </p>
@@ -185,6 +185,23 @@
 <p>那个时候他的影响力至今无人能敌，18先生也不愧是数藏第一人。<br>后来因为分蛋糕问题，18先生很遗憾的离开了1b，同时加入了42这个新台子，一样的谱写了一番新高度。再之后18先生创立了新台子名为十八数藏，在数藏圈再次炸裂来袭，运粮鼠1元一只上线，最高暴涨到8000元+，8000多倍的利润，能有谁可以做到啊?</p>
 <p>虽然数藏圈的热度正在慢慢下降，但是围绕18先生的话题还在不断上涨，割友们对18先生也是爱恨交加。<br>18先生是第一个提出2.0置换玩法，在数藏环境不佳的情况下仍旧能保持日交易额千万以上，相对18先生抛弃的1b当时在低估的时候日均交易额也只有几万元，说不定还是左手倒右手。</p>
 <p>18先生传奇的经历不止这些，他的神话自1b始，尚未终结。2024年18据说又联合了国家队搞什么数字资产，音乐版权，重回巅峰不知道是不是梦。</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>回忆录</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录十几年的折腾资产之路（四）</title>
+    <url>/posts/zt4/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（四）"><a href="#记录十几年的折腾资产之路（四）" class="headerlink" title="记录十几年的折腾资产之路（四）"></a>记录十几年的折腾资产之路（四）</h1><h2 id="2022-2023-01，数藏投资阶段"><a href="#2022-2023-01，数藏投资阶段" class="headerlink" title="2022-2023.01，数藏投资阶段"></a>2022-2023.01，数藏投资阶段</h2><h3 id="接着上回说ibox"><a href="#接着上回说ibox" class="headerlink" title="接着上回说ibox"></a>接着上回说ibox</h3><p>ibox在2022年5月迎来大牛市，但就是在5月十几号（具体日子记不清了），ibox泡沫太大了，迎来了大崩盘。消息面上18说有对手造谣中伤，盘面上ibox维持了几天藏品超高价格，官方还是发新品上演鸡生蛋钱生钱的老剧本，资金盘老玩法。ibox这个崩盘有多大呢？可以说刷新大家三观，我记得从下午开始阴跌，一直几个小时跌到傍晚，最夸张一个藏品的价格跌了90%以上，就是说原本1万的藏品跌到只值1千。而且在跌的过程中很少有反弹，我试着挂几个藏品，卖不出去，只有挂最低才能卖出，那样十分亏本。</p>
+<p>前面唯一艺术崩盘过50%以上，ibox跌了90%，慌了，18在各种群里面给大家打气，有藏品的没藏品都理智了，大家发现ibox的神话破灭了。我在ibox的藏品缩水了很多，心里面特别不甘，但是也没有办法。在藏品高位的时候，我其实设定过一个盈利目标，但是就差大概50%的样子。而且事后我反复复盘，我的投资风格就是长期，不然我早就清盘很多了，既然是这种风格，就很难卖在顶峰。哪个投资能精准逃顶呢？抄底和逃顶完全是碰运气的事情。</p>
+<p>在当时我寄希望ibox有一个二轮顶，因为做投资的都知道很多资产都有二轮顶。币圈出现了二轮顶，二轮比一轮还高一点。可惜快到9月份，ibox才小爆发了一下，这个小爆发没有持续多久，和之前的牛市相差太远了。</p>
+<p>ibox大崩盘之后，只有再隔天出现了最大的反弹，之后就一路阴跌，跌了一个月，官方坐不住了，出乎意料的是官方拿策划18开刀，因为我一直认为18算是ibox的王牌。当时18出走的说法众说纷纭啊，回头来看无外乎几种。一是分赃不均，18没有ibox的股份，个人认为这并非主要原因，后面的策划据说有股份但也退隐了；二是玩法理念不同，官方想趁热多发新品赚钱，而18想控制发新通缩拉盘；三和二有些类似，就是官方就是想换新策划用来拉盘拉人气，从后面来看ibox多次换策划，就是想用新人拉人气。总而言之，ibox迎来了新策划光头，光头在数藏圈当初也是风云人物，光头开创了数藏策划抖音拉盘的先例，当初也算是耳目一新。就因为光头抖音引流，一批人开始直播炒数藏，那时真是热闹，直播间里面成千上万人，弹幕也能刷起来。光头各种画大饼整活，有时候会有奇效，很多光头经典语录，当初数藏圈传了一遍又一遍。</p>
+<p>前面我说了ibox的小爆发在9月，光头当初的说法就是发大招了，大招就是老三样。一是拉新，玩法还是传承着18的，拉人送空投；二是打榜，老玩法，但是据光头说下了血本，第一名奖励玛莎拉蒂跑车；三是弄了抽奖游戏，消耗藏品抽藏品，跟合成出藏品一个道理，换汤不换药。</p>
+<p>我大约在ibox的小爆发后，终于失去了耐心，我认识到，ibox再不能重回巅峰了。当时ibox发出的新品比牛市的时候多出几倍，而市值相差很远，而光头还要继续发很多新藏品。我狠心基本上把值钱的都卖完了，只留下一些不值钱的老藏品。就这样，离开的时候也套现了几十万，ibox生涯宣告结束。</p>
 ]]></content>
       <categories>
         <category>Docs文檔</category>
@@ -212,23 +229,6 @@
 <li>疫情来了，币圈和美股有同步，不同的是币圈只用了一个晚上。我清楚的记得是一个寒风阵阵的傍晚，暴跌，3k大饼，80u的以太都看到过，仓位都快到脚脖子了。紧接着第二天行情也没太起来，恐怖的是defi抵押借贷快触及平仓线，那样就爆仓归零了，连忙又拿应急的钱买了5千rmb的以太。</li>
 <li>之后对币圈有点灰心了，亏了几万，也不舍得割肉，但神奇的也是，疫情的时候那么恐慌，币价却没怎么再跌。我套了大半年，神奇的又回来了，后面nft爆火，我不干寂寞又卖了以太，玩别的去了，成功错过了21年币圈大牛。</li>
 </ul>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>回忆录</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录十几年的折腾资产之路（四）</title>
-    <url>/posts/zt4/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（四）"><a href="#记录十几年的折腾资产之路（四）" class="headerlink" title="记录十几年的折腾资产之路（四）"></a>记录十几年的折腾资产之路（四）</h1><h2 id="2022-2023-01，数藏投资阶段"><a href="#2022-2023-01，数藏投资阶段" class="headerlink" title="2022-2023.01，数藏投资阶段"></a>2022-2023.01，数藏投资阶段</h2><h3 id="接着上回说ibox"><a href="#接着上回说ibox" class="headerlink" title="接着上回说ibox"></a>接着上回说ibox</h3><p>ibox在2022年5月迎来大牛市，但就是在5月十几号（具体日子记不清了），ibox泡沫太大了，迎来了大崩盘。消息面上18说有对手造谣中伤，盘面上ibox维持了几天藏品超高价格，官方还是发新品上演鸡生蛋钱生钱的老剧本，资金盘老玩法。ibox这个崩盘有多大呢？可以说刷新大家三观，我记得从下午开始阴跌，一直几个小时跌到傍晚，最夸张一个藏品的价格跌了90%以上，就是说原本1万的藏品跌到只值1千。而且在跌的过程中很少有反弹，我试着挂几个藏品，卖不出去，只有挂最低才能卖出，那样十分亏本。</p>
-<p>前面唯一艺术崩盘过50%以上，ibox跌了90%，慌了，18在各种群里面给大家打气，有藏品的没藏品都理智了，大家发现ibox的神话破灭了。我在ibox的藏品缩水了很多，心里面特别不甘，但是也没有办法。在藏品高位的时候，我其实设定过一个盈利目标，但是就差大概50%的样子。而且事后我反复复盘，我的投资风格就是长期，不然我早就清盘很多了，既然是这种风格，就很难卖在顶峰。哪个投资能精准逃顶呢？抄底和逃顶完全是碰运气的事情。</p>
-<p>在当时我寄希望ibox有一个二轮顶，因为做投资的都知道很多资产都有二轮顶。币圈出现了二轮顶，二轮比一轮还高一点。可惜快到9月份，ibox才小爆发了一下，这个小爆发没有持续多久，和之前的牛市相差太远了。</p>
-<p>ibox大崩盘之后，只有再隔天出现了最大的反弹，之后就一路阴跌，跌了一个月，官方坐不住了，出乎意料的是官方拿策划18开刀，因为我一直认为18算是ibox的王牌。当时18出走的说法众说纷纭啊，回头来看无外乎几种。一是分赃不均，18没有ibox的股份，个人认为这并非主要原因，后面的策划据说有股份但也退隐了；二是玩法理念不同，官方想趁热多发新品赚钱，而18想控制发新通缩拉盘；三和二有些类似，就是官方就是想换新策划用来拉盘拉人气，从后面来看ibox多次换策划，就是想用新人拉人气。总而言之，ibox迎来了新策划光头，光头在数藏圈当初也是风云人物，光头开创了数藏策划抖音拉盘的先例，当初也算是耳目一新。就因为光头抖音引流，一批人开始直播炒数藏，那时真是热闹，直播间里面成千上万人，弹幕也能刷起来。光头各种画大饼整活，有时候会有奇效，很多光头经典语录，当初数藏圈传了一遍又一遍。</p>
-<p>前面我说了ibox的小爆发在9月，光头当初的说法就是发大招了，大招就是老三样。一是拉新，玩法还是传承着18的，拉人送空投；二是打榜，老玩法，但是据光头说下了血本，第一名奖励玛莎拉蒂跑车；三是弄了抽奖游戏，消耗藏品抽藏品，跟合成出藏品一个道理，换汤不换药。</p>
-<p>我大约在ibox的小爆发后，终于失去了耐心，我认识到，ibox再不能重回巅峰了。当时ibox发出的新品比牛市的时候多出几倍，而市值相差很远，而光头还要继续发很多新藏品。我狠心基本上把值钱的都卖完了，只留下一些不值钱的老藏品。就这样，离开的时候也套现了几十万，ibox生涯宣告结束。</p>
 ]]></content>
       <categories>
         <category>Docs文檔</category>

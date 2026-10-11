@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>头条资讯 | Forever BLog</title>
+<meta name="description" content="实时新闻资讯 —— 热榜 / 频道 / 按日期翻历史，由本机新闻服务经 Cloudflare 隧道提供。">
+<link rel="icon" href="/img/favicon.png">
+<style>
+:root{
+  --accent:#D50030;
+  --accent2:#ff3b5c;
+  --radius:12px;
+  --maxw:1240px;
+}
+html[data-theme="dark"]{
+  --bg:#0d0d0d; --bg2:#121212; --card:#15171b; --card2:#1c1f24;
+  --border:rgba(255,255,255,.09); --border2:rgba(255,255,255,.18);
+  --text:#e6e8eb; --dim:#8b929c; --dim2:#6b7280;
+  --head:rgba(13,13,13,.80); --shadow:0 12px 28px rgba(0,0,0,.55);
+  --accent-text:#ff5c78;
+  --chipbg:rgba(255,255,255,.05);
+  --ph:linear-gradient(135deg,#1e2126,#2a2e35);
+}
+html[data-theme="light"]{
+  --bg:#f5f6f8; --bg2:#fff; --card:#fff; --card2:#f0f2f5;
+  --border:rgba(0,0,0,.09); --border2:rgba(0,0,0,.2);
+  --text:#22272e; --dim:#6b7280; --dim2:#9aa0a6;
+  --head:rgba(255,255,255,.85); --shadow:0 12px 28px rgba(15,23,42,.14);
+  --accent-text:#c30029;
+  --chipbg:rgba(0,0,0,.04);
+  --ph:linear-gradient(135deg,#e8eaee,#d7dbe1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+  font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent-text);text-decoration:none}
+button,input,select{font-family:inherit;font-size:inherit;color:inherit}
+::selection{background:var(--accent);color:#fff}
+
+/* ---------- header ---------- */
+.top{
+  position:sticky;top:0;z-index:60;
+  background:var(--head);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+.topin{max-width:var(--maxw);margin:0 auto;padding:10px 20px}
+.row1{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo{
+  width:34px;height:34px;border-radius:9px;flex:0 0 auto;
+  background:linear-gradient(135deg,var(--accent),#8d0020);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:700;font-size:15px;letter-spacing:.5px;
+}
+.brand h1{margin:0;font-size:17px;font-weight:700;letter-spacing:.3px;white-space:nowrap}
+.brand .sub{font-size:11.5px;color:var(--dim);white-space:nowrap}
+.spacer{flex:1 1 auto}
+.stats{font-size:12px;color:var(--dim);white-space:nowrap}
+.stats b{color:var(--accent-text);font-weight:700;font-size:13px}
+.back{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 12px;border-radius:999px;border:1px solid var(--border);
+  background:var(--chipbg);font-size:12.5px;color:var(--text);
+  transition:.15s;white-space:nowrap;
+}
+.back:hover{border-color:var(--accent);color:var(--accent-text)}
+.readnow{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 13px;border-radius:999px;
+  background:linear-gradient(135deg,var(--accent),#8d0020);
+  border:1px solid var(--accent);color:#fff;font-weight:600;font-size:12.5px;
+  transition:.15s;white-space:nowrap;
+}
+.readnow:hover{filter:brightness(1.1);color:#fff}
+.readnow .dot{width:6px;height:6px;border-radius:50%;background:#7dffb0;box-shadow:0 0 6px #7dffb0;flex:0 0 auto}
+.iconbtn{
+  width:32px;height:32px;border-radius:9px;border:1px solid var(--border);
+  background:var(--chipbg);cursor:pointer;display:flex;align-items:center;
+  justify-content:center;transition:.15s;flex:0 0 auto;
+}
+.iconbtn:hover{border-color:var(--accent);color:var(--accent-text)}
+.iconbtn.spin svg{animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+.row2{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.search{position:relative;flex:1 1 220px;min-width:180px;max-width:360px}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:.5;pointer-events:none}
+.search input{
+  width:100%;padding:8px 34px 8px 34px;border-radius:999px;
+  border:1px solid var(--border);background:var(--chipbg);outline:none;transition:.15s;
+}
+.search input:focus{border-color:var(--accent);background:var(--bg2)}
+.search .clr{
+  position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  width:22px;height:22px;border:0;border-radius:50%;background:transparent;
+  cursor:pointer;color:var(--dim);display:none;line-height:1;
+}
+.search .clr:hover{background:var(--card2);color:var(--text)}
+.search.hasval .clr{display:block}
+.chips{display:flex;gap:6px;flex-wrap:wrap;max-width:100%}
+.chip{
+  padding:5px 12px;border-radius:999px;border:1px solid var(--border);
+  background:var(--chipbg);cursor:pointer;font-size:12.5px;
+  transition:.15s;white-space:nowrap;
+}
+.chip:hover{border-color:var(--border2)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+select.sel{
+  padding:6px 10px;border-radius:9px;border:1px solid var(--border);
+  background:var(--chipbg);cursor:pointer;outline:none;font-size:12.5px;
+}
+select.sel:focus{border-color:var(--accent)}
+
+/* ---------- status ---------- */
+main{max-width:var(--maxw);margin:0 auto;padding:18px 20px 60px}
+.status{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  font-size:12.5px;color:var(--dim);
+  padding:8px 12px;margin-bottom:14px;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+}
+.status .dot{width:7px;height:7px;border-radius:50%;background:#22c55e;flex:none}
+.status .dot.off{background:var(--accent)}
+.status .sp{flex:1}
+.status code{font-size:11.5px;opacity:.8}
+
+/* ---------- 热榜 ---------- */
+.secttl{
+  display:flex;align-items:center;gap:8px;
+  font-size:14px;font-weight:700;margin:4px 0 10px;
+}
+.secttl .bar{width:3px;height:15px;border-radius:2px;background:var(--accent);display:inline-block}
+.hotstrip{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));
+  gap:10px;margin-bottom:22px;
+}
+.hot{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 11px;border-radius:10px;cursor:pointer;
+  background:var(--card);border:1px solid var(--border);
+  transition:.15s;overflow:hidden;
+}
+.hot:hover{border-color:var(--accent);transform:translateY(-2px)}
+.hot .rk{
+  flex:0 0 auto;width:20px;height:20px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11.5px;font-weight:700;color:#fff;background:var(--dim2);
+}
+.hot .rk.top{background:var(--accent)}
+.hot .rk.t2{background:#ff6b35}
+.hot .rk.t3{background:#f7b32b}
+.hot .ht{
+  flex:1 1 auto;min-width:0;font-size:12.8px;line-height:1.45;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.hot .hv{flex:0 0 auto;font-size:11px;color:var(--redhot);color:var(--accent-text);white-space:nowrap}
+
+/* ---------- 信息流 ---------- */
+#feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.card{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:12px;border-radius:var(--radius);cursor:pointer;
+  background:var(--card);border:1px solid var(--border);
+  transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease;
+}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--accent)}
+.card .body{flex:1 1 auto;min-width:0}
+.card .ttl{
+  font-size:14px;font-weight:600;line-height:1.45;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.card .abs{
+  font-size:12.2px;color:var(--dim);line-height:1.6;margin-top:5px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.card .meta{font-size:11.5px;color:var(--dim2);margin-top:7px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .meta .tag{
+  display:inline-block;padding:1px 6px;border-radius:5px;margin-right:5px;
+  font-size:10.5px;font-weight:700;color:#fff;background:var(--accent);
+}
+.card .meta .tag.v{background:#1f6feb}
+.card .thumb{
+  flex:0 0 auto;width:96px;height:66px;border-radius:8px;overflow:hidden;
+  background:var(--ph);position:relative;
+}
+.card .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.card .thumb .noimg{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:19px;font-weight:700;color:#fff;letter-spacing:1px;
+}
+
+.morebar{text-align:center;padding:22px 0 10px}
+.morebar button{
+  padding:8px 22px;border-radius:999px;border:1px solid var(--border);
+  background:var(--chipbg);cursor:pointer;font-size:13px;transition:.15s;
+}
+.morebar button:hover{border-color:var(--accent);color:var(--accent-text)}
+.done{text-align:center;color:var(--dim2);padding:22px 0;font-size:12.5px}
+.empty{text-align:center;padding:70px 20px;color:var(--dim);display:none}
+.empty .big{font-size:42px;opacity:.35;margin-bottom:10px}
+
+.note{
+  margin-top:26px;padding:12px 15px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--border);
+  font-size:12px;color:var(--dim);line-height:1.75;
+}
+.note code{font-size:11.5px}
+
+@media (max-width:760px){
+  .topin{padding:9px 14px}
+  main{padding:14px 14px 50px}
+  .brand .sub,.stats{display:none}
+  #feed{grid-template-columns:1fr}
+  .hotstrip{grid-template-columns:1fr 1fr}
+  .card .thumb{width:82px;height:58px}
+}
+@media (max-width:480px){
+  .hotstrip{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="topin">
+    <div class="row1">
+      <div class="brand">
+        <div class="logo">讯</div>
+        <div>
+          <h1>头条资讯</h1>
+          <div class="sub">Forever BLog · 实时新闻</div>
+        </div>
+      </div>
+      <div class="spacer"></div>
+      <div class="stats" id="stats">加载中…</div>
+      <a class="readnow" id="fullSite" href="javascript:void(0)" target="_blank" rel="noopener" title="打开完整新闻站（热榜 / 频道 / 按日期翻历史）">
+        <span class="dot"></span>完整新闻站
+      </a>
+      <a class="back" href="/">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        返回博客
+      </a>
+      <button class="iconbtn" id="reloadBtn" title="刷新" aria-label="刷新">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+      </button>
+      <button class="iconbtn" id="themeBtn" title="切换主题" aria-label="切换主题">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </button>
+    </div>
+
+    <div class="row2">
+      <div class="search" id="searchWrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="搜索新闻标题…（按 / 聚焦）" autocomplete="off">
+        <button class="clr" id="clrBtn" aria-label="清空">✕</button>
+      </div>
+      <div class="chips" id="chips"></div>
+      <div class="spacer"></div>
+      <select class="sel" id="dateSel" title="按收录日期翻历史">
+        <option value="">⚡ 实时最新</option>
+      </select>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="status" id="status">
+    <span class="dot" id="dot"></span>
+    <span id="statusText">正在连接新闻服务…</span>
+    <span class="sp"></span>
+    <code id="srcHint"></code>
+  </div>
+
+  <div id="hotWrap" style="display:none">
+    <div class="secttl"><span class="bar"></span>实时热榜</div>
+    <div class="hotstrip" id="hotstrip"></div>
+  </div>
+
+  <div class="secttl"><span class="bar"></span><span id="feedTitle">最新资讯</span></div>
+  <div id="feed"></div>
+
+  <div class="morebar" id="morebar" style="display:none">
+    <button id="moreBtn">加载更多</button>
+  </div>
+  <div class="done" id="done" style="display:none"></div>
+
+  <div class="empty" id="empty">
+    <div class="big">📰</div>
+    <div>没有匹配的新闻</div>
+  </div>
+
+  <div class="note">
+    📰 本页是<b>资讯前台</b>（热榜 + 信息流 + 搜索），静态托管在博客站点；
+    <b>数据与全文阅读</b>由本机新闻服务经 Cloudflare 隧道提供，入口：<code id="noteHost">news.demohappy.top</code>。
+    点标题可在<b>站内阅读页</b>打开原文摘要与相关推荐。若加载不出来，说明本机新闻服务（<code>E:\news_hub</code> + 只读网关）当前离线。
+  </div>
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* ---------- 后端地址：新域名优先，失败自动回退旧域名（迁移期双活） ---------- */
+  var PRIMARY = "https://news.demohappy.top";
+  var FALLBACK = "https://news.demo.fan";
+  var BASE = PRIMARY;
+
+  function probe(base){
+    return new Promise(function(resolve){
+      var ctl = ("AbortController" in window) ? new AbortController() : null;
+      var timer = setTimeout(function(){ if (ctl) ctl.abort(); resolve(false); }, 5000);
+      fetch(base + "/api/stats", { cache: "no-store", signal: ctl ? ctl.signal : undefined })
+        .then(function(r){ clearTimeout(timer); resolve(r.ok); })
+        .catch(function(){ clearTimeout(timer); resolve(false); });
+    });
+  }
+  function pickBase(){
+    return probe(PRIMARY).then(function(ok){
+      BASE = ok ? PRIMARY : FALLBACK;
+      if (!ok) return probe(FALLBACK).then(function(ok2){ return ok2; });
+      return true;
+    });
+  }
+  function api(path){
+    return fetch(BASE + path, { cache: "no-store" }).then(function(r){
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    });
+  }
+
+  /* ---------- theme：优先跟随博客(localStorage.theme)，否则跟随系统 ---------- */
+  function pickTheme(){
+    var t = null;
+    try { t = localStorage.getItem("theme"); } catch(e){}
+    if (t !== "dark" && t !== "light"){
+      t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+    }
+    document.documentElement.setAttribute("data-theme", t);
+  }
+  pickTheme();
+  $("themeBtn").addEventListener("click", function(){
+    var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch(e){}
+  });
+
+  /* ---------- 工具 ---------- */
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function ago(ts){
+    ts = parseInt(ts, 10) || 0;
+    if (!ts) return "";
+    var d = Math.floor(Date.now()/1000) - ts;
+    if (d < 60) return "刚刚";
+    if (d < 3600) return Math.floor(d/60) + " 分钟前";
+    if (d < 86400) return Math.floor(d/3600) + " 小时前";
+    if (d < 86400*7) return Math.floor(d/86400) + " 天前";
+    var dt = new Date(ts*1000);
+    return (dt.getMonth()+1) + "月" + dt.getDate() + "日";
+  }
+  function hotLabel(v){
+    v = parseInt(v, 10) || 0;
+    if (!v) return "";
+    if (v >= 10000) return (v/10000).toFixed(1) + " 万热度";
+    return v + " 热度";
+  }
+  var SRC_COLORS = ["#D50030","#e0632f","#c9a227","#2f9e63","#2d7ff9","#7a5cff","#c0399f","#0f8b8d"];
+  function srcColor(s){
+    s = String(s || "?");
+    var h = 0;
+    for (var i=0;i<s.length;i++) h = (h*31 + s.charCodeAt(i)) % 997;
+    return SRC_COLORS[h % SRC_COLORS.length];
+  }
+  var WD = ["周日","周一","周二","周三","周四","周五","周六"];
+  function weekdayOf(dstr){
+    var p = String(dstr).split("-");
+    if (p.length !== 3) return "";
+    var d = new Date(parseInt(p[0],10), parseInt(p[1],10)-1, parseInt(p[2],10));
+    return WD[d.getDay()] || "";
+  }
+  function dayLabel(dstr, today){
+    var md = dstr.slice(5);
+    if (dstr === today) return "今天 " + md;
+    var y = new Date(); y.setDate(y.getDate() - 1);
+    var ys = y.getFullYear() + "-" + String(y.getMonth()+1).padStart(2,"0") + "-" + String(y.getDate()).padStart(2,"0");
+    if (dstr === ys) return "昨天 " + md;
+    return md + " " + weekdayOf(dstr);
+  }
+  function abs(p){ return p ? (BASE + p) : ""; }
+
+  /* ---------- 渲染 ---------- */
+  function hotHTML(it, i){
+    var rk = i + 1;
+    var cls = rk === 1 ? "top" : (rk === 2 ? "t2" : (rk === 3 ? "t3" : ""));
+    return '<article class="hot" data-id="' + esc(it.item_id) + '" title="' + esc(it.title) + '">' +
+      '<span class="rk ' + cls + '">' + rk + '</span>' +
+      '<span class="ht">' + esc(it.title) + '</span>' +
+      '<span class="hv">' + esc(hotLabel(it.hot_value)) + '</span>' +
+    '</article>';
+  }
+
+  function cardHTML(it){
+    var cover = abs(it.cover_proxy);
+    var thumb;
+    if (cover){
+      thumb = '<div class="thumb"><img loading="lazy" decoding="async" src="' + esc(cover) + '" alt="" ' +
+              'onerror="this.parentNode.innerHTML=\'<div class=noimg style=background:' + srcColor(it.source) + '>' +
+              esc((it.source || "头").slice(0,1)) + '</div>\'"></div>';
+    } else {
+      var ch = (it.source || "头条").slice(0, 1);
+      thumb = '<div class="thumb"><div class="noimg" style="background:' + srcColor(it.source) + '">' +
+              esc(ch) + '</div></div>';
+    }
+    var meta = [];
+    if (it.best_rank > 0 && it.best_rank <= 10) meta.push('<span class="tag">热榜 ' + it.best_rank + '</span>');
+    if (it.is_video) meta.push('<span class="tag v">视频</span>');
+    var plain = [
+      it.source ? esc(it.source) : "头条",
+      ago(it.item_time || it.first_seen),
+      it.comments_count ? it.comments_count + " 评论" : ""
+    ].filter(Boolean).join(" · ");
+    return '<article class="card" data-id="' + esc(it.item_id) + '">' +
+      '<div class="body">' +
+        '<div class="ttl">' + esc(it.title) + '</div>' +
+        (it.abstract ? '<div class="abs">' + esc(it.abstract) + '</div>' : '') +
+        '<div class="meta">' + meta.join("") + plain + '</div>' +
+      '</div>' + thumb +
+    '</article>';
+  }
+
+  /* ---------- 状态 ---------- */
+  var state = { cat: "", date: "", q: "", page: 1, limit: 30, total: 0, shown: 0 };
+
+  function setStatus(txt, off){
+    $("statusText").textContent = txt;
+    $("dot").className = "dot" + (off ? " off" : "");
+  }
+
+  /* ---------- 频道 chips ---------- */
+  function loadChannels(){
+    return api("/api/channels").then(function(d){
+      var list = (d.channels || []).filter(function(c){ return c.cat && c.cat !== "__all__"; });
+      var html = '<button class="chip on" data-c="">全部</button>';
+      list.forEach(function(c){
+        html += '<button class="chip" data-c="' + esc(c.cat) + '">' + esc(c.label) + ' ' + c.count + '</button>';
+      });
+      var box = $("chips");
+      box.innerHTML = html;
+      box.onclick = function(e){
+        var b = e.target.closest ? e.target.closest(".chip") : null;
+        if (!b) return;
+        var all = box.querySelectorAll(".chip");
+        for (var i=0;i<all.length;i++) all[i].classList.remove("on");
+        b.classList.add("on");
+        state.cat = b.getAttribute("data-c");
+        reload();
+      };
+    }).catch(function(){ /* 频道失败不阻断 */ });
+  }
+
+  /* ---------- 日期归档 ---------- */
+  function loadDays(){
+    return api("/api/archive/days").then(function(d){
+      var days = d.days || [];
+      var sel = $("dateSel");
+      var html = '<option value="">⚡ 实时最新</option>';
+      days.forEach(function(x){
+        html += '<option value="' + esc(x.date) + '">' + esc(dayLabel(x.date, d.today)) +
+                '（' + x.count + ' 条）</option>';
+      });
+      sel.innerHTML = html;
+      sel.onchange = function(){ state.date = sel.value; reload(); };
+    }).catch(function(){ /* 归档失败不阻断 */ });
+  }
+
+  /* ---------- 热榜 ---------- */
+  function loadHot(){
+    return api("/api/hot").then(function(d){
+      var items = (d.items || []).slice(0, 10);
+      if (!items.length){ $("hotWrap").style.display = "none"; return; }
+      $("hotstrip").innerHTML = items.map(hotHTML).join("");
+      $("hotWrap").style.display = "";
+      var ts = d.ts ? new Date(d.ts*1000) : null;
+      if (ts) $("stats").innerHTML = '热榜 <b>' + (d.items || []).length + '</b> 条 · ' +
+        String(ts.getHours()).padStart(2,"0") + ":" + String(ts.getMinutes()).padStart(2,"0") + " 更新";
+    }).catch(function(){ $("hotWrap").style.display = "none"; });
+  }
+
+  /* ---------- 信息流 ---------- */
+  function loadFeed(append){
+    var p = append ? state.page + 1 : 1;
+    var path;
+    if (state.q){
+      path = "/api/search?q=" + encodeURIComponent(state.q);
+    } else {
+      path = "/api/feed?page=" + p + "&limit=" + state.limit +
+             (state.cat ? "&cat=" + encodeURIComponent(state.cat) : "") +
+             (state.date ? "&date=" + encodeURIComponent(state.date) : "");
+    }
+    return api(path).then(function(d){
+      var items = d.items || [];
+      state.page = p;
+      state.total = state.q ? items.length : (d.total || items.length);
+      if (append){
+        $("feed").insertAdjacentHTML("beforeend", items.map(cardHTML).join(""));
+        state.shown += items.length;
+      } else {
+        $("feed").innerHTML = items.map(cardHTML).join("");
+        state.shown = items.length;
+      }
+      $("empty").style.display = state.shown ? "none" : "block";
+      var exhausted = state.shown >= state.total || items.length === 0;
+      $("morebar").style.display = (state.q || exhausted) ? "none" : "block";
+      $("done").style.display = (state.shown && exhausted && !state.q) ? "block" : "none";
+      if (!state.q && exhausted && state.shown){
+        $("done").textContent = "— 已显示全部 " + state.shown + " 条 —";
+      }
+      $("feedTitle").textContent = state.q
+        ? ("搜索「" + state.q + "」· " + state.shown + " 条")
+        : (state.date ? (state.date + " 收录 · " + state.total + " 条") : "最新资讯");
+
+      var now = new Date();
+      var hh = String(now.getHours()).padStart(2,"0") + ":" + String(now.getMinutes()).padStart(2,"0");
+      setStatus("新闻服务正常 · " + hh + " 刷新 · 累计 " + state.total + " 条", false);
+      $("srcHint").textContent = BASE.replace("https://", "");
+    });
+  }
+
+  function reload(){
+    state.shown = 0;
+    $("feed").innerHTML = '<div class="done">加载中…</div>';
+    return loadFeed(false).catch(function(e){
+      $("feed").innerHTML = "";
+      setStatus("新闻服务连接失败（" + e.message + "）", true);
+      $("empty").style.display = "block";
+    });
+  }
+
+  /* ---------- 事件 ---------- */
+  $("moreBtn").addEventListener("click", function(){
+    var b = $("moreBtn"); b.disabled = true; b.textContent = "加载中…";
+    loadFeed(true).catch(function(){}).then(function(){
+      b.disabled = false; b.textContent = "加载更多";
+    });
+  });
+
+  $("reloadBtn").addEventListener("click", function(){
+    var b = $("reloadBtn"); b.classList.add("spin");
+    Promise.all([loadHot(), reload()]).then(function(){ b.classList.remove("spin"); });
+  });
+
+  $("feed").addEventListener("click", function(e){
+    var c = e.target.closest ? e.target.closest(".card") : null;
+    if (!c) return;
+    window.open(BASE + "/article?id=" + encodeURIComponent(c.getAttribute("data-id")), "_blank", "noopener");
+  });
+  $("hotstrip").addEventListener("click", function(e){
+    var c = e.target.closest ? e.target.closest(".hot") : null;
+    if (!c) return;
+    window.open(BASE + "/article?id=" + encodeURIComponent(c.getAttribute("data-id")), "_blank", "noopener");
+  });
+
+  var qEl = $("q"), qTimer = null;
+  qEl.addEventListener("input", function(){
+    clearTimeout(qTimer);
+    $("searchWrap").classList.toggle("hasval", !!qEl.value);
+    qTimer = setTimeout(function(){
+      state.q = qEl.value.trim();
+      reload();
+    }, 350);
+  });
+  $("clrBtn").addEventListener("click", function(){
+    qEl.value = ""; state.q = ""; $("searchWrap").classList.remove("hasval"); reload(); qEl.focus();
+  });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape" && qEl.value){ $("clrBtn").click(); return; }
+    var tag = (e.target.tagName || "").toLowerCase();
+    if (e.key === "/" && tag !== "input" && tag !== "textarea"){ e.preventDefault(); qEl.focus(); }
+  });
+
+  /* ---------- 启动 ---------- */
+  $("fullSite").href = PRIMARY;
+  $("noteHost").textContent = "news.demohappy.top";
+  setStatus("正在连接新闻服务…", false);
+  pickBase().then(function(ok){
+    if (!ok){ setStatus("新闻服务离线（新/旧域名均不可达）", true); $("stats").textContent = "离线"; return; }
+    if (BASE !== PRIMARY){
+      // 回退到旧域名时，按钮与提示同步指向当前可用域名
+      $("fullSite").href = BASE;
+      $("noteHost").textContent = BASE.replace("https://", "");
+    } else {
+      $("fullSite").href = BASE;
+    }
+    return Promise.all([loadHot(), loadChannels(), loadDays()]).then(function(){
+      return reload();
+    });
+  });
+})();
+</script>
+</body>
+</html>

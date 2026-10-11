@@ -246,7 +246,7 @@ main{max-width:var(--maxw);margin:0 auto;padding:20px}
       </div>
       <div class="spacer"></div>
       <div class="stats" id="stats">加载中…</div>
-      <a class="readnow" id="readnowTop" href="https://books.demo.fan" target="_blank" rel="noopener" title="打开完整在线书库（在线阅读 / 下载）">
+      <a class="readnow" id="readnowTop" href="https://books.demohappy.top" target="_blank" rel="noopener" title="打开完整在线书库（在线阅读 / 下载）">
         <span class="dot"></span>在线阅读
       </a>
       <a class="back" href="/">
@@ -297,8 +297,8 @@ main{max-width:var(--maxw);margin:0 auto;padding:20px}
         <div class="metas" id="mm"></div>
         <div class="psum" id="ms"></div>
         <div class="pacts">
-          <a class="btn primary" id="readBtn" href="https://books.demo.fan" target="_blank" rel="noopener">📖 在线阅读</a>
-          <a class="btn" id="dlBtn" href="https://books.demo.fan" target="_blank" rel="noopener">⬇ 下载本书</a>
+          <a class="btn primary" id="readBtn" href="https://books.demohappy.top" target="_blank" rel="noopener">📖 在线阅读</a>
+          <a class="btn" id="dlBtn" href="https://books.demohappy.top" target="_blank" rel="noopener">⬇ 下载本书</a>
         </div>
         <div class="pacts">
           <button class="btn" id="copyT">复制书名</button>
@@ -308,7 +308,7 @@ main{max-width:var(--maxw);margin:0 auto;padding:20px}
     </div>
     <div class="note">
       📖 本页是<b>书库目录</b>（封面墙 + 搜索），静态托管在 GitHub Pages；
-      <b>在线阅读 / 下载</b>由本机书库服务经 Cloudflare 隧道提供，入口：<code>books.demo.fan</code>。
+      <b>在线阅读 / 下载</b>由本机书库服务经 Cloudflare 隧道提供，入口：<code>books.demohappy.top</code>。
       若点开报错，说明本机书库服务（<code>E:\yunpan_hub</code> + 只读网关）当前离线。
     </div>
     <div class="pfoot">
@@ -325,8 +325,39 @@ main{max-width:var(--maxw);margin:0 auto;padding:20px}
   "use strict";
   var $ = function(id){ return document.getElementById(id); };
   var BATCH = 96;
-  /* 在线书库后端（本机书库经 Cloudflare 隧道暴露，只读网关） */
-  var READER = "https://books.demo.fan";
+  /* 在线书库后端（本机书库经 Cloudflare 隧道暴露，只读网关）
+     新域名优先，失败自动回退旧域名（迁移期双活，旧域到期后自然只走新域） */
+  var READER_PRIMARY = "https://books.demohappy.top";
+  var READER_FALLBACK = "https://books.demo.fan";
+  var READER = READER_PRIMARY;
+
+  function probeReader(){
+    var ctl = ("AbortController" in window) ? new AbortController() : null;
+    var timer = setTimeout(function(){ if (ctl) ctl.abort(); }, 5000);
+    fetch(READER_PRIMARY + "/api/books?limit=1", { cache: "no-store",
+        signal: ctl ? ctl.signal : undefined })
+      .then(function(r){
+        clearTimeout(timer);
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        applyReader(READER_PRIMARY);
+      })
+      .catch(function(){
+        clearTimeout(timer);
+        applyReader(READER_FALLBACK);
+      });
+  }
+  function applyReader(base){
+    READER = base;
+    var top = $("readnowTop");
+    if (top) top.href = base;
+    if (cur){  /* 弹窗已开着的话同步更新两个按钮 */
+      var rb = $("readBtn"), db = $("dlBtn");
+      if (rb) rb.href = base + "/reader?id=" + encodeURIComponent(cur.id);
+      if (db) db.href = base + "/api/download/" + encodeURIComponent(cur.id);
+    }
+    var host = document.querySelector(".note code");
+    if (host) host.textContent = base.replace("https://", "");
+  }
 
   /* ---------- theme：优先跟随博客(localStorage.theme)，否则跟随系统 ---------- */
   function pickTheme(){
@@ -561,6 +592,7 @@ main{max-width:var(--maxw);margin:0 auto;padding:20px}
   }
 
   /* ---------- 启动 ---------- */
+  probeReader();          /* 后台探测在线书库域名，失败自动回退旧域名 */
   var STATS = { totalSizeLabel: "" };
   fetch("books.json", { cache: "no-cache" })
     .then(function(r){ if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
