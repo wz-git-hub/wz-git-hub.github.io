@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://demohapi.4everland.link/ipfs/bafybeida7wrii3n4sfbvmgohctijnrjowwhh4xx7zf5k6ecvmva6xopami">
 <meta property="article:published_time" content="2024-01-09T05:17:49.000Z">
-<meta property="article:modified_time" content="2026-10-12T10:20:59.476Z">
+<meta property="article:modified_time" content="2026-10-12T10:31:21.147Z">
 <meta property="article:author" content="DEMOHAPI">
 <meta property="article:tag" content="blog,demo,enjoy,forever">
 <meta name="twitter:card" content="summary">
@@ -56,7 +56,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2026-10-12 18:20:59'
+  postUpdate: '2026-10-12 18:31:21'
 }</script><script>(win=>{
       win.saveToLocal = {
         set: (key, value, ttl) => {
@@ -180,10 +180,10 @@
 
 <hr>
 
-        <div id="aplayer-JtadekBQ" class="aplayer aplayer-tag-marker" style="margin-bottom: 20px;"></div>
+        <div id="aplayer-GoFeroaB" class="aplayer aplayer-tag-marker" style="margin-bottom: 20px;"></div>
 			  <script>
 				  var options = {"narrow":false,"autoplay":true,"showlrc":3,"preload":"none","mode":"random","music":[{"title":"桃花笑","author":"锦零","url":"https://blog-music.4everbucket.com/%E6%A1%83%E8%8A%B1%E7%AC%91.m4a","pic":"/music/covers/local-1.jpg","lrc":"https://blog-music.4everbucket.com/%E9%94%A6%E9%9B%B6%20-%20%E6%A1%83%E8%8A%B1%E7%AC%91.txt"},{"title":"推开世界的门","author":"杨乃文","url":"https://blog-music.4everbucket.com/%E6%8E%A8%E5%BC%80%E4%B8%96%E7%95%8C%E7%9A%84%E9%97%A8.m4a","pic":"/music/covers/local-2.jpg","lrc":"https://blog-music.4everbucket.com/%E6%9D%A8%E4%B9%83%E6%96%87%20-%20%E6%8E%A8%E5%BC%80%E4%B8%96%E7%95%8C%E7%9A%84%E9%97%A8.txt"},{"title":"花好月圆","author":"刘紫玲","url":"https://blog-music.4everbucket.com/%E8%8A%B1%E5%A5%BD%E6%9C%88%E5%9C%86.m4a","pic":"/music/covers/local-3.jpg","lrc":"https://blog-music.4everbucket.com/%E5%88%98%E7%B4%AB%E7%8E%B2%20-%20%E8%8A%B1%E5%A5%BD%E6%9C%88%E5%9C%86.txt"},{"title":"此去半生","author":"桃籽","url":"https://blog-music.4everbucket.com/%E6%AD%A4%E5%8E%BB%E5%8D%8A%E7%94%9F.m4a","pic":"/music/covers/local-4.jpg","lrc":"https://blog-music.4everbucket.com/L%EF%BC%88%E6%A1%83%E7%B1%BD%EF%BC%89%20-%20%E6%AD%A4%E5%8E%BB%E5%8D%8A%E7%94%9F.txt"}]};
-				  options.element = document.getElementById("aplayer-JtadekBQ");
+				  options.element = document.getElementById("aplayer-GoFeroaB");
 				  var ap = new APlayer(options);
 			    window.aplayers || (window.aplayers = []);
 				  window.aplayers.push(ap);
@@ -295,10 +295,16 @@
 (function () {
   'use strict';
   var API = 'https://api.qijieya.cn/meting/';
+  /* 网易云搜索的多路端点（公共 Meting 实例，字段名不同需分别映射） */
+  var SEARCH_APIS = [
+    { base: API, k: ['name', 'artist'] },
+    { base: 'https://api.i-meto.com/meting/api', k: ['title', 'author'] },
+    { base: API, k: ['name', 'artist'] }
+  ];
   var PAGE = 48;
   var $ = function (id) { return document.getElementById(id); };
   var CAT = [], VIEW = [], shown = 0, kw = '', chart = 'ALL', mode = 'catalog';
-  var playingIdx = -1, probed = {}, searchToken = 0, COVERPX = 200;
+  var playingIdx = -1, probed = {}, searchToken = 0, COVERPX = 200, localNote = '';
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -382,7 +388,11 @@
   }
   function updateStat() {
     var el = $('mlibStat');
-    if (mode === 'search') {
+    if (mode === 'local') {
+      el.innerHTML = VIEW.length
+        ? '本地曲库匹配「<b>' + esc(kw) + '</b>」<b>' + VIEW.length + '</b> 首 · <span class="mlib-dim">' + esc(localNote) + '</span>'
+        : '';
+    } else if (mode === 'search') {
       el.innerHTML = '搜索「<b>' + esc(kw) + '</b>」找到 <b>' + VIEW.length + '</b> 首（网易云实时搜索）';
     } else if (chart !== 'ALL') {
       el.innerHTML = '<b>' + esc(chart) + '</b> · <b>' + VIEW.length + '</b> 首 · 共收录 <b>' + CAT.length + '</b> 首';
@@ -435,56 +445,85 @@
     VIEW = chart === 'ALL' ? CAT.slice() : CAT.filter(function (s) { return s.charts.indexOf(chart) >= 0; });
     reset();
   }
+  /* ---------- 网易云搜索：多端点容错 ---------- */
+  /* 公共 Meting 实例会间歇性限流（历史上出现过整段返回 [] 的情况），
+     所以这里串行尝试多个端点，任一返回非空即采用；全空则退化为本地曲库过滤。 */
+  function fetchSearch(api, q) {
+    return fetch(api.base + '?server=netease&type=search&id=' + encodeURIComponent(q), { cache: 'no-store' })
+      .then(function (r) { return r.text(); })
+      .then(function (t) {
+        var s = String(t || '').trim(), k = s.search(/[[{]/);
+        if (k > 0) s = s.slice(k);
+        var d = JSON.parse(s);
+        if (!Array.isArray(d)) return [];
+        return d.map(function (x) {
+          return {
+            id: songId(x.url),
+            name: (x[api.k[0]] || '').trim(),
+            artist: (x[api.k[1]] || '').trim(),
+            url: x.url || '', pic: x.pic || '', lrc: x.lrc || '',
+            charts: [], verified: false
+          };
+        }).filter(function (x) { return x.url && x.name; });
+      });
+  }
+  function searchAll(q) {
+    var i = 0;
+    function step() {
+      if (i >= SEARCH_APIS.length) return Promise.resolve([]);   // 全部端点都没结果
+      var api = SEARCH_APIS[i++];
+      return fetchSearch(api, q)
+        .then(function (list) {
+          if (list.length) return list;
+          return new Promise(function (res) { setTimeout(res, 200); }).then(step);
+        })
+        .catch(function () { return step(); });                    // 请求异常 -> 换下一个
+    }
+    return step();
+  }
+
+  function localFilter(q) {
+    var lq = q.toLowerCase();
+    return CAT.filter(function (s) { return (s.name + ' ' + s.artist).toLowerCase().indexOf(lq) >= 0; });
+  }
+  function showLocal(q, note) {
+    mode = 'local';
+    localNote = note;
+    VIEW = localFilter(q);
+    reset();
+    updateStat();
+    if (!VIEW.length) {
+      $('mlibGrid').innerHTML = '';
+      $('mlibEmpty').innerHTML = '<div class="big">🔍</div><div>没有找到「' + esc(q) + '」<br>' +
+        '<span style="font-size:12px;opacity:.75">网易云本次未返回结果，本地曲库也没有匹配</span></div>';
+      $('mlibEmpty').style.display = 'block';
+    }
+  }
+
   function doSearch(q) {
     mode = 'search';
     var my = ++searchToken;
     $('mlibStat').innerHTML = '正在搜索「<b>' + esc(q) + '</b>」…';
     $('mlibGrid').innerHTML = '';
     $('mlibEmpty').style.display = 'none';
-    fetch(API + '?server=netease&type=search&id=' + encodeURIComponent(q))
-      .then(function (r) { return r.json(); })
-      .then(function (d) {
-        if (my !== searchToken) return;
-        if (!Array.isArray(d) || !d.length) {
-          VIEW = []; shown = 0; $('mlibGrid').innerHTML = '';
-          $('mlibEmpty').innerHTML = '<div class="big">🔍</div><div>没有找到「' + esc(q) + '」</div>';
-          $('mlibEmpty').style.display = 'block'; updateStat(); return;
-        }
-        VIEW = d.map(function (x) {
-          return {
-            id: songId(x.url), name: (x.name || '').trim(), artist: (x.artist || '').trim(),
-            url: x.url, pic: x.pic || '', lrc: x.lrc || '', charts: [], verified: false
-          };
+    searchAll(q).then(function (list) {
+      if (my !== searchToken) return;
+      if (!list.length) { showLocal(q, '网易云本次未返回结果，以上为本地曲库匹配'); return; }
+      VIEW = list;
+      reset();
+      /* 后台并发校验前 30 首可播性，不可播置灰 */
+      var n = 0, cap = Math.min(30, VIEW.length);
+      function worker() {
+        if (my !== searchToken || n >= cap) return;
+        var s = VIEW[n++];
+        probe(s.url).then(function () {
+          if (my !== searchToken) return;
+          refreshBad();
+          worker();
         });
-        reset();
-        /* 后台并发校验前 30 首可播性，不可播置灰 */
-        var n = 0, cap = Math.min(30, VIEW.length);
-        function worker() {
-          if (my !== searchToken || n >= cap) return;
-          var s = VIEW[n++];
-          probe(s.url).then(function () {
-            if (my !== searchToken) return;
-            refreshBad();
-            worker();
-          });
-        }
-        for (var w = 0; w < 4; w++) worker();
-      })
-      .catch(function () {
-        if (my !== searchToken) return;
-        /* 搜索接口异常时，退化为本地曲库过滤 */
-        mode = 'catalog';
-        VIEW = CAT.filter(function (s) {
-          var t = (s.name + ' ' + s.artist).toLowerCase();
-          return t.indexOf(q.toLowerCase()) >= 0;
-        });
-        reset();
-        if (!VIEW.length) {
-          $('mlibEmpty').innerHTML = '<div class="big">🔍</div><div>搜索服务暂不可用，本地曲库也没有「' + esc(q) + '」</div>';
-          $('mlibEmpty').style.display = 'block';
-        }
-        toast('网易云搜索暂不可用，已切换为本地曲库搜索');
-      });
+      }
+      for (var w = 0; w < 4; w++) worker();
+    });
   }
 
   function buildChips(list) {
@@ -564,6 +603,17 @@
   /* ---------- 启动 ---------- */
   function boot() {
     bind();
+    /* 播放失败（VIP / 无版权 / 接口抖动）时给个提示，避免"点了没反应" */
+    (function hookErr(t) {
+      var p = ap();
+      if (!p) { if (t < 12) setTimeout(function () { hookErr(t + 1); }, 250); return; }
+      if (p.audio && !p.__mlibErrHooked) {
+        p.__mlibErrHooked = true;
+        p.audio.addEventListener('error', function () {
+          if (p.audio && p.audio.src) toast('这首暂时播不了，换一首试试');
+        });
+      }
+    })(0);
     fetch('music.json', { cache: 'no-cache' })
       .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
       .then(function (txt) {
@@ -603,5 +653,5 @@
             </div>
             <ul class="card-category-list" id="aside-cat-list">
             <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Docs%E6%96%87%E6%AA%94/"><span class="card-category-list-name">Docs文檔</span><span class="card-category-list-count">50</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%88%86%E4%BA%AB/"><span class="card-category-list-name">分享</span><span class="card-category-list-count">3</span></a></li>
-            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/ForeverBlog/" style="font-size: 1.15em; color: rgb(128, 144, 194)">ForeverBlog</a><a href="/tags/%E5%88%86%E4%BA%AB/" style="font-size: 1.24em; color: rgb(164, 125, 64)">分享</a><a href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" style="font-size: 1.15em; color: rgb(23, 119, 56)">区块链</a><a href="/tags/web3/" style="font-size: 1.15em; color: rgb(174, 179, 111)">web3</a><a href="/tags/%E9%87%8F%E5%8C%96/" style="font-size: 1.45em; color: rgb(12, 141, 61)">量化</a><a href="/tags/%E6%8E%92%E9%9A%9C/" style="font-size: 1.36em; color: rgb(79, 23, 53)">排障</a><a href="/tags/%E6%8E%A5%E5%8F%A3/" style="font-size: 1.24em; color: rgb(112, 83, 95)">接口</a><a href="/tags/%E7%AD%96%E7%95%A5/" style="font-size: 1.19em; color: rgb(68, 166, 1)">策略</a><a href="/tags/%E4%B8%BB%E6%B5%81%E5%B8%81/" style="font-size: 1.19em; color: rgb(128, 148, 38)">主流币</a><a href="/tags/%E4%BB%A3%E7%A0%81%E8%AF%84%E5%AE%A1/" style="font-size: 1.15em; color: rgb(143, 3, 131)">代码评审</a><a href="/tags/Streamlit/" style="font-size: 1.19em; color: rgb(1, 199, 74)">Streamlit</a><a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 1.28em; color: rgb(85, 59, 194)">记录</a><a href="/tags/%E5%B7%A5%E7%A8%8B/" style="font-size: 1.15em; color: rgb(20, 4, 37)">工程</a><a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 1.15em; color: rgb(93, 103, 112)">优化</a><a href="/tags/%E8%AE%B0%E5%BF%86%E6%9C%8D%E5%8A%A1/" style="font-size: 1.24em; color: rgb(186, 57, 21)">记忆服务</a><a href="/tags/%E4%BA%A4%E6%98%93%E7%B3%BB%E7%BB%9F/" style="font-size: 1.24em; color: rgb(76, 5, 10)">交易系统</a><a href="/tags/%E5%9B%A0%E5%AD%90/" style="font-size: 1.15em; color: rgb(191, 180, 184)">因子</a><a href="/tags/%E5%9B%9E%E6%B5%8B/" style="font-size: 1.32em; color: rgb(13, 184, 188)">回测</a><a href="/tags/%E5%B7%A1%E6%A3%80/" style="font-size: 1.15em; color: rgb(182, 110, 152)">巡检</a><a href="/tags/%E8%BF%90%E7%BB%B4/" style="font-size: 1.24em; color: rgb(106, 64, 137)">运维</a><a href="/tags/%E4%BE%9D%E8%B5%96/" style="font-size: 1.15em; color: rgb(7, 82, 89)">依赖</a><a href="/tags/%E5%AF%B9%E8%B4%A6/" style="font-size: 1.15em; color: rgb(10, 4, 93)">对账</a><a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 1.15em; color: rgb(76, 143, 193)">数据库</a><a href="/tags/%E6%96%87%E6%A1%A3/" style="font-size: 1.15em; color: rgb(124, 57, 85)">文档</a><a href="/tags/%E9%AA%8C%E8%AF%81/" style="font-size: 1.19em; color: rgb(192, 5, 97)">验证</a><a href="/tags/%E7%9C%8B%E6%9D%BF/" style="font-size: 1.24em; color: rgb(25, 143, 188)">看板</a><a href="/tags/%E5%A4%8D%E7%9B%98/" style="font-size: 1.41em; color: rgb(185, 108, 63)">复盘</a><a href="/tags/%E5%BF%83%E8%B7%B3/" style="font-size: 1.15em; color: rgb(109, 45, 28)">心跳</a><a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" style="font-size: 1.32em; color: rgb(8, 43, 14)">自动化</a><a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 1.15em; color: rgb(169, 185, 171)">进程</a><a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 1.15em; color: rgb(56, 110, 66)">架构</a><a href="/tags/%E5%AE%9E%E6%97%B6%E4%BF%A1%E5%8F%B7/" style="font-size: 1.15em; color: rgb(40, 27, 43)">实时信号</a><a href="/tags/%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/" style="font-size: 1.15em; color: rgb(129, 131, 14)">并发控制</a><a href="/tags/%E5%B7%A5%E5%85%B7%E9%93%BE/" style="font-size: 1.19em; color: rgb(47, 32, 170)">工具链</a><a href="/tags/%E6%A8%A1%E5%9E%8B%E9%80%89%E5%9E%8B/" style="font-size: 1.15em; color: rgb(33, 173, 192)">模型选型</a><a href="/tags/%E6%95%B0%E6%8D%AE%E6%BA%90/" style="font-size: 1.15em; color: rgb(119, 95, 165)">数据源</a><a href="/tags/%E6%8D%A2%E8%B5%9B%E9%81%93/" style="font-size: 1.15em; color: rgb(92, 148, 64)">换赛道</a><a href="/tags/%E6%A8%A1%E6%8B%9F%E7%9B%98/" style="font-size: 1.19em; color: rgb(176, 166, 3)">模拟盘</a><a href="/tags/%E4%BA%A4%E6%98%93/" style="font-size: 1.19em; color: rgb(66, 151, 108)">交易</a><a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 1.15em; color: rgb(150, 81, 182)">工具</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
-    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/09/"><span class="card-archive-list-date">九月 2026</span><span class="card-archive-list-count">7</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/08/"><span class="card-archive-list-date">八月 2026</span><span class="card-archive-list-count">10</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/07/"><span class="card-archive-list-date">七月 2026</span><span class="card-archive-list-count">6</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/06/"><span class="card-archive-list-date">六月 2026</span><span class="card-archive-list-count">17</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/05/"><span class="card-archive-list-date">五月 2026</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/04/"><span class="card-archive-list-date">四月 2026</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/01/"><span class="card-archive-list-date">一月 2024</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/12/"><span class="card-archive-list-date">十二月 2023</span><span class="card-archive-list-count">1</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">53</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2023-11-10T16:00:00.000Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-10-12T10:21:08.540Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://demohapi.4everland.link/ipfs/bafkreifdghjvied2p74sazkbl5kpys4nrlnvqvnm5mcrpmpmy4gw3ftttu')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By DEMOHAPI</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/ForeverBlog/" style="font-size: 1.15em; color: rgb(143, 24, 57)">ForeverBlog</a><a href="/tags/%E5%88%86%E4%BA%AB/" style="font-size: 1.24em; color: rgb(55, 38, 10)">分享</a><a href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" style="font-size: 1.15em; color: rgb(38, 128, 110)">区块链</a><a href="/tags/web3/" style="font-size: 1.15em; color: rgb(125, 1, 136)">web3</a><a href="/tags/%E9%87%8F%E5%8C%96/" style="font-size: 1.45em; color: rgb(139, 93, 186)">量化</a><a href="/tags/%E6%8E%92%E9%9A%9C/" style="font-size: 1.36em; color: rgb(152, 13, 54)">排障</a><a href="/tags/%E6%8E%A5%E5%8F%A3/" style="font-size: 1.24em; color: rgb(33, 142, 52)">接口</a><a href="/tags/%E7%AD%96%E7%95%A5/" style="font-size: 1.19em; color: rgb(171, 124, 167)">策略</a><a href="/tags/%E4%B8%BB%E6%B5%81%E5%B8%81/" style="font-size: 1.19em; color: rgb(102, 131, 134)">主流币</a><a href="/tags/%E4%BB%A3%E7%A0%81%E8%AF%84%E5%AE%A1/" style="font-size: 1.15em; color: rgb(177, 46, 132)">代码评审</a><a href="/tags/Streamlit/" style="font-size: 1.19em; color: rgb(18, 109, 182)">Streamlit</a><a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 1.28em; color: rgb(105, 135, 42)">记录</a><a href="/tags/%E5%B7%A5%E7%A8%8B/" style="font-size: 1.15em; color: rgb(64, 92, 43)">工程</a><a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 1.15em; color: rgb(51, 11, 184)">优化</a><a href="/tags/%E8%AE%B0%E5%BF%86%E6%9C%8D%E5%8A%A1/" style="font-size: 1.24em; color: rgb(5, 129, 68)">记忆服务</a><a href="/tags/%E4%BA%A4%E6%98%93%E7%B3%BB%E7%BB%9F/" style="font-size: 1.24em; color: rgb(191, 155, 26)">交易系统</a><a href="/tags/%E5%9B%A0%E5%AD%90/" style="font-size: 1.15em; color: rgb(196, 37, 194)">因子</a><a href="/tags/%E5%9B%9E%E6%B5%8B/" style="font-size: 1.32em; color: rgb(17, 162, 82)">回测</a><a href="/tags/%E5%B7%A1%E6%A3%80/" style="font-size: 1.15em; color: rgb(190, 130, 167)">巡检</a><a href="/tags/%E8%BF%90%E7%BB%B4/" style="font-size: 1.24em; color: rgb(198, 59, 148)">运维</a><a href="/tags/%E4%BE%9D%E8%B5%96/" style="font-size: 1.15em; color: rgb(174, 128, 68)">依赖</a><a href="/tags/%E5%AF%B9%E8%B4%A6/" style="font-size: 1.15em; color: rgb(174, 176, 117)">对账</a><a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 1.15em; color: rgb(79, 113, 2)">数据库</a><a href="/tags/%E6%96%87%E6%A1%A3/" style="font-size: 1.15em; color: rgb(102, 62, 113)">文档</a><a href="/tags/%E9%AA%8C%E8%AF%81/" style="font-size: 1.19em; color: rgb(181, 17, 49)">验证</a><a href="/tags/%E7%9C%8B%E6%9D%BF/" style="font-size: 1.24em; color: rgb(192, 101, 85)">看板</a><a href="/tags/%E5%A4%8D%E7%9B%98/" style="font-size: 1.41em; color: rgb(99, 57, 116)">复盘</a><a href="/tags/%E5%BF%83%E8%B7%B3/" style="font-size: 1.15em; color: rgb(23, 50, 148)">心跳</a><a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" style="font-size: 1.32em; color: rgb(86, 184, 195)">自动化</a><a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 1.15em; color: rgb(110, 120, 159)">进程</a><a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 1.15em; color: rgb(170, 11, 18)">架构</a><a href="/tags/%E5%AE%9E%E6%97%B6%E4%BF%A1%E5%8F%B7/" style="font-size: 1.15em; color: rgb(43, 81, 37)">实时信号</a><a href="/tags/%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/" style="font-size: 1.15em; color: rgb(76, 39, 27)">并发控制</a><a href="/tags/%E5%B7%A5%E5%85%B7%E9%93%BE/" style="font-size: 1.19em; color: rgb(178, 56, 125)">工具链</a><a href="/tags/%E6%A8%A1%E5%9E%8B%E9%80%89%E5%9E%8B/" style="font-size: 1.15em; color: rgb(118, 86, 163)">模型选型</a><a href="/tags/%E6%95%B0%E6%8D%AE%E6%BA%90/" style="font-size: 1.15em; color: rgb(20, 136, 82)">数据源</a><a href="/tags/%E6%8D%A2%E8%B5%9B%E9%81%93/" style="font-size: 1.15em; color: rgb(164, 77, 39)">换赛道</a><a href="/tags/%E6%A8%A1%E6%8B%9F%E7%9B%98/" style="font-size: 1.19em; color: rgb(163, 155, 172)">模拟盘</a><a href="/tags/%E4%BA%A4%E6%98%93/" style="font-size: 1.19em; color: rgb(155, 145, 103)">交易</a><a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 1.15em; color: rgb(132, 185, 194)">工具</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/09/"><span class="card-archive-list-date">九月 2026</span><span class="card-archive-list-count">7</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/08/"><span class="card-archive-list-date">八月 2026</span><span class="card-archive-list-count">10</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/07/"><span class="card-archive-list-date">七月 2026</span><span class="card-archive-list-count">6</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/06/"><span class="card-archive-list-date">六月 2026</span><span class="card-archive-list-count">17</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/05/"><span class="card-archive-list-date">五月 2026</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/04/"><span class="card-archive-list-date">四月 2026</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/01/"><span class="card-archive-list-date">一月 2024</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/12/"><span class="card-archive-list-date">十二月 2023</span><span class="card-archive-list-count">1</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">53</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2023-11-10T16:00:00.000Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-10-12T10:31:37.474Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://demohapi.4everland.link/ipfs/bafkreifdghjvied2p74sazkbl5kpys4nrlnvqvnm5mcrpmpmy4gw3ftttu')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By DEMOHAPI</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
