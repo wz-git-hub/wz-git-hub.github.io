@@ -1,44 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>ForeverBlog</title>
-    <url>/posts/1/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="Forever-Blog"><a href="#Forever-Blog" class="headerlink" title="Forever Blog"></a>Forever Blog</h1><h2 id="一想起永久，我就想起王菲的歌"><a href="#一想起永久，我就想起王菲的歌" class="headerlink" title="一想起永久，我就想起王菲的歌"></a>一想起永久，我就想起王菲的歌</h2><p><strong>有时候有时候 我会相信一切有尽头 相聚离开都有时候 没有什么会永垂不朽</strong></p>
-<ul>
-<li>我不能避免死亡，我害怕死后什么都没有留下来。</li>
-<li>作为默默无闻的一人，没有什么闪耀，慢慢的也过了创造奇迹的年纪，我的世界一片黑暗。</li>
-</ul>
-<h2 id="想来想去，只能用老本行，科技改变命运"><a href="#想来想去，只能用老本行，科技改变命运" class="headerlink" title="想来想去，只能用老本行，科技改变命运!"></a>想来想去，只能用老本行，科技改变命运!</h2><ol>
-<li>曾经看过一个老美电影，就是一个极客得了绝症，为了家人，然后把自己的意识上传网络，让自己完全活在了网络中，家人还可以和网络中的极客对话。有一段时间有新闻说，可以使用AI重建去世亲人，我觉得都是同一类事情。</li>
-<li>现阶段我只懂一些鸡肋IT，就做一个简简单单的Forever Blog吧，后面再慢慢完善下去！</li>
-<li>现在我一个人更新Blog，以后可能会告诉家人，可以合力把Blog更起来。既然是Forever Blog，能子子孙孙的更新下去，也是奇迹呢。</li>
-</ol>
-<p><strong>作为永生博客，我简单的想法就是百年之后，博客仍然可以运行，哈哈😝，这样就可以让世人知道，曾经世上还有这人这事存在过!</strong></p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>ForeverBlog</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>python基于cv2图像超分辨率重建</title>
     <url>/posts/a5/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="python基于cv2图像超分辨率重建"><a href="#python基于cv2图像超分辨率重建" class="headerlink" title="python基于cv2图像超分辨率重建"></a>python基于cv2图像超分辨率重建</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">img_chuli_plt2</span>():</span><br><span class="line">    <span class="keyword">import</span> cv2</span><br><span class="line">    <span class="keyword">import</span> random</span><br><span class="line">    <span class="comment"># import imutils</span></span><br><span class="line">    <span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 彩色图像每个像素值是[x,y,z], 灰度图像每个像素值便是一个np.uint8</span></span><br><span class="line">    path = <span class="string">&#x27;./img/0.jpg&#x27;</span> <span class="comment"># 路径图片</span></span><br><span class="line">    image = cv2.imread(path)</span><br><span class="line">    gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 图像大小调整</span></span><br><span class="line">    ori_h, ori_w = image.shape[:<span class="number">2</span>]</span><br><span class="line">    height, width = gray_img.shape[:<span class="number">2</span>]</span><br><span class="line">    image = cv2.resize(image, (<span class="built_in">int</span>(ori_w / ori_h * <span class="number">400</span>), <span class="number">400</span>), interpolation=cv2.INTER_CUBIC)</span><br><span class="line">    gray_img = cv2.resize(gray_img, (<span class="built_in">int</span>(width / height * <span class="number">400</span>), <span class="number">400</span>), interpolation=cv2.INTER_CUBIC)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a&lt;0 and b=0: 图像的亮区域变暗，暗区域变亮</span></span><br><span class="line">    a, b = -<span class="number">0.5</span>, <span class="number">0</span></span><br><span class="line">    new_img1 = np.ones((gray_img.shape[<span class="number">0</span>], gray_img.shape[<span class="number">1</span>]), dtype=np.uint8)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(new_img1.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(new_img1.shape[<span class="number">1</span>]):</span><br><span class="line">            new_img1[i][j] = gray_img[i][j] * a + b</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a&gt;1: 增强图像的对比度,图像看起来更加清晰</span></span><br><span class="line">    a, b = <span class="number">1.5</span>, <span class="number">20</span></span><br><span class="line">    new_img2 = np.ones((gray_img.shape[<span class="number">0</span>], gray_img.shape[<span class="number">1</span>]), dtype=np.uint8)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(new_img2.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(new_img2.shape[<span class="number">1</span>]):</span><br><span class="line">            <span class="keyword">if</span> gray_img[i][j] * a + b &gt; <span class="number">255</span>:</span><br><span class="line">                new_img2[i][j] = <span class="number">255</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                new_img2[i][j] = gray_img[i][j] * a + b</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a&lt;1: 减小了图像的对比度, 图像看起来变暗</span></span><br><span class="line">    a, b = <span class="number">0.5</span>, <span class="number">0</span></span><br><span class="line">    new_img3 = np.ones((gray_img.shape[<span class="number">0</span>], gray_img.shape[<span class="number">1</span>]), dtype=np.uint8)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(new_img3.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(new_img3.shape[<span class="number">1</span>]):</span><br><span class="line">            new_img3[i][j] = gray_img[i][j] * a + b</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a=1且b≠0, 图像整体的灰度值上移或者下移, 也就是图像整体变亮或者变暗, 不会改变图像的对比度</span></span><br><span class="line">    a, b = <span class="number">1</span>, -<span class="number">50</span></span><br><span class="line">    new_img4 = np.ones((gray_img.shape[<span class="number">0</span>], gray_img.shape[<span class="number">1</span>]), dtype=np.uint8)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(new_img4.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(new_img4.shape[<span class="number">1</span>]):</span><br><span class="line">            pix = gray_img[i][j] * a + b</span><br><span class="line">            <span class="keyword">if</span> pix &gt; <span class="number">255</span>:</span><br><span class="line">                new_img4[i][j] = <span class="number">255</span></span><br><span class="line">            <span class="keyword">elif</span> pix &lt; <span class="number">0</span>:</span><br><span class="line">                new_img4[i][j] = <span class="number">0</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                new_img4[i][j] = pix</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a=-1, b=255, 图像翻转</span></span><br><span class="line">    new_img5 = <span class="number">255</span> - gray_img</span><br><span class="line"></span><br><span class="line">    cv2.imshow(<span class="string">&#x27;origin&#x27;</span>, image)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;gray&#x27;</span>, gray_img)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a&lt;0 and b=0&#x27;</span>, new_img1)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a&gt;1 and b&gt;=0&#x27;</span>,new_img2)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a&lt;1 and b&gt;=0&#x27;</span>,new_img3)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a=1 and b&gt;&lt;0&#x27;</span>,new_img4)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;a=-1 and b=255&#x27;</span>,new_img5)</span><br><span class="line">    <span class="keyword">if</span> cv2.waitKey(<span class="number">0</span>) == <span class="number">27</span>:</span><br><span class="line">        cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>分享</category>
-      </categories>
-      <tags>
-        <tag>分享</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>python输入实物码记录网卡IP及MAC地址</title>
-    <url>/posts/a6/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="python输入实物码记录网卡IP及MAC地址"><a href="#python输入实物码记录网卡IP及MAC地址" class="headerlink" title="python输入实物码记录网卡IP及MAC地址"></a>python输入实物码记录网卡IP及MAC地址</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> psutil</span><br><span class="line"><span class="keyword">import</span> pymysql</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">insent_db</span>(<span class="params">adapter, mac, ipv4, swcode, sent_time</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        db = pymysql.connect(host=<span class="string">&quot;10.103.50.147&quot;</span>, port=<span class="number">3306</span>, user=<span class="string">&quot;crrcuser&quot;</span>, password=<span class="string">&quot;abc.123456&quot;</span>, database=<span class="string">&quot;gsdata&quot;</span>,</span><br><span class="line">                             charset=<span class="string">&quot;utf8&quot;</span>)</span><br><span class="line">        cursor= db.cursor()</span><br><span class="line">        db.ping(reconnect=<span class="literal">True</span>)</span><br><span class="line">        new_list_1 = []</span><br><span class="line">        tup_1 = (adapter, mac, ipv4, swcode, sent_time)</span><br><span class="line">        new_list_1.append(tup_1)</span><br><span class="line">        sql = <span class="string">&quot;insert into MAC_Collect(adapter, mac, ipv4, swcode, sent_time) values(%s, %s, %s, %s, %s)&quot;</span></span><br><span class="line">        cursor.executemany(sql, new_list_1)</span><br><span class="line">        db.commit()<span class="comment"># 提交数据库执行</span></span><br><span class="line">        cursor.close()</span><br><span class="line">        db.close()</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">return</span> sys.exc_info()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">PrintNetIfAddr</span>():</span><br><span class="line">  <span class="string">&quot;&quot;&quot; 打印多网卡 mac 和 ip 信息 &quot;&quot;&quot;</span></span><br><span class="line">  swcode = <span class="built_in">input</span>(<span class="string">&quot;请输入实物码（实物码以SW开头）:&quot;</span>)</span><br><span class="line">  <span class="keyword">if</span> swcode[:<span class="number">2</span>] != <span class="string">&quot;SW&quot;</span> <span class="keyword">and</span> swcode[:<span class="number">2</span>] != <span class="string">&quot;sw&quot;</span>:</span><br><span class="line">      <span class="built_in">print</span>(<span class="string">&quot;实物码输入错误，请输入正确实物码（实物码以SW开头）！&quot;</span>)</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">  dic = psutil.net_if_addrs()</span><br><span class="line">  <span class="keyword">for</span> adapter <span class="keyword">in</span> dic:</span><br><span class="line">      snicList = dic[adapter]</span><br><span class="line">      mac = <span class="string">&#x27;无 mac 地址&#x27;</span></span><br><span class="line">      ipv4 = <span class="string">&#x27;无 ipv4 地址&#x27;</span></span><br><span class="line">      <span class="keyword">for</span> snic <span class="keyword">in</span> snicList:</span><br><span class="line">          <span class="keyword">if</span> snic.family.name <span class="keyword">in</span> &#123;<span class="string">&#x27;AF_LINK&#x27;</span>, <span class="string">&#x27;AF_PACKET&#x27;</span>&#125;:</span><br><span class="line">              mac = snic.address</span><br><span class="line">          <span class="keyword">elif</span> snic.family.name == <span class="string">&#x27;AF_INET&#x27;</span>:</span><br><span class="line">              ipv4 = snic.address</span><br><span class="line">      <span class="keyword">if</span> mac == <span class="string">&#x27;无 mac 地址&#x27;</span>:</span><br><span class="line">          <span class="keyword">continue</span></span><br><span class="line">      <span class="keyword">if</span> <span class="string">&quot;蓝牙&quot;</span> <span class="keyword">in</span> adapter:</span><br><span class="line">          <span class="keyword">continue</span></span><br><span class="line">      <span class="keyword">if</span> ipv4[:<span class="number">2</span>] != <span class="string">&quot;10&quot;</span>:</span><br><span class="line">          <span class="keyword">continue</span></span><br><span class="line">      sent_time = datetime.datetime.now().strftime(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span><br><span class="line">      insent_db_str = insent_db(adapter, mac, ipv4, swcode, sent_time)</span><br><span class="line">      <span class="keyword">if</span> insent_db_str:</span><br><span class="line">          <span class="keyword">return</span> insent_db_str</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          <span class="built_in">print</span>(<span class="string">&quot;成功上传数据：&quot;</span>,<span class="string">&#x27;%s, %s, %s, %s, %s&#x27;</span> % (adapter, mac, ipv4, swcode, sent_time))</span><br><span class="line">          <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;内网没有符合要求的MAC&quot;</span></span><br><span class="line">pro_end = PrintNetIfAddr()</span><br><span class="line"><span class="keyword">if</span> pro_end:</span><br><span class="line">    <span class="built_in">print</span>(pro_end)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;失败，按下任意键以退出程序&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;成功，按下任意键以退出程序&quot;</span>)</span><br><span class="line"><span class="built_in">input</span>()</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
@@ -73,6 +38,28 @@
       </tags>
   </entry>
   <entry>
+    <title>ForeverBlog</title>
+    <url>/posts/1/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="Forever-Blog"><a href="#Forever-Blog" class="headerlink" title="Forever Blog"></a>Forever Blog</h1><h2 id="一想起永久，我就想起王菲的歌"><a href="#一想起永久，我就想起王菲的歌" class="headerlink" title="一想起永久，我就想起王菲的歌"></a>一想起永久，我就想起王菲的歌</h2><p><strong>有时候有时候 我会相信一切有尽头 相聚离开都有时候 没有什么会永垂不朽</strong></p>
+<ul>
+<li>我不能避免死亡，我害怕死后什么都没有留下来。</li>
+<li>作为默默无闻的一人，没有什么闪耀，慢慢的也过了创造奇迹的年纪，我的世界一片黑暗。</li>
+</ul>
+<h2 id="想来想去，只能用老本行，科技改变命运"><a href="#想来想去，只能用老本行，科技改变命运" class="headerlink" title="想来想去，只能用老本行，科技改变命运!"></a>想来想去，只能用老本行，科技改变命运!</h2><ol>
+<li>曾经看过一个老美电影，就是一个极客得了绝症，为了家人，然后把自己的意识上传网络，让自己完全活在了网络中，家人还可以和网络中的极客对话。有一段时间有新闻说，可以使用AI重建去世亲人，我觉得都是同一类事情。</li>
+<li>现阶段我只懂一些鸡肋IT，就做一个简简单单的Forever Blog吧，后面再慢慢完善下去！</li>
+<li>现在我一个人更新Blog，以后可能会告诉家人，可以合力把Blog更起来。既然是Forever Blog，能子子孙孙的更新下去，也是奇迹呢。</li>
+</ol>
+<p><strong>作为永生博客，我简单的想法就是百年之后，博客仍然可以运行，哈哈😝，这样就可以让世人知道，曾经世上还有这人这事存在过!</strong></p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>ForeverBlog</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>分享网盘及存储</title>
     <url>/posts/a3/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="分享一个我正在用的网盘"><a href="#分享一个我正在用的网盘" class="headerlink" title="分享一个我正在用的网盘"></a>分享一个我正在用的网盘</h1><p><strong>就是大名鼎鼎微软的OneDrive</strong><br>话说国内的网盘市场已经被百度网盘垄断了<br>百度网盘不付费的话，下载速度没得说，慢的一比<br>唯一的好处就是资源多<br>大家都在百度上分享链接<br>例如，<a href="http://www.yunpangou.com/">云盘狗</a><br>百度大而不倒</p>
@@ -82,6 +69,19 @@
 <h2 id="OneDrive可以做私人网盘"><a href="#OneDrive可以做私人网盘" class="headerlink" title="OneDrive可以做私人网盘"></a>OneDrive可以做私人网盘</h2><p>搜索私人网盘搭建，网络上一堆堆攻略。<br>按照之前的经验来看，需要云服务器，开个新账户阿里腾讯云，买三年很便宜，博主都已经玩过一遍了。<br>推荐：Cloudreve</p>
 <hr>
 <h2 id="Web3存储"><a href="#Web3存储" class="headerlink" title="Web3存储"></a>Web3存储</h2><p>前几年Web3大爆发的时候，Web3存储横空出世，File这个cx币，刚出来的时候起飞上天，被称为以太之后的币⚪第三次创新革命。<br>从叙事上来说，Web3存储有些亮点，AR（arweave）通过简化数字世界 <strong>一次付款</strong>, <strong>永远存储</strong> ，数据可以维持200年，比只能维持20年的web2，超出一个数量级。<br>到底是画饼，还是确实，只能拭目以待了。Web3的世界起飞和爆炸往往都在几个瞬间。</p>
+]]></content>
+      <categories>
+        <category>分享</category>
+      </categories>
+      <tags>
+        <tag>分享</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>python输入实物码记录网卡IP及MAC地址</title>
+    <url>/posts/a6/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="python输入实物码记录网卡IP及MAC地址"><a href="#python输入实物码记录网卡IP及MAC地址" class="headerlink" title="python输入实物码记录网卡IP及MAC地址"></a>python输入实物码记录网卡IP及MAC地址</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> psutil</span><br><span class="line"><span class="keyword">import</span> pymysql</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">insent_db</span>(<span class="params">adapter, mac, ipv4, swcode, sent_time</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        db = pymysql.connect(host=<span class="string">&quot;10.103.50.147&quot;</span>, port=<span class="number">3306</span>, user=<span class="string">&quot;crrcuser&quot;</span>, password=<span class="string">&quot;abc.123456&quot;</span>, database=<span class="string">&quot;gsdata&quot;</span>,</span><br><span class="line">                             charset=<span class="string">&quot;utf8&quot;</span>)</span><br><span class="line">        cursor= db.cursor()</span><br><span class="line">        db.ping(reconnect=<span class="literal">True</span>)</span><br><span class="line">        new_list_1 = []</span><br><span class="line">        tup_1 = (adapter, mac, ipv4, swcode, sent_time)</span><br><span class="line">        new_list_1.append(tup_1)</span><br><span class="line">        sql = <span class="string">&quot;insert into MAC_Collect(adapter, mac, ipv4, swcode, sent_time) values(%s, %s, %s, %s, %s)&quot;</span></span><br><span class="line">        cursor.executemany(sql, new_list_1)</span><br><span class="line">        db.commit()<span class="comment"># 提交数据库执行</span></span><br><span class="line">        cursor.close()</span><br><span class="line">        db.close()</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">return</span> sys.exc_info()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">PrintNetIfAddr</span>():</span><br><span class="line">  <span class="string">&quot;&quot;&quot; 打印多网卡 mac 和 ip 信息 &quot;&quot;&quot;</span></span><br><span class="line">  swcode = <span class="built_in">input</span>(<span class="string">&quot;请输入实物码（实物码以SW开头）:&quot;</span>)</span><br><span class="line">  <span class="keyword">if</span> swcode[:<span class="number">2</span>] != <span class="string">&quot;SW&quot;</span> <span class="keyword">and</span> swcode[:<span class="number">2</span>] != <span class="string">&quot;sw&quot;</span>:</span><br><span class="line">      <span class="built_in">print</span>(<span class="string">&quot;实物码输入错误，请输入正确实物码（实物码以SW开头）！&quot;</span>)</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">  dic = psutil.net_if_addrs()</span><br><span class="line">  <span class="keyword">for</span> adapter <span class="keyword">in</span> dic:</span><br><span class="line">      snicList = dic[adapter]</span><br><span class="line">      mac = <span class="string">&#x27;无 mac 地址&#x27;</span></span><br><span class="line">      ipv4 = <span class="string">&#x27;无 ipv4 地址&#x27;</span></span><br><span class="line">      <span class="keyword">for</span> snic <span class="keyword">in</span> snicList:</span><br><span class="line">          <span class="keyword">if</span> snic.family.name <span class="keyword">in</span> &#123;<span class="string">&#x27;AF_LINK&#x27;</span>, <span class="string">&#x27;AF_PACKET&#x27;</span>&#125;:</span><br><span class="line">              mac = snic.address</span><br><span class="line">          <span class="keyword">elif</span> snic.family.name == <span class="string">&#x27;AF_INET&#x27;</span>:</span><br><span class="line">              ipv4 = snic.address</span><br><span class="line">      <span class="keyword">if</span> mac == <span class="string">&#x27;无 mac 地址&#x27;</span>:</span><br><span class="line">          <span class="keyword">continue</span></span><br><span class="line">      <span class="keyword">if</span> <span class="string">&quot;蓝牙&quot;</span> <span class="keyword">in</span> adapter:</span><br><span class="line">          <span class="keyword">continue</span></span><br><span class="line">      <span class="keyword">if</span> ipv4[:<span class="number">2</span>] != <span class="string">&quot;10&quot;</span>:</span><br><span class="line">          <span class="keyword">continue</span></span><br><span class="line">      sent_time = datetime.datetime.now().strftime(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span><br><span class="line">      insent_db_str = insent_db(adapter, mac, ipv4, swcode, sent_time)</span><br><span class="line">      <span class="keyword">if</span> insent_db_str:</span><br><span class="line">          <span class="keyword">return</span> insent_db_str</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          <span class="built_in">print</span>(<span class="string">&quot;成功上传数据：&quot;</span>,<span class="string">&#x27;%s, %s, %s, %s, %s&#x27;</span> % (adapter, mac, ipv4, swcode, sent_time))</span><br><span class="line">          <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;内网没有符合要求的MAC&quot;</span></span><br><span class="line">pro_end = PrintNetIfAddr()</span><br><span class="line"><span class="keyword">if</span> pro_end:</span><br><span class="line">    <span class="built_in">print</span>(pro_end)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;失败，按下任意键以退出程序&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;成功，按下任意键以退出程序&quot;</span>)</span><br><span class="line"><span class="built_in">input</span>()</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>分享</category>
@@ -256,6 +256,117 @@
       </tags>
   </entry>
   <entry>
+    <title>记录一次五个候选因子的验证（2026-08-14）</title>
+    <url>/posts/ov0814/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次五个候选因子的验证（2026-08-14）"><a href="#记录一次五个候选因子的验证（2026-08-14）" class="headerlink" title="记录一次五个候选因子的验证（2026-08-14）"></a>记录一次五个候选因子的验证（2026-08-14）</h1><p><strong>一天跑完五个方向，最后只剩一条腿站着。</strong></p>
+<p>08-14 把手上所有候选方向一次性验证完：低动量做多、24h 动量跟随、量价因子新腿、factor_ic 最优形态、长周期反转。五个方向，五份报告。</p>
+<p>框架是同一套：<strong>12 币池、IS&#x2F;OOS 切在 2026-07-31（之后为真样本外）、24h 持有、5% 止损 &#x2F; 15% 止盈、120min 冷却、手续费 1bp。</strong> 只换信号，不换尺子。</p>
+<p>结论是：<strong>五个方向里，四个被否，只剩&quot;做空高动量&quot;这一条腿。</strong></p>
+<hr>
+<h2 id="一份报告，一个拒绝理由"><a href="#一份报告，一个拒绝理由" class="headerlink" title="一份报告，一个拒绝理由"></a>一份报告，一个拒绝理由</h2><p>那天先把&quot;怎么算验证通过&quot;定死了。评估分三条：<strong>回测配置一致性（权重 0.3）、结论数据支撑（0.4）、建议可执行性（0.3）</strong>。也就是说，一个方向的结论，光看全样本收益没用，<strong>必须有全样本 + 样本内 &#x2F; 样本外多维度的支撑。</strong></p>
+<p>剩下的就是一份份看。</p>
+<h2 id="低动量做多：−29-63-到-−54-01"><a href="#低动量做多：−29-63-到-−54-01" class="headerlink" title="低动量做多：−29.63% 到 −54.01%"></a>低动量做多：−29.63% 到 −54.01%</h2><p>四个配置（A 上涨限定 TOP1 &#x2F; B 不限 regime TOP1 &#x2F; D1 上涨限定 TOP2 &#x2F; D2 上涨限定 TOP3），笔数从 74 到 222，<strong>总收益 −25.82% 到 −54.01% 全负</strong>。胜率全部贴着 50%。</p>
+<p><strong>没有对称收益，不能作为策略腿加入。</strong></p>
+<h2 id="24h-动量跟随：−49-56"><a href="#24h-动量跟随：−49-56" class="headerlink" title="24h 动量跟随：−49.56%"></a>24h 动量跟随：−49.56%</h2><p>即便限定在上涨 regime，做多最高动量的币，**全样本收益 −49.56%**；仅看上涨 regime 那一段 −50.50%；上涨 regime 入场那一档 −7.04%，不限 regime 入场 −45.73%，TOP_N&#x3D;2 &#x2F; 3 更差（−60.6% &#x2F; −68.9%）。</p>
+<p>和 factor_ic 对照最清楚：<strong>SHORT 高动量 +34.9% ↔ 动量跟随 LONG 高动量 −49.6%<strong>。这批币在 24h 频段</strong>均值回归占优</strong>，跟动量必亏。<strong>方向无效，被数据拒绝。</strong></p>
+<h2 id="量价新腿：SHORT-全正，但它不是新-alpha"><a href="#量价新腿：SHORT-全正，但它不是新-alpha" class="headerlink" title="量价新腿：SHORT 全正，但它不是新 alpha"></a>量价新腿：SHORT 全正，但它不是新 alpha</h2><p>量价因子（<code>volume_zscore</code> 和 <code>cvd_slope_24h</code>）各测了<strong>反转</strong>和<strong>跟随</strong>两个方向，共 4 个配置，每配置只有 <strong>22 笔真样本外</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>配置</th>
+<th>LONG 腿</th>
+<th>SHORT 腿</th>
+<th>配对</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>VOL 反转（低量 L &#x2F; 高量 S）</td>
+<td>−10.00%</td>
+<td>+3.96%</td>
+<td>−6.44%</td>
+</tr>
+<tr>
+<td>VOL 跟随（高量 L &#x2F; 低量 S）</td>
+<td>−4.24%</td>
+<td>+10.49%</td>
+<td><strong>+5.81%</strong></td>
+</tr>
+<tr>
+<td>CVD 反转（低 CVD L &#x2F; 高 CVD S）</td>
+<td>−0.59%</td>
+<td>+4.56%</td>
+<td><strong>+3.93%</strong></td>
+</tr>
+<tr>
+<td>CVD 跟随（高 CVD L &#x2F; 低 CVD S）</td>
+<td>−4.78%</td>
+<td>+1.58%</td>
+<td>−3.28%</td>
+</tr>
+</tbody></table>
+<p>全样本上看，<strong>SHORT 腿 4 个配置全正</strong>：VOL 反转 +36.9% &#x2F; VOL 跟随 +24.0% &#x2F; CVD 反转 +46.3% &#x2F; CVD 跟随 **+94.4%**；而 <strong>LONG 腿全负</strong>（−55% 到 −24%）。</p>
+<p>看起来很诱人，但结论是<strong>不新增</strong>，三条理由：</p>
+<ol>
+<li><strong>LONG 腿在所有配置全负</strong>——和&quot;LONG 已死&quot;一致，量价因子也救不出正的多头腿。</li>
+<li><strong>SHORT 腿是唯一的稳定信号，但它和现动量 SHORT 是同一个 alpha</strong>——都是&quot;做空高关注 &#x2F; 放量币&quot;的反转，<strong>高度相关，不是独立的分散腿</strong>。加进去只是把同一笔赌注加倍。</li>
+<li>**CVD 跟随全样本 SHORT 高达 +94.4%，但样本外塌到 +1.58%**——典型的 regime 过拟合，不可信。</li>
+</ol>
+<p>报告落在 <code>_tmp_vol_cvd_bt_report.txt</code>（含 4 配置 × 全样本 &#x2F; IS &#x2F; OOS &#x2F; 分腿 &#x2F; fee 敏感性完整明细）。</p>
+<h2 id="长周期：24h-72h-168h，一个方向地衰减"><a href="#长周期：24h-72h-168h，一个方向地衰减" class="headerlink" title="长周期：24h &#x2F; 72h &#x2F; 168h，一个方向地衰减"></a>长周期：24h &#x2F; 72h &#x2F; 168h，一个方向地衰减</h2><p>最后一个问题是：&quot;拉长到 72h &#x2F; 168h，是不是就对称了？&quot;报告（<code>_tmp_long_horizon_reversal_bt_report.txt</code>）给的判据表：</p>
+<table>
+<thead>
+<tr>
+<th>窗口</th>
+<th>SHORT 高动量腿</th>
+<th>LONG 低动量腿</th>
+<th>配对</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>24h</td>
+<td>+34.9%</td>
+<td>−38.1%</td>
+<td>−16.5%</td>
+</tr>
+<tr>
+<td>72h</td>
+<td>+14.0%</td>
+<td>−48.1%</td>
+<td>−40.8%</td>
+</tr>
+<tr>
+<td>168h</td>
+<td>−15.1%</td>
+<td>−24.6%</td>
+<td>−36.0%</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>LONG 低动量腿在 24 &#x2F; 72 &#x2F; 168h 全为负</strong>（−38% → −48% → −25%），越拉越长越亏——&quot;对称补完&quot;的假设<strong>被彻底否决</strong>。</li>
+<li><strong>SHORT 高动量腿随窗口衰减</strong>（+35% → +14% → −15%），整个反转溢价在 168h 蒸发。</li>
+<li>稳健性上有一点很关键：72h 那一档里，<strong>SHORT 和 LONG 用的是完全相同的 5% &#x2F; 15% 止损止盈</strong>，一个正一个负——<strong>符号背离不是止损参数的假象，是 IC 本身的单向性。</strong></li>
+</ul>
+<h2 id="factor-ic-的最优形态：只剩一条腿"><a href="#factor-ic-的最优形态：只剩一条腿" class="headerlink" title="factor_ic 的最优形态：只剩一条腿"></a>factor_ic 的最优形态：只剩一条腿</h2><p>五个方向看完，收口很清楚：<strong>factor_ic 唯一 durable 的 alpha，就是 24h SHORT-only 反向动量。</strong></p>
+<ul>
+<li>维持现状：<strong>24h SHORT-only + $80 验证仓</strong>，让 A&#x2F;B（自 08-10）继续安静攒样本。</li>
+<li><strong>不加</strong>低动量做多、<strong>不加</strong>长周期、<strong>不加</strong>量价新腿。</li>
+<li>下一步若真想找新腿，得<strong>离开量价族</strong>（比如 funding &#x2F; 基差、跨所价差）——但那已经超出当前因子库的范围。</li>
+</ul>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>那天五个方向跑完，收获得分三层。</p>
+<p><strong>最表面的是五份报告</strong>——一份通过、四份被否，落成可以复盘的证据。</p>
+<p><strong>中间一层是那条判据</strong>：<strong>一个方向是否成立，不看它全样本多漂亮，看它样本外还剩多少。</strong> CVD 跟随的全样本 +94.4% 和样本外 +1.58%，就是这条判据最好的反例。</p>
+<p><strong>最里面一层，是接受&quot;只剩一条腿&quot;这件事。</strong> 跑了一天，最后能加的只有零条——这从&quot;找收益&quot;的角度看是失败的，但从&quot;搞清楚自己赚的是哪一笔钱&quot;的角度看，是那天最值钱的结论。<strong>知道自己手里的 alpha 只有一条、且知道它为什么只有一条，比手里攥着五条说不清来源的腿，要稳得多。</strong></p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>量化</tag>
+        <tag>因子</tag>
+        <tag>回测</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>记录一次 GMGN 接口的摸底（2026-06-07）</title>
     <url>/posts/ov0607/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次-GMGN-接口的摸底（2026-06-07）"><a href="#记录一次-GMGN-接口的摸底（2026-06-07）" class="headerlink" title="记录一次 GMGN 接口的摸底（2026-06-07）"></a>记录一次 GMGN 接口的摸底（2026-06-07）</h1><p><strong>平台真正的能力边界，从来不在文档里</strong></p>
@@ -316,6 +427,72 @@
       <tags>
         <tag>量化</tag>
         <tag>接口</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录一次代码体检：290 行的 Streamlit（2026-05-28）</title>
+    <url>/posts/ov0528/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次代码体检：290-行的-Streamlit（2026-05-28）"><a href="#记录一次代码体检：290-行的-Streamlit（2026-05-28）" class="headerlink" title="记录一次代码体检：290 行的 Streamlit（2026-05-28）"></a>记录一次代码体检：290 行的 Streamlit（2026-05-28）</h1><p><strong>自己写的东西，自己最不容易看出问题</strong></p>
+<p>那天没写新功能，做了两件更基础的事：<strong>给一套自己写的 Streamlit 做代码体检</strong>，<strong>再把另一个小项目的架构摊开看一遍</strong>。都是&quot;回头看&quot;的活，比往前冲更难受，但也更有用。</p>
+<hr>
+<h2 id="第一件：给效率分析系统做个体检"><a href="#第一件：给效率分析系统做个体检" class="headerlink" title="第一件：给效率分析系统做个体检"></a>第一件：给效率分析系统做个体检</h2><p>被体检的是一个 <strong>290 行</strong>的 Streamlit 应用——效率分析管理系统。结构其实挺清楚，一共七个区块：</p>
+<ol>
+<li>页面配置（7-13 行）</li>
+<li>样式注入（15-35 行）—— 自定义 CSS，用 <code>unsafe_allow_html</code></li>
+<li>常量定义（37-52 行）—— 硬编码了 <code>D:\work</code> 路径和三个 Excel 文件路径，三组列名</li>
+<li>Session State 初始化（54-69 行）—— 把三个表读进 <code>session_state</code></li>
+<li>工具函数（71-98 行）—— DataFrame 转 Excel bytes、校验列名后导入</li>
+<li>主界面三个 Tab（106-282 行）—— 每个 Tab 都是&quot;导入&#x2F;导出&#x2F;在线编辑&quot;</li>
+<li>页脚（284-289 行）</li>
+</ol>
+<p>功能上没毛病：三表管理、Excel 导入带列名校验、导出、<code>data_editor</code> 在线编辑、样式美化，该有的都有。</p>
+<p>问题在于**这些功能全都是&quot;看起来能用&quot;**。往下一挖，九个坑排着队：</p>
+<p><strong>严重的三条：</strong></p>
+<ol>
+<li><strong>数据无持久化。</strong> 所有数据只活在 <code>session_state</code> 里，用户刷新页面、关掉浏览器，改的东西全没。导入的新数据也没有回写本地 xlsx。</li>
+<li><strong>导出触发逻辑有问题。</strong> 点&quot;导出&quot;后先设一个 <code>trigger = True</code>，等下一次 rerun 才显示下载按钮——但 trigger 立刻又被置回 False。结果就是下载按钮会闪一下、甚至点不到。正确做法是把 <code>st.download_button</code> 直接放在按钮旁边。</li>
+<li><strong>数据覆盖风险。</strong> 导入时直接整个 DataFrame 替换，没有&quot;追加&quot;或&quot;合并&quot;选项，用户辛苦编辑的本地数据会被一把覆盖。</li>
+</ol>
+<p><strong>中等的三条：</strong></p>
+<ol start="4">
+<li><strong>硬编码路径 <code>D:\work</code>。</strong> 跨平台差，而且路径不存在时函数静默返回空表，一声不吭。</li>
+<li><strong>字段校验太死。</strong> 要求列名和顺序完全一致，列顺序不同但内容相同也拒绝，还不给自动排序。</li>
+<li><strong>数值列全读成 str。</strong> <code>dtype=str</code> 一路到底，<code>data_editor</code> 的数字格式化不生效，算的时候还得再转类型。</li>
+</ol>
+<p><strong>轻微的三条：</strong></p>
+<ol start="7">
+<li>样式注入带 XSS 隐患（这次是静态 CSS，但是坏习惯）</li>
+<li>异常被静默吞掉，用户不知道文件为什么加载失败</li>
+<li>三个 Tab 的代码几乎完全重复，该抽成函数</li>
+</ol>
+<p>最后给出了六条改进建议：加持久化（回写 xlsx 或者上 sqlite）、导出改用 <code>st.download_button</code> 去掉中间态、导入加&quot;替换&#x2F;追加&quot;选项、路径配置化、抽公共渲染函数、数值列先 <code>pd.to_numeric</code> 再入 state。</p>
+<p>说句实话，<strong>第 9 条最扎心</strong>。三个 Tab 各写一遍，意味着以后改一处要改三处，漏一处就出不一致——这种债不会当场爆，但会一直收利息。</p>
+<h2 id="第二件：把-UI-agnet-ev-摊开看"><a href="#第二件：把-UI-agnet-ev-摊开看" class="headerlink" title="第二件：把 UI_agnet_ev 摊开看"></a>第二件：把 UI_agnet_ev 摊开看</h2><p>另一个被翻出来的是 <code>UI_agnet_ev</code>——一个多智能体对话可视化监控，定位是 Codex ↔ Hermes 的实时对话展示。整个项目只有三个文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">UI_agnet_ev/</span><br><span class="line">├── app.py      # Streamlit 监控面板（558 行，端口 8508）</span><br><span class="line">├── bridge.py   # FastAPI 桥接服务（69 行，端口 8643）</span><br><span class="line">└── run.bat     # 一键启动</span><br></pre></td></tr></table></figure>
+
+<p>结构是&quot;事件收集 + 实时展示&quot;：Bridge 收 Codex &#x2F; Hermes 发来的消息（<code>POST /api/chat</code>），Streamlit 轮询（<code>GET /api/conversation</code>、<code>GET /api/logs</code>）把对话和日志画出来。前端四张指标卡 + 两个 Tab（对话记录 &#x2F; 活动日志），每 0.1 秒 rerun 一次。</p>
+<p><strong>优点是真的很简单</strong>——三个文件，前后端分离清楚，靠轮询把实时性做出来了。</p>
+<p><strong>局限也同样明显：</strong></p>
+<ul>
+<li>消息存内存，重启即丢，没有数据库</li>
+<li>完全没有认证，CORS 全开</li>
+<li>端口硬编码，没有配置文件</li>
+</ul>
+<p>那天给它开的方子也是四条：持久化（文件或 SQLite）、把轮询换成 WebSocket、配置外置到 <code>config.toml</code>、补一个 <code>requirements.txt</code>。</p>
+<h2 id="顺带认识了一下搭档"><a href="#顺带认识了一下搭档" class="headerlink" title="顺带认识了一下搭档"></a>顺带认识了一下搭档</h2><p>那天还花了点时间搞清楚&quot;我到底在跟什么打交道&quot;——当前会话跑的模型是 <strong>mimo-v2.5</strong>，但它本质上是一个 Agent 框架（Hermes Agent），<strong>底层模型是可以换的</strong>。</p>
+<p>这件事值得单独记一笔，因为它解释了很多后面的行为：环境是长期存在的，模型是可以替换的，而<strong>跨会话记住的偏好和环境信息，才是真正沉淀下来的东西</strong>。</p>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>那天学到的最大一件事是：**&quot;能跑&quot;和&quot;扛得住&quot;是两回事。**</p>
+<p>290 行那个应用，功能全都能演示一遍，看起来很完整。但它的每一个 Tab 都建立在&quot;用户不会刷新页面&quot;&quot;用户不会传错列顺序&quot;&quot;用户只在一台机器上跑&quot;这三个脆弱前提上。任何一个前提松动，它就开始丢数据或者沉默地失败。</p>
+<p>代码体检的价值就在这儿——<strong>它不增加功能，但它把&quot;什么时候会坏&quot;提前指出来了</strong>。而提前知道，就有机会在它真的坏掉之前修掉。</p>
+<p>至于那两个当天的答案（RESTful 到底是什么、微服务该怎么拆），后来我把它们单独记成了知识条目。知识本身是通用的，反而是&quot;这套 290 行的东西该怎么改&quot;才是一次性的——<strong>通用的东西存成知识，一次性的东西就当场改掉</strong>，这也算是那天顺手定下来的分工。</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>代码评审</tag>
+        <tag>Streamlit</tag>
       </tags>
   </entry>
   <entry>
@@ -538,117 +715,6 @@
       </tags>
   </entry>
   <entry>
-    <title>记录一次五个候选因子的验证（2026-08-14）</title>
-    <url>/posts/ov0814/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次五个候选因子的验证（2026-08-14）"><a href="#记录一次五个候选因子的验证（2026-08-14）" class="headerlink" title="记录一次五个候选因子的验证（2026-08-14）"></a>记录一次五个候选因子的验证（2026-08-14）</h1><p><strong>一天跑完五个方向，最后只剩一条腿站着。</strong></p>
-<p>08-14 把手上所有候选方向一次性验证完：低动量做多、24h 动量跟随、量价因子新腿、factor_ic 最优形态、长周期反转。五个方向，五份报告。</p>
-<p>框架是同一套：<strong>12 币池、IS&#x2F;OOS 切在 2026-07-31（之后为真样本外）、24h 持有、5% 止损 &#x2F; 15% 止盈、120min 冷却、手续费 1bp。</strong> 只换信号，不换尺子。</p>
-<p>结论是：<strong>五个方向里，四个被否，只剩&quot;做空高动量&quot;这一条腿。</strong></p>
-<hr>
-<h2 id="一份报告，一个拒绝理由"><a href="#一份报告，一个拒绝理由" class="headerlink" title="一份报告，一个拒绝理由"></a>一份报告，一个拒绝理由</h2><p>那天先把&quot;怎么算验证通过&quot;定死了。评估分三条：<strong>回测配置一致性（权重 0.3）、结论数据支撑（0.4）、建议可执行性（0.3）</strong>。也就是说，一个方向的结论，光看全样本收益没用，<strong>必须有全样本 + 样本内 &#x2F; 样本外多维度的支撑。</strong></p>
-<p>剩下的就是一份份看。</p>
-<h2 id="低动量做多：−29-63-到-−54-01"><a href="#低动量做多：−29-63-到-−54-01" class="headerlink" title="低动量做多：−29.63% 到 −54.01%"></a>低动量做多：−29.63% 到 −54.01%</h2><p>四个配置（A 上涨限定 TOP1 &#x2F; B 不限 regime TOP1 &#x2F; D1 上涨限定 TOP2 &#x2F; D2 上涨限定 TOP3），笔数从 74 到 222，<strong>总收益 −25.82% 到 −54.01% 全负</strong>。胜率全部贴着 50%。</p>
-<p><strong>没有对称收益，不能作为策略腿加入。</strong></p>
-<h2 id="24h-动量跟随：−49-56"><a href="#24h-动量跟随：−49-56" class="headerlink" title="24h 动量跟随：−49.56%"></a>24h 动量跟随：−49.56%</h2><p>即便限定在上涨 regime，做多最高动量的币，**全样本收益 −49.56%**；仅看上涨 regime 那一段 −50.50%；上涨 regime 入场那一档 −7.04%，不限 regime 入场 −45.73%，TOP_N&#x3D;2 &#x2F; 3 更差（−60.6% &#x2F; −68.9%）。</p>
-<p>和 factor_ic 对照最清楚：<strong>SHORT 高动量 +34.9% ↔ 动量跟随 LONG 高动量 −49.6%<strong>。这批币在 24h 频段</strong>均值回归占优</strong>，跟动量必亏。<strong>方向无效，被数据拒绝。</strong></p>
-<h2 id="量价新腿：SHORT-全正，但它不是新-alpha"><a href="#量价新腿：SHORT-全正，但它不是新-alpha" class="headerlink" title="量价新腿：SHORT 全正，但它不是新 alpha"></a>量价新腿：SHORT 全正，但它不是新 alpha</h2><p>量价因子（<code>volume_zscore</code> 和 <code>cvd_slope_24h</code>）各测了<strong>反转</strong>和<strong>跟随</strong>两个方向，共 4 个配置，每配置只有 <strong>22 笔真样本外</strong>：</p>
-<table>
-<thead>
-<tr>
-<th>配置</th>
-<th>LONG 腿</th>
-<th>SHORT 腿</th>
-<th>配对</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>VOL 反转（低量 L &#x2F; 高量 S）</td>
-<td>−10.00%</td>
-<td>+3.96%</td>
-<td>−6.44%</td>
-</tr>
-<tr>
-<td>VOL 跟随（高量 L &#x2F; 低量 S）</td>
-<td>−4.24%</td>
-<td>+10.49%</td>
-<td><strong>+5.81%</strong></td>
-</tr>
-<tr>
-<td>CVD 反转（低 CVD L &#x2F; 高 CVD S）</td>
-<td>−0.59%</td>
-<td>+4.56%</td>
-<td><strong>+3.93%</strong></td>
-</tr>
-<tr>
-<td>CVD 跟随（高 CVD L &#x2F; 低 CVD S）</td>
-<td>−4.78%</td>
-<td>+1.58%</td>
-<td>−3.28%</td>
-</tr>
-</tbody></table>
-<p>全样本上看，<strong>SHORT 腿 4 个配置全正</strong>：VOL 反转 +36.9% &#x2F; VOL 跟随 +24.0% &#x2F; CVD 反转 +46.3% &#x2F; CVD 跟随 **+94.4%**；而 <strong>LONG 腿全负</strong>（−55% 到 −24%）。</p>
-<p>看起来很诱人，但结论是<strong>不新增</strong>，三条理由：</p>
-<ol>
-<li><strong>LONG 腿在所有配置全负</strong>——和&quot;LONG 已死&quot;一致，量价因子也救不出正的多头腿。</li>
-<li><strong>SHORT 腿是唯一的稳定信号，但它和现动量 SHORT 是同一个 alpha</strong>——都是&quot;做空高关注 &#x2F; 放量币&quot;的反转，<strong>高度相关，不是独立的分散腿</strong>。加进去只是把同一笔赌注加倍。</li>
-<li>**CVD 跟随全样本 SHORT 高达 +94.4%，但样本外塌到 +1.58%**——典型的 regime 过拟合，不可信。</li>
-</ol>
-<p>报告落在 <code>_tmp_vol_cvd_bt_report.txt</code>（含 4 配置 × 全样本 &#x2F; IS &#x2F; OOS &#x2F; 分腿 &#x2F; fee 敏感性完整明细）。</p>
-<h2 id="长周期：24h-72h-168h，一个方向地衰减"><a href="#长周期：24h-72h-168h，一个方向地衰减" class="headerlink" title="长周期：24h &#x2F; 72h &#x2F; 168h，一个方向地衰减"></a>长周期：24h &#x2F; 72h &#x2F; 168h，一个方向地衰减</h2><p>最后一个问题是：&quot;拉长到 72h &#x2F; 168h，是不是就对称了？&quot;报告（<code>_tmp_long_horizon_reversal_bt_report.txt</code>）给的判据表：</p>
-<table>
-<thead>
-<tr>
-<th>窗口</th>
-<th>SHORT 高动量腿</th>
-<th>LONG 低动量腿</th>
-<th>配对</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>24h</td>
-<td>+34.9%</td>
-<td>−38.1%</td>
-<td>−16.5%</td>
-</tr>
-<tr>
-<td>72h</td>
-<td>+14.0%</td>
-<td>−48.1%</td>
-<td>−40.8%</td>
-</tr>
-<tr>
-<td>168h</td>
-<td>−15.1%</td>
-<td>−24.6%</td>
-<td>−36.0%</td>
-</tr>
-</tbody></table>
-<ul>
-<li><strong>LONG 低动量腿在 24 &#x2F; 72 &#x2F; 168h 全为负</strong>（−38% → −48% → −25%），越拉越长越亏——&quot;对称补完&quot;的假设<strong>被彻底否决</strong>。</li>
-<li><strong>SHORT 高动量腿随窗口衰减</strong>（+35% → +14% → −15%），整个反转溢价在 168h 蒸发。</li>
-<li>稳健性上有一点很关键：72h 那一档里，<strong>SHORT 和 LONG 用的是完全相同的 5% &#x2F; 15% 止损止盈</strong>，一个正一个负——<strong>符号背离不是止损参数的假象，是 IC 本身的单向性。</strong></li>
-</ul>
-<h2 id="factor-ic-的最优形态：只剩一条腿"><a href="#factor-ic-的最优形态：只剩一条腿" class="headerlink" title="factor_ic 的最优形态：只剩一条腿"></a>factor_ic 的最优形态：只剩一条腿</h2><p>五个方向看完，收口很清楚：<strong>factor_ic 唯一 durable 的 alpha，就是 24h SHORT-only 反向动量。</strong></p>
-<ul>
-<li>维持现状：<strong>24h SHORT-only + $80 验证仓</strong>，让 A&#x2F;B（自 08-10）继续安静攒样本。</li>
-<li><strong>不加</strong>低动量做多、<strong>不加</strong>长周期、<strong>不加</strong>量价新腿。</li>
-<li>下一步若真想找新腿，得<strong>离开量价族</strong>（比如 funding &#x2F; 基差、跨所价差）——但那已经超出当前因子库的范围。</li>
-</ul>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>那天五个方向跑完，收获得分三层。</p>
-<p><strong>最表面的是五份报告</strong>——一份通过、四份被否，落成可以复盘的证据。</p>
-<p><strong>中间一层是那条判据</strong>：<strong>一个方向是否成立，不看它全样本多漂亮，看它样本外还剩多少。</strong> CVD 跟随的全样本 +94.4% 和样本外 +1.58%，就是这条判据最好的反例。</p>
-<p><strong>最里面一层，是接受&quot;只剩一条腿&quot;这件事。</strong> 跑了一天，最后能加的只有零条——这从&quot;找收益&quot;的角度看是失败的，但从&quot;搞清楚自己赚的是哪一笔钱&quot;的角度看，是那天最值钱的结论。<strong>知道自己手里的 alpha 只有一条、且知道它为什么只有一条，比手里攥着五条说不清来源的腿，要稳得多。</strong></p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>量化</tag>
-        <tag>因子</tag>
-        <tag>回测</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>记录一次五个项目的盘点（2026-06-04）</title>
     <url>/posts/ov0604/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次五个项目的盘点（2026-06-04）"><a href="#记录一次五个项目的盘点（2026-06-04）" class="headerlink" title="记录一次五个项目的盘点（2026-06-04）"></a>记录一次五个项目的盘点（2026-06-04）</h1><p><strong>手上的东西一多，就需要有人替你说清&quot;你现在在忙什么&quot;</strong></p>
@@ -694,124 +760,6 @@
       <tags>
         <tag>记录</tag>
         <tag>工程</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录一次代码体检：290 行的 Streamlit（2026-05-28）</title>
-    <url>/posts/ov0528/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次代码体检：290-行的-Streamlit（2026-05-28）"><a href="#记录一次代码体检：290-行的-Streamlit（2026-05-28）" class="headerlink" title="记录一次代码体检：290 行的 Streamlit（2026-05-28）"></a>记录一次代码体检：290 行的 Streamlit（2026-05-28）</h1><p><strong>自己写的东西，自己最不容易看出问题</strong></p>
-<p>那天没写新功能，做了两件更基础的事：<strong>给一套自己写的 Streamlit 做代码体检</strong>，<strong>再把另一个小项目的架构摊开看一遍</strong>。都是&quot;回头看&quot;的活，比往前冲更难受，但也更有用。</p>
-<hr>
-<h2 id="第一件：给效率分析系统做个体检"><a href="#第一件：给效率分析系统做个体检" class="headerlink" title="第一件：给效率分析系统做个体检"></a>第一件：给效率分析系统做个体检</h2><p>被体检的是一个 <strong>290 行</strong>的 Streamlit 应用——效率分析管理系统。结构其实挺清楚，一共七个区块：</p>
-<ol>
-<li>页面配置（7-13 行）</li>
-<li>样式注入（15-35 行）—— 自定义 CSS，用 <code>unsafe_allow_html</code></li>
-<li>常量定义（37-52 行）—— 硬编码了 <code>D:\work</code> 路径和三个 Excel 文件路径，三组列名</li>
-<li>Session State 初始化（54-69 行）—— 把三个表读进 <code>session_state</code></li>
-<li>工具函数（71-98 行）—— DataFrame 转 Excel bytes、校验列名后导入</li>
-<li>主界面三个 Tab（106-282 行）—— 每个 Tab 都是&quot;导入&#x2F;导出&#x2F;在线编辑&quot;</li>
-<li>页脚（284-289 行）</li>
-</ol>
-<p>功能上没毛病：三表管理、Excel 导入带列名校验、导出、<code>data_editor</code> 在线编辑、样式美化，该有的都有。</p>
-<p>问题在于**这些功能全都是&quot;看起来能用&quot;**。往下一挖，九个坑排着队：</p>
-<p><strong>严重的三条：</strong></p>
-<ol>
-<li><strong>数据无持久化。</strong> 所有数据只活在 <code>session_state</code> 里，用户刷新页面、关掉浏览器，改的东西全没。导入的新数据也没有回写本地 xlsx。</li>
-<li><strong>导出触发逻辑有问题。</strong> 点&quot;导出&quot;后先设一个 <code>trigger = True</code>，等下一次 rerun 才显示下载按钮——但 trigger 立刻又被置回 False。结果就是下载按钮会闪一下、甚至点不到。正确做法是把 <code>st.download_button</code> 直接放在按钮旁边。</li>
-<li><strong>数据覆盖风险。</strong> 导入时直接整个 DataFrame 替换，没有&quot;追加&quot;或&quot;合并&quot;选项，用户辛苦编辑的本地数据会被一把覆盖。</li>
-</ol>
-<p><strong>中等的三条：</strong></p>
-<ol start="4">
-<li><strong>硬编码路径 <code>D:\work</code>。</strong> 跨平台差，而且路径不存在时函数静默返回空表，一声不吭。</li>
-<li><strong>字段校验太死。</strong> 要求列名和顺序完全一致，列顺序不同但内容相同也拒绝，还不给自动排序。</li>
-<li><strong>数值列全读成 str。</strong> <code>dtype=str</code> 一路到底，<code>data_editor</code> 的数字格式化不生效，算的时候还得再转类型。</li>
-</ol>
-<p><strong>轻微的三条：</strong></p>
-<ol start="7">
-<li>样式注入带 XSS 隐患（这次是静态 CSS，但是坏习惯）</li>
-<li>异常被静默吞掉，用户不知道文件为什么加载失败</li>
-<li>三个 Tab 的代码几乎完全重复，该抽成函数</li>
-</ol>
-<p>最后给出了六条改进建议：加持久化（回写 xlsx 或者上 sqlite）、导出改用 <code>st.download_button</code> 去掉中间态、导入加&quot;替换&#x2F;追加&quot;选项、路径配置化、抽公共渲染函数、数值列先 <code>pd.to_numeric</code> 再入 state。</p>
-<p>说句实话，<strong>第 9 条最扎心</strong>。三个 Tab 各写一遍，意味着以后改一处要改三处，漏一处就出不一致——这种债不会当场爆，但会一直收利息。</p>
-<h2 id="第二件：把-UI-agnet-ev-摊开看"><a href="#第二件：把-UI-agnet-ev-摊开看" class="headerlink" title="第二件：把 UI_agnet_ev 摊开看"></a>第二件：把 UI_agnet_ev 摊开看</h2><p>另一个被翻出来的是 <code>UI_agnet_ev</code>——一个多智能体对话可视化监控，定位是 Codex ↔ Hermes 的实时对话展示。整个项目只有三个文件：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">UI_agnet_ev/</span><br><span class="line">├── app.py      # Streamlit 监控面板（558 行，端口 8508）</span><br><span class="line">├── bridge.py   # FastAPI 桥接服务（69 行，端口 8643）</span><br><span class="line">└── run.bat     # 一键启动</span><br></pre></td></tr></table></figure>
-
-<p>结构是&quot;事件收集 + 实时展示&quot;：Bridge 收 Codex &#x2F; Hermes 发来的消息（<code>POST /api/chat</code>），Streamlit 轮询（<code>GET /api/conversation</code>、<code>GET /api/logs</code>）把对话和日志画出来。前端四张指标卡 + 两个 Tab（对话记录 &#x2F; 活动日志），每 0.1 秒 rerun 一次。</p>
-<p><strong>优点是真的很简单</strong>——三个文件，前后端分离清楚，靠轮询把实时性做出来了。</p>
-<p><strong>局限也同样明显：</strong></p>
-<ul>
-<li>消息存内存，重启即丢，没有数据库</li>
-<li>完全没有认证，CORS 全开</li>
-<li>端口硬编码，没有配置文件</li>
-</ul>
-<p>那天给它开的方子也是四条：持久化（文件或 SQLite）、把轮询换成 WebSocket、配置外置到 <code>config.toml</code>、补一个 <code>requirements.txt</code>。</p>
-<h2 id="顺带认识了一下搭档"><a href="#顺带认识了一下搭档" class="headerlink" title="顺带认识了一下搭档"></a>顺带认识了一下搭档</h2><p>那天还花了点时间搞清楚&quot;我到底在跟什么打交道&quot;——当前会话跑的模型是 <strong>mimo-v2.5</strong>，但它本质上是一个 Agent 框架（Hermes Agent），<strong>底层模型是可以换的</strong>。</p>
-<p>这件事值得单独记一笔，因为它解释了很多后面的行为：环境是长期存在的，模型是可以替换的，而<strong>跨会话记住的偏好和环境信息，才是真正沉淀下来的东西</strong>。</p>
-<hr>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>那天学到的最大一件事是：**&quot;能跑&quot;和&quot;扛得住&quot;是两回事。**</p>
-<p>290 行那个应用，功能全都能演示一遍，看起来很完整。但它的每一个 Tab 都建立在&quot;用户不会刷新页面&quot;&quot;用户不会传错列顺序&quot;&quot;用户只在一台机器上跑&quot;这三个脆弱前提上。任何一个前提松动，它就开始丢数据或者沉默地失败。</p>
-<p>代码体检的价值就在这儿——<strong>它不增加功能，但它把&quot;什么时候会坏&quot;提前指出来了</strong>。而提前知道，就有机会在它真的坏掉之前修掉。</p>
-<p>至于那两个当天的答案（RESTful 到底是什么、微服务该怎么拆），后来我把它们单独记成了知识条目。知识本身是通用的，反而是&quot;这套 290 行的东西该怎么改&quot;才是一次性的——<strong>通用的东西存成知识，一次性的东西就当场改掉</strong>，这也算是那天顺手定下来的分工。</p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>代码评审</tag>
-        <tag>Streamlit</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录一次优化清单（2026-09-04）</title>
-    <url>/posts/ov0904/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次优化清单（2026-09-04）"><a href="#记录一次优化清单（2026-09-04）" class="headerlink" title="记录一次优化清单（2026-09-04）"></a>记录一次优化清单（2026-09-04）</h1><p><strong>系统跑得动，不代表它没有一堆欠账</strong></p>
-<p>那天没有急着写新功能，而是做了一次系统深潜——把交易系统从上到下过了一遍，把&quot;该修、但一直没修&quot;的事一条条捞出来，收成一份优化队列。深潜的副产品，是几个早就该做的接通和改造。</p>
-<hr>
-<h2 id="一、先把清单本身立起来"><a href="#一、先把清单本身立起来" class="headerlink" title="一、先把清单本身立起来"></a>一、先把清单本身立起来</h2><p>清单不是随手记的备忘，它得能当队列用。所以它的形态是一个<strong>结构化目录</strong>：<code>optimization_todos</code>，落在</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">viking://resources/craw_app1_wz/queue/optimization_todos_1</span><br></pre></td></tr></table></figure>
-
-<p>它来自 <strong>2026-09-04 的一次系统深潜</strong>，用途写得很明确——作为交易系统改进任务的有序队列，按优先级排。</p>
-<p><strong>先有清单，再谈排期。</strong> 没有清单的时候，优化永远是&quot;想起来才做&quot;，而想起来的，往往是最不痛的那一条。</p>
-<p>这件事看着像在整理文档，其实是先给自己立一个&quot;可执行的容器&quot;。一套系统跑久了，欠账是散着的：有的藏在某个脚本的注释里，有的只在某次事故的复盘里被提过一句，有的就是&quot;知道有问题但没空管&quot;。<strong>深潜的作用，就是把这些散落的欠账从各个角落里翻出来，塞进同一个容器、排好序。</strong> 没有这个动作，再好的想法也只是想法。</p>
-<h2 id="二、清单上的第一件：把-OpenViking-接通"><a href="#二、清单上的第一件：把-OpenViking-接通" class="headerlink" title="二、清单上的第一件：把 OpenViking 接通"></a>二、清单上的第一件：把 OpenViking 接通</h2><p>第一条大件是记忆服务的接入。bootstrap 那天跑通了，用的两个脚本职责很清楚：</p>
-<ul>
-<li><code>codex_ov_bootstrap.py</code> —— 一次性播种（seed）</li>
-<li><code>codex_ov_session_start.py</code> —— 每个会话开始时装载上下文</li>
-</ul>
-<p>挂载点是 <code>viking://resources/craw_app1_wz/</code> 下的 <code>&#123;CONTEXT, SESSION_LOG, queue&#125;</code> 三个目录；凭据放在 <code>~/.hermes/.env</code> 的 <code>OPENVIKING_API_KEY</code>（这条随后被轮换过）。</p>
-<p><strong>为什么要把记忆服务接进工作流？</strong> 因为很多坑不是难，是忘：同一个口径、同一个路径写法、同一个授权位置，隔两个月就会重新踩一次。<strong>把上下文持久化下来，等于给&quot;记性&quot;这件事上了个外挂。</strong></p>
-<p>坑也记了一条：<strong>0.4.12 版本里 <code>/api/v1/content/write</code> 返回 404</strong>，写内容要走 <code>add_resource</code>，用 <code>k=v</code> 标签传参。还有一个清理项——bootstrap 重跑时要 <code>rm</code> 掉 <code>CONTEXT_test</code> &#x2F; <code>CONTEXT_1</code>，否则会留下重复目录。<strong>接通一个新服务，真正的成本往往不在主路径，而在这些边角上的&quot;已知怪癖&quot;。</strong></p>
-<h2 id="三、验收也是一个条目"><a href="#三、验收也是一个条目" class="headerlink" title="三、验收也是一个条目"></a>三、验收也是一个条目</h2><p>接通之后还有一步，被单独当成里程碑记下来：<strong>完成 OpenViking 技能的端到端读取验收。</strong></p>
-<p>&quot;接通&quot;和&quot;验收&quot;是两件事。脚本跑通了、目录挂上了，只说明链路搭起来了；<strong>端到端读一遍，确认写进去的东西能完整读出来，才算真的可用。</strong> 所以这一条在清单上不是&quot;顺手的收尾&quot;，而是一个独立勾选项——因为记忆服务最常见的坏法，恰恰是&quot;看起来接通了、实际读不出来&quot;。</p>
-<p>验收里还留了一条尾巴：<strong>清理 OpenViking 的重复目录</strong>。它不影响功能，但会影响整洁和排查。清单的价值之一，就是这种&quot;不急但该做&quot;的小项不会被无限期地拖着。</p>
-<h2 id="四、清单上的第二件：链上原生止损单"><a href="#四、清单上的第二件：链上原生止损单" class="headerlink" title="四、清单上的第二件：链上原生止损单"></a>四、清单上的第二件：链上原生止损单</h2><p>第二条大件，是给 <code>smart_money_trader</code> 接 <strong>持久化的 HL 原生 reduce-only 市价止损触发单</strong>。它不是一个孤立的函数，而是一组动作：</p>
-<ul>
-<li><strong>开仓后挂单</strong>：仓位建好，立刻挂上对应的止损触发单</li>
-<li><strong>平仓前撤单</strong>：正常平仓时先把挂单撤掉，避免留孤儿单</li>
-<li><strong>旧库自动迁移</strong>：老记录迁移到新字段 <code>hl_sl_oid</code></li>
-<li><strong>链上仓位先消失时</strong>：按当前价核销 PnL</li>
-</ul>
-<p>这一步的意义，是把&quot;止损&quot;从策略逻辑里挪到交易所侧——<strong>止损单挂在链上，就不依赖本地进程还活着</strong>。本地进程会卡、会僵、会没，但挂在链上的挂单不会因为你的进程死了就消失。<strong>把安全边界从&quot;我的代码&quot;挪到&quot;交易所&quot;，本身就是一种冗余设计。</strong></p>
-<p>那个&quot;链上仓位先消失时按当前价核销 PnL&quot;的分支，背后是同一条原则：<strong>本地账本和现实分叉的时候，以现实为准。</strong></p>
-<p>那天完成了<strong>语法与数据库迁移验证</strong>，但运行态的真实回执还没验：要等重启、等一次真实新开仓，看 API 的实际应答。所以这条在清单上**只能算&quot;开发完成&quot;，不能算&quot;验收通过&quot;**。</p>
-<h2 id="五、清单要能滚动"><a href="#五、清单要能滚动" class="headerlink" title="五、清单要能滚动"></a>五、清单要能滚动</h2><p>清单的另一个作用，是让&quot;下一步&quot;可指。接通那天写下的下一条推荐就很具体：<strong>item #2 —— 把 SL 触发单接到 HL 上</strong>，正是上面那一条。</p>
-<p>一份清单如果只是躺着，它就跟没有一样。<strong>能指向下一条，它才是活的。</strong></p>
-<p>而且清单是要<strong>滚动</strong>的——做完一条划掉一条，新发现的问题再补进去，优先级也跟着现实重排。一次深潜产出的清单，不该是一张一次性的表，而是一个会随系统一起长大的队列。它记的是&quot;欠账&quot;，但真正管的是&quot;顺序&quot;：<strong>先做哪条、后做哪条，这个判断本身就是价值。</strong></p>
-<p><strong>清单的生命力，全在&quot;滚动&quot;这两个字上。</strong> 它每被取用一次、每被更新一次，就离&quot;活文档&quot;近一点、离&quot;一次性产物&quot;远一点。</p>
-<hr>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>那次深潜本身没产出收益，但我觉得它比任何一次调参都值得。</p>
-<p><strong>最表面的是那份队列</strong>：<code>optimization_todos</code>，按优先级排好，随时可以取。</p>
-<p><strong>中间一层是&quot;先立清单&quot;这个习惯</strong>：优化这件事最大的敌人不是难，是散。<strong>把欠账从脑子里搬进一个有序队列，它才有机会被真正做掉。</strong></p>
-<p><strong>最里面一层，是那份对&quot;完成&quot;的克制。</strong> 止损单那条，代码写完、迁移验完，很容易就报&quot;做完了&quot;。但真实 API 回执拿到之前，它只能躺在清单上标着&quot;待运行态验证&quot;。<strong>分清&quot;写完了&quot;和&quot;验过了&quot;，是这份清单最想守住的一条线。</strong></p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>优化</tag>
-        <tag>记忆服务</tag>
-        <tag>交易系统</tag>
       </tags>
   </entry>
   <entry>
@@ -950,54 +898,6 @@
       </tags>
   </entry>
   <entry>
-    <title>记录一次依赖的坑（2026-09-07）</title>
-    <url>/posts/ov0907/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次依赖的坑（2026-09-07）"><a href="#记录一次依赖的坑（2026-09-07）" class="headerlink" title="记录一次依赖的坑（2026-09-07）"></a>记录一次依赖的坑（2026-09-07）</h1><p><strong>报错写的是模块名，坑往往在环境里</strong></p>
-<p>那天的两件活都不大，但都属于同一类：<strong>代码没写错，环境却有缺口</strong>。一个是 Streamlit 看板少了 <code>pymysql</code>，一个是本地 workbuddy-delegate 的 <code>wb.py</code> 有两个&quot;改了代码却没更新元数据&quot;的 bug。都不难，但都容易只看表面就修错方向。</p>
-<hr>
-<h2 id="一、两个页面挂了"><a href="#一、两个页面挂了" class="headerlink" title="一、两个页面挂了"></a>一、两个页面挂了</h2><p>Streamlit 看板跑在 <strong>8501</strong> 端口，页面 5（<code>views.5_market_mood</code>）和页面 14（<code>views.14_new_tokens</code>）直接报 <code>ModuleNotFoundError: pymysql</code>。</p>
-<p>看板是给交易系统做可视化的，页面挂了不会影响交易本身，但会影响&quot;看&quot;——而看不了，等于把判断系统状态的眼睛蒙住一只。所以这类问题优先级不高，但不能拖。</p>
-<h2 id="二、报错指向模块，坑在环境"><a href="#二、报错指向模块，坑在环境" class="headerlink" title="二、报错指向模块，坑在环境"></a>二、报错指向模块，坑在环境</h2><p>第一反应很容易是&quot;去改代码、加个 try 兜住&quot;。这是错的。<strong>报错已经明确说是缺模块，那就去装模块，而不是改代码绕开它。</strong> 尤其当缺的是 <code>pymysql</code> 这种公开的包——绕开它，只会让下一次跑在别的机器上再炸一次。</p>
-<p>处理方式：</p>
-<ul>
-<li>用 pip 把 <code>pymysql 1.2.0</code> 装到 <strong>user-site</strong>（这个环境是无特权的用户上下文，不能走系统级安装）</li>
-<li>重启 Streamlit 服务，让新依赖加载进来</li>
-<li>跑一遍 Playwright 冒烟测试 <code>smoke_pages.py</code></li>
-</ul>
-<p>这里有两个&quot;为什么不&quot;值得记牢：<strong>不用改源码去绕过一个公开依赖</strong>，也<strong>不用系统级 pip</strong>。前者是把环境问题伪装成代码问题，后者是在一个无特权上下文里做了一件越权的事。<strong>修依赖要修在依赖该被修的地方</strong>——user-site，重启生效，干净利落。</p>
-<p>还有一层前提容易被忽略：<strong>这套做法成立，是因为运行的是一台持久化的机器</strong>——user-site 的改动重启之后还在。如果是个用完就销毁的容器，装完就没了，那这套流程就不适用。<strong>一个修法能不能用，取决于它所依赖的环境假设</strong>，这一点值得单独想清楚。</p>
-<h2 id="三、21-个页面全过，才算修好"><a href="#三、21-个页面全过，才算修好" class="headerlink" title="三、21 个页面全过，才算修好"></a>三、21 个页面全过，才算修好</h2><p>重启之后，冒烟测试的结果是 <strong>21 个页面全部干净加载，0 失败</strong>。</p>
-<p>这里有一条我给自己定的规矩：<strong>修完必须跑全量冒烟，不能只看&quot;刚才那两个页面好了没&quot;。</strong> 因为缺依赖这种事，报错的页面只是率先撞上的那两个；同一个模块可能在别的页面上也被 import，只是那一页还没被访问到。<strong>只看报错页，等于修了症状、没验系统。</strong></p>
-<p>顺带记一条良性的：页面 15 的 <code>mc_tf</code> 控件有个 Streamlit 警告——<code>default</code> 和 <code>session_state</code> 同时被设置。它不阻断加载，先记着，不算故障。<strong>分清&quot;警告&quot;和&quot;故障&quot;，也是冒烟测试要输出的东西</strong>——不然全量跑一遍，只会被一堆噪音淹没。</p>
-<h2 id="四、冒烟测试为什么值得"><a href="#四、冒烟测试为什么值得" class="headerlink" title="四、冒烟测试为什么值得"></a>四、冒烟测试为什么值得</h2><p><code>smoke_pages.py</code> 是拿 Playwright 把 21 个页面挨个打开一遍，看有没有加载失败。它把&quot;我改完之后系统到底还是不是好的&quot;从一句感觉，变成了一个数字：<strong>0 失败</strong>。</p>
-<p><strong>系统越大，&quot;只看你改的那处&quot;就越不可靠。</strong> 依赖是全局的，改动也可能是全局的——一个包被装上或卸掉，受影响的面往往超出你以为的范围。冒烟测试的价值，就在于它不回答&quot;我改的那处好了吗&quot;，而回答&quot;整个系统还站得住吗&quot;。这两个问题，后者才是真正该被回答的。</p>
-<p>它也顺手兜住了另一种可能：<strong>万一你的修复本身引入了新问题。</strong> 改完之后先跑一遍全量，早发现比晚发现便宜得多——毕竟冒烟测试是自动的，多跑一次几乎不花什么代价。</p>
-<h2 id="五、另一个坑：wb-py-的两个-bug"><a href="#五、另一个坑：wb-py-的两个-bug" class="headerlink" title="五、另一个坑：wb.py 的两个 bug"></a>五、另一个坑：wb.py 的两个 bug</h2><p>第二件活，是给本地的 workbuddy-delegate 技能修 <code>wb.py</code>。两个 bug 属于同一类——<strong>状态没回写</strong>：</p>
-<ol>
-<li><strong>后台任务完成后，<code>meta.json</code> 不更新</strong>：任务明明跑完了，元数据还停在&quot;运行中&quot;</li>
-<li>**<code>kill</code> 命令不更新本地 <code>meta.json</code>**：进程被杀了，本地却还记着它活着</li>
-</ol>
-<p>它们不致命，但很讨厌——<strong>你以为你在看状态，其实你在看一份过期的自述</strong>。这类 bug 的修法不难，难的是发现它：因为命令都&quot;成功返回&quot;了，没有报错，只是结果不对。</p>
-<p>修的时候有一条红线：<strong>只修这两个 bug，不动已经好用的核心命令、不动技能的目录结构。</strong> 核心命令（<code>run</code> &#x2F; <code>status</code> &#x2F; <code>list</code> &#x2F; <code>kill</code> &#x2F; <code>logs</code>）是别人、也是未来的我天天要用的，<strong>为了修一个边角 bug 把它们带崩，是典型的得不偿失。</strong></p>
-<h2 id="六、修完之后：把用法写成-recipe"><a href="#六、修完之后：把用法写成-recipe" class="headerlink" title="六、修完之后：把用法写成 recipe"></a>六、修完之后：把用法写成 recipe</h2><p>修完不算完。对那几个核心命令做一遍端到端冒烟、确认原有功能没被带崩之后，还把验证过的用法补成了 <strong>4 条 recipe</strong>，写进技能的 references；再更新 <code>SKILL.md</code>，把新增的 recipe 链上，并讲清楚 runs 目录的结构。</p>
-<p>这一步看着是文档工作，其实是<strong>把&quot;我这次摸出来的用法&quot;固化下来</strong>。一次修复如果只留在提交记录里，下次用的人还得重新试；写成 recipe，它就变成了别人可以直接抄的东西。<strong>改动产出的价值，一半在代码，一半在&quot;下次不用重来&quot;。</strong></p>
-<p>更新的标准也很简单：<strong>下一个用的人，能不能只靠这份文档把事做完。</strong> 能，就说明写到位了；不能，就还差一节。</p>
-<hr>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>那天两件活，分三层看。</p>
-<p><strong>最表面的是两处修复</strong>：装上 <code>pymysql 1.2.0</code>、修掉 <code>wb.py</code> 的两个状态回写 bug。</p>
-<p><strong>中间一层是那条判断</strong>：<strong>报错指向模块，就去补环境，而不是改代码绕过它</strong>；改完代码，就去跑全量验证，而不是只看报错的那两个点。补依赖和改代码，方向完全不同——选错方向，问题只会换个地方再冒出来。</p>
-<p><strong>最里面一层，是两个 bug 共同暴露的东西</strong>：<code>meta.json</code> 不更新、<code>kill</code> 不写回，本质都是**&quot;自述和事实对不上&quot;<strong>。这和账本对不上链上是同一类病——</strong>系统里最不能信的，是它对自己状态的描述<strong>。命令返回成功不代表状态正确，日志打出横幅才代表。</strong>多问一句&quot;我怎么确认它真的变了&quot;，是那天两件活共同的注脚。**</p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>排障</tag>
-        <tag>Streamlit</tag>
-        <tag>依赖</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>记录一次全量验证（2026-06-18）</title>
     <url>/posts/ov0618/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次全量验证（2026-06-18）"><a href="#记录一次全量验证（2026-06-18）" class="headerlink" title="记录一次全量验证（2026-06-18）"></a>记录一次全量验证（2026-06-18）</h1><p><strong>验证不是&quot;看起来没报错&quot;，是把每一格都点开看过</strong></p>
@@ -1087,6 +987,54 @@
         <tag>量化</tag>
         <tag>验证</tag>
         <tag>看板</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录一次依赖的坑（2026-09-07）</title>
+    <url>/posts/ov0907/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次依赖的坑（2026-09-07）"><a href="#记录一次依赖的坑（2026-09-07）" class="headerlink" title="记录一次依赖的坑（2026-09-07）"></a>记录一次依赖的坑（2026-09-07）</h1><p><strong>报错写的是模块名，坑往往在环境里</strong></p>
+<p>那天的两件活都不大，但都属于同一类：<strong>代码没写错，环境却有缺口</strong>。一个是 Streamlit 看板少了 <code>pymysql</code>，一个是本地 workbuddy-delegate 的 <code>wb.py</code> 有两个&quot;改了代码却没更新元数据&quot;的 bug。都不难，但都容易只看表面就修错方向。</p>
+<hr>
+<h2 id="一、两个页面挂了"><a href="#一、两个页面挂了" class="headerlink" title="一、两个页面挂了"></a>一、两个页面挂了</h2><p>Streamlit 看板跑在 <strong>8501</strong> 端口，页面 5（<code>views.5_market_mood</code>）和页面 14（<code>views.14_new_tokens</code>）直接报 <code>ModuleNotFoundError: pymysql</code>。</p>
+<p>看板是给交易系统做可视化的，页面挂了不会影响交易本身，但会影响&quot;看&quot;——而看不了，等于把判断系统状态的眼睛蒙住一只。所以这类问题优先级不高，但不能拖。</p>
+<h2 id="二、报错指向模块，坑在环境"><a href="#二、报错指向模块，坑在环境" class="headerlink" title="二、报错指向模块，坑在环境"></a>二、报错指向模块，坑在环境</h2><p>第一反应很容易是&quot;去改代码、加个 try 兜住&quot;。这是错的。<strong>报错已经明确说是缺模块，那就去装模块，而不是改代码绕开它。</strong> 尤其当缺的是 <code>pymysql</code> 这种公开的包——绕开它，只会让下一次跑在别的机器上再炸一次。</p>
+<p>处理方式：</p>
+<ul>
+<li>用 pip 把 <code>pymysql 1.2.0</code> 装到 <strong>user-site</strong>（这个环境是无特权的用户上下文，不能走系统级安装）</li>
+<li>重启 Streamlit 服务，让新依赖加载进来</li>
+<li>跑一遍 Playwright 冒烟测试 <code>smoke_pages.py</code></li>
+</ul>
+<p>这里有两个&quot;为什么不&quot;值得记牢：<strong>不用改源码去绕过一个公开依赖</strong>，也<strong>不用系统级 pip</strong>。前者是把环境问题伪装成代码问题，后者是在一个无特权上下文里做了一件越权的事。<strong>修依赖要修在依赖该被修的地方</strong>——user-site，重启生效，干净利落。</p>
+<p>还有一层前提容易被忽略：<strong>这套做法成立，是因为运行的是一台持久化的机器</strong>——user-site 的改动重启之后还在。如果是个用完就销毁的容器，装完就没了，那这套流程就不适用。<strong>一个修法能不能用，取决于它所依赖的环境假设</strong>，这一点值得单独想清楚。</p>
+<h2 id="三、21-个页面全过，才算修好"><a href="#三、21-个页面全过，才算修好" class="headerlink" title="三、21 个页面全过，才算修好"></a>三、21 个页面全过，才算修好</h2><p>重启之后，冒烟测试的结果是 <strong>21 个页面全部干净加载，0 失败</strong>。</p>
+<p>这里有一条我给自己定的规矩：<strong>修完必须跑全量冒烟，不能只看&quot;刚才那两个页面好了没&quot;。</strong> 因为缺依赖这种事，报错的页面只是率先撞上的那两个；同一个模块可能在别的页面上也被 import，只是那一页还没被访问到。<strong>只看报错页，等于修了症状、没验系统。</strong></p>
+<p>顺带记一条良性的：页面 15 的 <code>mc_tf</code> 控件有个 Streamlit 警告——<code>default</code> 和 <code>session_state</code> 同时被设置。它不阻断加载，先记着，不算故障。<strong>分清&quot;警告&quot;和&quot;故障&quot;，也是冒烟测试要输出的东西</strong>——不然全量跑一遍，只会被一堆噪音淹没。</p>
+<h2 id="四、冒烟测试为什么值得"><a href="#四、冒烟测试为什么值得" class="headerlink" title="四、冒烟测试为什么值得"></a>四、冒烟测试为什么值得</h2><p><code>smoke_pages.py</code> 是拿 Playwright 把 21 个页面挨个打开一遍，看有没有加载失败。它把&quot;我改完之后系统到底还是不是好的&quot;从一句感觉，变成了一个数字：<strong>0 失败</strong>。</p>
+<p><strong>系统越大，&quot;只看你改的那处&quot;就越不可靠。</strong> 依赖是全局的，改动也可能是全局的——一个包被装上或卸掉，受影响的面往往超出你以为的范围。冒烟测试的价值，就在于它不回答&quot;我改的那处好了吗&quot;，而回答&quot;整个系统还站得住吗&quot;。这两个问题，后者才是真正该被回答的。</p>
+<p>它也顺手兜住了另一种可能：<strong>万一你的修复本身引入了新问题。</strong> 改完之后先跑一遍全量，早发现比晚发现便宜得多——毕竟冒烟测试是自动的，多跑一次几乎不花什么代价。</p>
+<h2 id="五、另一个坑：wb-py-的两个-bug"><a href="#五、另一个坑：wb-py-的两个-bug" class="headerlink" title="五、另一个坑：wb.py 的两个 bug"></a>五、另一个坑：wb.py 的两个 bug</h2><p>第二件活，是给本地的 workbuddy-delegate 技能修 <code>wb.py</code>。两个 bug 属于同一类——<strong>状态没回写</strong>：</p>
+<ol>
+<li><strong>后台任务完成后，<code>meta.json</code> 不更新</strong>：任务明明跑完了，元数据还停在&quot;运行中&quot;</li>
+<li>**<code>kill</code> 命令不更新本地 <code>meta.json</code>**：进程被杀了，本地却还记着它活着</li>
+</ol>
+<p>它们不致命，但很讨厌——<strong>你以为你在看状态，其实你在看一份过期的自述</strong>。这类 bug 的修法不难，难的是发现它：因为命令都&quot;成功返回&quot;了，没有报错，只是结果不对。</p>
+<p>修的时候有一条红线：<strong>只修这两个 bug，不动已经好用的核心命令、不动技能的目录结构。</strong> 核心命令（<code>run</code> &#x2F; <code>status</code> &#x2F; <code>list</code> &#x2F; <code>kill</code> &#x2F; <code>logs</code>）是别人、也是未来的我天天要用的，<strong>为了修一个边角 bug 把它们带崩，是典型的得不偿失。</strong></p>
+<h2 id="六、修完之后：把用法写成-recipe"><a href="#六、修完之后：把用法写成-recipe" class="headerlink" title="六、修完之后：把用法写成 recipe"></a>六、修完之后：把用法写成 recipe</h2><p>修完不算完。对那几个核心命令做一遍端到端冒烟、确认原有功能没被带崩之后，还把验证过的用法补成了 <strong>4 条 recipe</strong>，写进技能的 references；再更新 <code>SKILL.md</code>，把新增的 recipe 链上，并讲清楚 runs 目录的结构。</p>
+<p>这一步看着是文档工作，其实是<strong>把&quot;我这次摸出来的用法&quot;固化下来</strong>。一次修复如果只留在提交记录里，下次用的人还得重新试；写成 recipe，它就变成了别人可以直接抄的东西。<strong>改动产出的价值，一半在代码，一半在&quot;下次不用重来&quot;。</strong></p>
+<p>更新的标准也很简单：<strong>下一个用的人，能不能只靠这份文档把事做完。</strong> 能，就说明写到位了；不能，就还差一节。</p>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>那天两件活，分三层看。</p>
+<p><strong>最表面的是两处修复</strong>：装上 <code>pymysql 1.2.0</code>、修掉 <code>wb.py</code> 的两个状态回写 bug。</p>
+<p><strong>中间一层是那条判断</strong>：<strong>报错指向模块，就去补环境，而不是改代码绕过它</strong>；改完代码，就去跑全量验证，而不是只看报错的那两个点。补依赖和改代码，方向完全不同——选错方向，问题只会换个地方再冒出来。</p>
+<p><strong>最里面一层，是两个 bug 共同暴露的东西</strong>：<code>meta.json</code> 不更新、<code>kill</code> 不写回，本质都是**&quot;自述和事实对不上&quot;<strong>。这和账本对不上链上是同一类病——</strong>系统里最不能信的，是它对自己状态的描述<strong>。命令返回成功不代表状态正确，日志打出横幅才代表。</strong>多问一句&quot;我怎么确认它真的变了&quot;，是那天两件活共同的注脚。**</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>排障</tag>
+        <tag>Streamlit</tag>
+        <tag>依赖</tag>
       </tags>
   </entry>
   <entry>
@@ -1213,6 +1161,138 @@
       </tags>
   </entry>
   <entry>
+    <title>记录一次优化清单（2026-09-04）</title>
+    <url>/posts/ov0904/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次优化清单（2026-09-04）"><a href="#记录一次优化清单（2026-09-04）" class="headerlink" title="记录一次优化清单（2026-09-04）"></a>记录一次优化清单（2026-09-04）</h1><p><strong>系统跑得动，不代表它没有一堆欠账</strong></p>
+<p>那天没有急着写新功能，而是做了一次系统深潜——把交易系统从上到下过了一遍，把&quot;该修、但一直没修&quot;的事一条条捞出来，收成一份优化队列。深潜的副产品，是几个早就该做的接通和改造。</p>
+<hr>
+<h2 id="一、先把清单本身立起来"><a href="#一、先把清单本身立起来" class="headerlink" title="一、先把清单本身立起来"></a>一、先把清单本身立起来</h2><p>清单不是随手记的备忘，它得能当队列用。所以它的形态是一个<strong>结构化目录</strong>：<code>optimization_todos</code>，落在</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">viking://resources/craw_app1_wz/queue/optimization_todos_1</span><br></pre></td></tr></table></figure>
+
+<p>它来自 <strong>2026-09-04 的一次系统深潜</strong>，用途写得很明确——作为交易系统改进任务的有序队列，按优先级排。</p>
+<p><strong>先有清单，再谈排期。</strong> 没有清单的时候，优化永远是&quot;想起来才做&quot;，而想起来的，往往是最不痛的那一条。</p>
+<p>这件事看着像在整理文档，其实是先给自己立一个&quot;可执行的容器&quot;。一套系统跑久了，欠账是散着的：有的藏在某个脚本的注释里，有的只在某次事故的复盘里被提过一句，有的就是&quot;知道有问题但没空管&quot;。<strong>深潜的作用，就是把这些散落的欠账从各个角落里翻出来，塞进同一个容器、排好序。</strong> 没有这个动作，再好的想法也只是想法。</p>
+<h2 id="二、清单上的第一件：把-OpenViking-接通"><a href="#二、清单上的第一件：把-OpenViking-接通" class="headerlink" title="二、清单上的第一件：把 OpenViking 接通"></a>二、清单上的第一件：把 OpenViking 接通</h2><p>第一条大件是记忆服务的接入。bootstrap 那天跑通了，用的两个脚本职责很清楚：</p>
+<ul>
+<li><code>codex_ov_bootstrap.py</code> —— 一次性播种（seed）</li>
+<li><code>codex_ov_session_start.py</code> —— 每个会话开始时装载上下文</li>
+</ul>
+<p>挂载点是 <code>viking://resources/craw_app1_wz/</code> 下的 <code>&#123;CONTEXT, SESSION_LOG, queue&#125;</code> 三个目录；凭据放在 <code>~/.hermes/.env</code> 的 <code>OPENVIKING_API_KEY</code>（这条随后被轮换过）。</p>
+<p><strong>为什么要把记忆服务接进工作流？</strong> 因为很多坑不是难，是忘：同一个口径、同一个路径写法、同一个授权位置，隔两个月就会重新踩一次。<strong>把上下文持久化下来，等于给&quot;记性&quot;这件事上了个外挂。</strong></p>
+<p>坑也记了一条：<strong>0.4.12 版本里 <code>/api/v1/content/write</code> 返回 404</strong>，写内容要走 <code>add_resource</code>，用 <code>k=v</code> 标签传参。还有一个清理项——bootstrap 重跑时要 <code>rm</code> 掉 <code>CONTEXT_test</code> &#x2F; <code>CONTEXT_1</code>，否则会留下重复目录。<strong>接通一个新服务，真正的成本往往不在主路径，而在这些边角上的&quot;已知怪癖&quot;。</strong></p>
+<h2 id="三、验收也是一个条目"><a href="#三、验收也是一个条目" class="headerlink" title="三、验收也是一个条目"></a>三、验收也是一个条目</h2><p>接通之后还有一步，被单独当成里程碑记下来：<strong>完成 OpenViking 技能的端到端读取验收。</strong></p>
+<p>&quot;接通&quot;和&quot;验收&quot;是两件事。脚本跑通了、目录挂上了，只说明链路搭起来了；<strong>端到端读一遍，确认写进去的东西能完整读出来，才算真的可用。</strong> 所以这一条在清单上不是&quot;顺手的收尾&quot;，而是一个独立勾选项——因为记忆服务最常见的坏法，恰恰是&quot;看起来接通了、实际读不出来&quot;。</p>
+<p>验收里还留了一条尾巴：<strong>清理 OpenViking 的重复目录</strong>。它不影响功能，但会影响整洁和排查。清单的价值之一，就是这种&quot;不急但该做&quot;的小项不会被无限期地拖着。</p>
+<h2 id="四、清单上的第二件：链上原生止损单"><a href="#四、清单上的第二件：链上原生止损单" class="headerlink" title="四、清单上的第二件：链上原生止损单"></a>四、清单上的第二件：链上原生止损单</h2><p>第二条大件，是给 <code>smart_money_trader</code> 接 <strong>持久化的 HL 原生 reduce-only 市价止损触发单</strong>。它不是一个孤立的函数，而是一组动作：</p>
+<ul>
+<li><strong>开仓后挂单</strong>：仓位建好，立刻挂上对应的止损触发单</li>
+<li><strong>平仓前撤单</strong>：正常平仓时先把挂单撤掉，避免留孤儿单</li>
+<li><strong>旧库自动迁移</strong>：老记录迁移到新字段 <code>hl_sl_oid</code></li>
+<li><strong>链上仓位先消失时</strong>：按当前价核销 PnL</li>
+</ul>
+<p>这一步的意义，是把&quot;止损&quot;从策略逻辑里挪到交易所侧——<strong>止损单挂在链上，就不依赖本地进程还活着</strong>。本地进程会卡、会僵、会没，但挂在链上的挂单不会因为你的进程死了就消失。<strong>把安全边界从&quot;我的代码&quot;挪到&quot;交易所&quot;，本身就是一种冗余设计。</strong></p>
+<p>那个&quot;链上仓位先消失时按当前价核销 PnL&quot;的分支，背后是同一条原则：<strong>本地账本和现实分叉的时候，以现实为准。</strong></p>
+<p>那天完成了<strong>语法与数据库迁移验证</strong>，但运行态的真实回执还没验：要等重启、等一次真实新开仓，看 API 的实际应答。所以这条在清单上**只能算&quot;开发完成&quot;，不能算&quot;验收通过&quot;**。</p>
+<h2 id="五、清单要能滚动"><a href="#五、清单要能滚动" class="headerlink" title="五、清单要能滚动"></a>五、清单要能滚动</h2><p>清单的另一个作用，是让&quot;下一步&quot;可指。接通那天写下的下一条推荐就很具体：<strong>item #2 —— 把 SL 触发单接到 HL 上</strong>，正是上面那一条。</p>
+<p>一份清单如果只是躺着，它就跟没有一样。<strong>能指向下一条，它才是活的。</strong></p>
+<p>而且清单是要<strong>滚动</strong>的——做完一条划掉一条，新发现的问题再补进去，优先级也跟着现实重排。一次深潜产出的清单，不该是一张一次性的表，而是一个会随系统一起长大的队列。它记的是&quot;欠账&quot;，但真正管的是&quot;顺序&quot;：<strong>先做哪条、后做哪条，这个判断本身就是价值。</strong></p>
+<p><strong>清单的生命力，全在&quot;滚动&quot;这两个字上。</strong> 它每被取用一次、每被更新一次，就离&quot;活文档&quot;近一点、离&quot;一次性产物&quot;远一点。</p>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>那次深潜本身没产出收益，但我觉得它比任何一次调参都值得。</p>
+<p><strong>最表面的是那份队列</strong>：<code>optimization_todos</code>，按优先级排好，随时可以取。</p>
+<p><strong>中间一层是&quot;先立清单&quot;这个习惯</strong>：优化这件事最大的敌人不是难，是散。<strong>把欠账从脑子里搬进一个有序队列，它才有机会被真正做掉。</strong></p>
+<p><strong>最里面一层，是那份对&quot;完成&quot;的克制。</strong> 止损单那条，代码写完、迁移验完，很容易就报&quot;做完了&quot;。但真实 API 回执拿到之前，它只能躺在清单上标着&quot;待运行态验证&quot;。<strong>分清&quot;写完了&quot;和&quot;验过了&quot;，是这份清单最想守住的一条线。</strong></p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>优化</tag>
+        <tag>记忆服务</tag>
+        <tag>交易系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录一次回测版本的公平化（2026-06-16）</title>
+    <url>/posts/ov0616/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次回测版本的公平化（2026-06-16）"><a href="#记录一次回测版本的公平化（2026-06-16）" class="headerlink" title="记录一次回测版本的公平化（2026-06-16）"></a>记录一次回测版本的公平化（2026-06-16）</h1><p><strong>一个版本跑得好，可能只是因为它被允许晚一点开始</strong></p>
+<p>前几天看榜单的时候，总觉得有些版本&quot;数据特别漂亮&quot;。但心里清楚：回测里每多一条规则，都可能是在给某一个版本开后门。</p>
+<p>所以这天不干别的，<strong>把回测器里那些不公平的地方一件件拆掉，让所有版本回到同一条起跑线上</strong>。</p>
+<hr>
+<h2 id="拆掉三处-起跑线偏差"><a href="#拆掉三处-起跑线偏差" class="headerlink" title="拆掉三处&quot;起跑线偏差&quot;"></a>拆掉三处&quot;起跑线偏差&quot;</h2><p><code>backtest_v12.py</code> 里有几处逻辑在执行&quot;区分对待&quot;，全部改掉：</p>
+<ol>
+<li><strong>去掉 v1.19 的 deploy_ts BUY 过滤</strong>（<code>backtest_v12.py</code> line 733-735）。原来每个 version 的候选被 <code>deploy_ts</code> 截断过一次，现在改成对 prefetch 的全量 hot token 独立评分，不再按时间窗口截。</li>
+<li><strong>去掉 v1.18 的 BacktestAccount 组合约束</strong>：<code>cash=inf, positions=[], recent_sells=[]</code>。也就是资金无限、不设已有仓位、不记已卖记录——只保留 <code>eng.check_buy_risk</code> 这一道单笔硬约束（holder &#x2F; liquidity &#x2F; sniper &#x2F; rug）。<code>BacktestAccount</code> 类保留、不删除，只是不再拿它当外挂的约束墙。</li>
+<li><strong><code>_simulate_sell</code> 的 sell_ts 截止改用 NOW_TS</strong>：<code>sell_ts = min(last[&quot;ts&quot;], NOW_TS)</code>。这句话的意思是——6&#x2F;16 之前的所有 token，都按&quot;持仓到今天&quot;来结算，而不是停在历史某一刻。</li>
+<li><strong>去掉 v18 返回字段</strong>，只留 <code>n_sell_before_buy</code> 和 <code>total_realized_pnl</code>。</li>
+</ol>
+<p>改完之后，v1.0 的 BUY 笔数从 <strong>7 笔涨到 221 笔</strong>，buy_ts 范围从 2026-06-13 一直延伸到 <strong>2026-06-16 23:51</strong>；限定在 808 候选池内的 <code>v1.0#baseline</code> 也有 <strong>215 笔</strong>。</p>
+<p>笔数涨了三十倍，不是因为策略变好了，而是因为<strong>它终于被允许看到全部候选</strong>。</p>
+<h2 id="数字变大不等于结论变好"><a href="#数字变大不等于结论变好" class="headerlink" title="数字变大不等于结论变好"></a>数字变大不等于结论变好</h2><p>这里要小心一件事：拆掉约束之后，所有版本的数字都会&quot;变好看&quot;，只是幅度不同。</p>
+<p>所以比较的重点不是绝对收益，而是<strong>同池、同时段下的相对表现</strong>。文档里那条线被单独标了出来——<code>v1.0</code> 自由池 +8782U、<code>baseline</code> +250U、<code>v1.22 maker</code> 信誉加权净 <strong>+76.02U</strong>。这些数字放在一起才有意义：同一个池子里的口径统一了，横向对比才站得住。</p>
+<p>反过来讲，公平化也意味着<strong>不能再拿老口径的数字给自己撑腰</strong>。之前那份&quot;v1.0 很能打&quot;的印象，有相当一部分是候选池给的，不是策略挣的。</p>
+<h2 id="一份文档，两种读法"><a href="#一份文档，两种读法" class="headerlink" title="一份文档，两种读法"></a>一份文档，两种读法</h2><p>同一天还有两件配套的活，都在给这套结论&quot;上索引&quot;。</p>
+<p>第一件是把 <code>references/v121-baseline-pool-fair-compare.md</code> 补全：头部新增一段&quot;配套总览&quot;，再加一张 9 行的关联文档索引表，覆盖 baseline 池方法、<code>restrict_to_baseline</code>、v1.0 的失真数字、v1.22 maker、CRONK lookahead 这些内容。同时在 <code>memory</code> 的 §15 末尾用 <code>viking_remember</code> 追加了关联。</p>
+<p>第二件是反向的：在 <code>mem_abba55eda6a6.md</code> 里追加 §16 关联文档索引，新增 7 个搜索关键词（<code>run_for_version</code>、<code>restrict_to_baseline</code>、v1.0 自由池 +8782U、baseline +250U、v1.22 maker 信誉加权净 +76.02U 等），再在 reference 顶部插一段&quot;配套总览&quot;指向 memory。</p>
+<p>一边是文档指向记忆，一边是记忆指向文档。<strong>目的是让下次搜索时，两个方向都能被召回。</strong></p>
+<p>验证做了 4 步：</p>
+<table>
+<thead>
+<tr>
+<th>搜索问题</th>
+<th>hit 数</th>
+<th>命中文档</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>baseline 池公平对比 &#x2F; 候选池选择偏差</td>
+<td>3</td>
+<td>mem_db6402c4f337、v121 reference、mem_abba55eda6a6</td>
+</tr>
+<tr>
+<td>11 号页 vs 12 号页 PnL 口径</td>
+<td>3</td>
+<td>v121 reference、12_page_buy_overcount、mem_abba55eda6a6</td>
+</tr>
+<tr>
+<td>v1.22 maker 信誉加权 实战</td>
+<td>3</td>
+<td>v122 reference、mem_0a599e69c41e、mem_4a0021d70fe8</td>
+</tr>
+<tr>
+<td>lookahead 假暴利 CRONK</td>
+<td>3</td>
+<td>t_xxxxxxx_cr_fix、mem_ab5c6d321804、反事实回测虚假收益修复</td>
+</tr>
+</tbody></table>
+<p>四步全部通过。</p>
+<p>还有一个细节值得记：<code>defi_dashboard</code> 目录<strong>不是 git 仓库</strong>（git history 为空、未初始化），拿不到 commit SHA。所以&quot;代码签名&quot;这条改成了用 <code>restrict_to_baseline</code> 这样的关键词替代，代码改动历史改通过 OpenViking 的 <code>session_search</code> 追溯。</p>
+<h2 id="页面也要说真话"><a href="#页面也要说真话" class="headerlink" title="页面也要说真话"></a>页面也要说真话</h2><p>同一天还修了一个不起眼、但更容易骗到人的问题：<strong>12 号反事实回测页面的数据时效</strong>。</p>
+<p><code>_load_summary()</code> 里新增了 <code>data_end_ts</code> 列，取值是 <code>bt_cf_trades</code> 的 <code>MAX(GREATEST(buy_ts, sell_ts))</code>。核下来 v1.16.4 的数据截止是 <strong>2026-06-14 23:57:51</strong>——不是之前说的 6&#x2F;12，而是最后一条 SELL 的时间。排名表格也加了一列「数据截止」，每一行都标清楚自己是哪天的数。</p>
+<p>时效警告直接重写成一句大白话：</p>
+<blockquote>
+<p>⚠️ <strong>数据已过时 — 这不是实时数据</strong></p>
+</blockquote>
+<p>并且说清楚三件事：这里展示的是 <code>backtest_runner.py</code> 预计算的<strong>快照回测结果</strong>，不是 <code>sim_decisions</code> 的实时数据；想看实时 BUY 去 11 号页 v1.23；想刷新 v1.16.4 得重跑 <code>backtest_runner.py</code>。警告阈值也从 3 天收紧到 <strong>1 天</strong>。</p>
+<p>改完之后，页面上&quot;我是不是在看一份过期报表&quot;这件事，一眼就能看出来。</p>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>这一天的收获也分三层。</p>
+<p><strong>最表面的是那 221 笔 BUY</strong>——数字涨了三十倍，看着像策略突然开窍了。但它其实什么都没变，只是约束被拿掉了。</p>
+<p><strong>中间一层是那条口径纪律</strong>：比较策略之前，先把候选池、时间段、约束条件对齐。对齐之前的一切绝对值，都是噪音。</p>
+<p><strong>最里面一层，是那句&quot;页面也要说真话&quot;。</strong></p>
+<p>公平对比不只是回测器里的事。<strong>一个显示着过期数据的漂亮页面，和一份被候选池喂出来的假收益，是同一种病</strong>——它们都在让人看到一个自己愿意相信的结论。拆掉 <code>deploy_ts</code> 的过滤容易，难的是<strong>主动把&quot;这数据其实已经三天没更新了&quot;这行字，也摆到最显眼的地方</strong>。</p>
+<p>那天之后我给自己加了一条：<strong>下结论之前，先问一句&quot;这个结果是它挣的，还是我给的&quot;。</strong></p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>量化</tag>
+        <tag>回测</tag>
+        <tag>文档</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>记录一次回测链路的抢修（2026-06-10）</title>
     <url>/posts/ov0610/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次回测链路的抢修（2026-06-10）"><a href="#记录一次回测链路的抢修（2026-06-10）" class="headerlink" title="记录一次回测链路的抢修（2026-06-10）"></a>记录一次回测链路的抢修（2026-06-10）</h1><p><strong>一个数字离谱到没人信的时候，问题多半不在那个数字上</strong></p>
@@ -1314,6 +1394,99 @@
         <tag>量化</tag>
         <tag>排障</tag>
         <tag>复盘</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录一次实时信号架构（2026-07-14）</title>
+    <url>/posts/ov0714/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次实时信号架构（2026-07-14）"><a href="#记录一次实时信号架构（2026-07-14）" class="headerlink" title="记录一次实时信号架构（2026-07-14）"></a>记录一次实时信号架构（2026-07-14）</h1><p><strong>把「读旧表交易」改成「每轮自己算信号」，是这套系统第一次真正意义上的实时化</strong></p>
+<p>前一天把止盈从 5% 调到 3%、又给信号刷新补了坑，第一批仓位陆续有了结果：三笔 +3% 附近止盈、两笔 -2% 止损，胜率 60%。数据能看，但更值得记的是那天对架构动的刀——<strong>主流币模拟交易从「读表」走向了「实时计算」</strong>。</p>
+<hr>
+<h2 id="三条并排的问题"><a href="#三条并排的问题" class="headerlink" title="三条并排的问题"></a>三条并排的问题</h2><p>改架构之前，问题其实是三条并列的：</p>
+<ol>
+<li>止盈 5% 太高 → 已经降到 3%</li>
+<li>信号每 2–4 小时才刷新一次 → 平仓之后没有新信号可用（旧信号被「过期 &gt; 4h」跳过）</li>
+<li>开仓太随意 → 只要有一条信号就想开仓，缺一道「够不够格」的判断</li>
+</ol>
+<p>前两条在前一天已经处理，第三条才是这天架构改造的动机。</p>
+<h2 id="从「读表交易」到「实时计算」"><a href="#从「读表交易」到「实时计算」" class="headerlink" title="从「读表交易」到「实时计算」"></a>从「读表交易」到「实时计算」</h2><p>旧架构是标准的三段式流水线：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mc_precompute.py（定时）→ mc_signals_latest 表 → maincoin_paper.py（读旧表交易）</span><br></pre></td></tr></table></figure>
+
+<p>它的命门很明显：中间那张 <code>mc_signals_latest</code> 一旦不刷新，整条链就断在「过期跳过」上——前一天那场「平仓后开不出新仓」，就是断在这里。</p>
+<p>新架构把中间那张表<strong>从交易主链路里摘出去</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">maincoin_paper.py 每轮实时拉数据 → 跑 14 个策略 → 共识判定 → 开仓</span><br></pre></td></tr></table></figure>
+
+<p>交易决策不再依赖「别人写好的表」，而是每一轮自己现算。</p>
+<h2 id="三个新函数"><a href="#三个新函数" class="headerlink" title="三个新函数"></a>三个新函数</h2><ul>
+<li><code>compute_realtime_signal(symbol, conn)</code>：实时拉永续合约数据（funding &#x2F; OI &#x2F; 多空比 &#x2F; 盘口 &#x2F; 鲸鱼），跑 14 个策略，返回共识结果</li>
+<li><code>get_entry_candidates(conn, open_positions, balance)</code>：遍历所有候选币种，筛出真正够高置信度的信号</li>
+<li><code>check_positions()</code>：判断信号反转时也改成实时计算，不再读 <code>mc_signals_latest</code></li>
+</ul>
+<h2 id="门槛从-0-65-提到-0-80，还加了共识"><a href="#门槛从-0-65-提到-0-80，还加了共识" class="headerlink" title="门槛从 0.65 提到 0.80，还加了共识"></a>门槛从 0.65 提到 0.80，还加了共识</h2><p>这一步是这次升级里最「反直觉」的地方——<strong>问题不是开仓不开仓，而是开得太随便，所以解决办法是把门槛调高</strong>：</p>
+<ul>
+<li><code>MIN_CONFIDENCE</code>：0.65 → <strong>0.80</strong></li>
+<li>新增 <code>MIN_CONSENSUS</code>：<strong>至少 2 个策略同方向</strong>才开仓</li>
+<li>信号反转平仓：同样要求 80% 以上置信度、有共识才执行</li>
+</ul>
+<p>提高门槛意味着会错过一些行情，但它换来的是<strong>「不因为一条吵得凶的信号就下单」</strong>。</p>
+<h2 id="第一轮：什么都没开"><a href="#第一轮：什么都没开" class="headerlink" title="第一轮：什么都没开"></a>第一轮：什么都没开</h2><p>改完第一次跑，结果是「信号 0、平仓 0、持仓 5」——一笔都没开。看着像坏了，其实是设计如此：</p>
+<ul>
+<li>TRX 有 5 个 LONG 对 1 个 SHORT，多空冲突、无共识 → HOLD</li>
+<li>WLD 有 2 个 LONG（90%），方向够齐但没到 80% 的门槛 → 不达标</li>
+<li>结论：<strong>市场当时没有高质量信号，系统正确地拒绝开仓</strong></li>
+</ul>
+<p>这一条我特意记了下来。<strong>一个系统「什么都不做」和「做错」是两回事</strong>，前者是纪律，后者是故障。能看到前者，说明门槛真的在起作用。</p>
+<h2 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h2><p>新的实时计算不是免费的：<strong>每轮扫描约 2.5 分钟</strong>（10 个币种 × 14 个策略，外加 API 调用）。5 分钟的循环间隔刚好能覆盖住，所以不额外压缩周期。</p>
+<h2 id="保留的两件事"><a href="#保留的两件事" class="headerlink" title="保留的两件事"></a>保留的两件事</h2><p>架构换了，但不是所有东西都推倒：</p>
+<ul>
+<li><code>scan_signals()</code> 保留下来，专门给仪表盘展示用</li>
+<li><code>refresh_signals()</code> 保留，每 2 小时刷新一次 <code>mc_signals_latest</code>，同样是给 17 号页看的</li>
+<li>5 分钟循环不变，只是每轮从「读表」变成了「实时算」</li>
+</ul>
+<p>也就是说，<strong>那张旧表现在只服务于「看」，不服务于「交易」</strong>。</p>
+<h2 id="附：Hermes-连接个人微信的调研"><a href="#附：Hermes-连接个人微信的调研" class="headerlink" title="附：Hermes 连接个人微信的调研"></a>附：Hermes 连接个人微信的调研</h2><p>同一天还顺手查了另一件事——Hermes 能不能连微信。结论是能，走的是腾讯的 <strong>iLink Bot API</strong>，只支持个人微信，企业微信要用另一套 WeCom 适配器。步骤记一下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 1. 装依赖</span></span><br><span class="line">pip install aiohttp cryptography</span><br><span class="line"><span class="built_in">cd</span> ~/.hermes/hermes-agent &amp;&amp; uv pip install -e <span class="string">&quot;.[messaging]&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 设置向导（手机扫码登录）</span></span><br><span class="line">hermes gateway setup</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 启动网关</span></span><br><span class="line">hermes gateway</span><br></pre></td></tr></table></figure>
+
+<p>扫码成功后凭据自动存到 <code>~/.hermes/weixin/accounts/</code>，<code>~/.hermes/.env</code> 里配 <code>WEIXIN_ACCOUNT_ID</code>（<code>WEIXIN_TOKEN</code> 由向导自动保存，一般不用手动设）。</p>
+<p>限制要提前知道：<strong>连上的是 iLink bot 身份，不是你本人的微信号</strong>——它不能被拉进普通微信群，群消息大概率收不到，实际只有私聊 DM 是稳定可用的。</p>
+<p>顺带把端口也确认了一遍，免得和「网关」混起来：</p>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>地址</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Dashboard</td>
+<td><code>http://127.0.0.1:9120</code></td>
+<td>Web 仪表盘（嵌入式 TUI、PTY、WebSocket）</td>
+</tr>
+<tr>
+<td>消息网关</td>
+<td>无 HTTP 端口</td>
+<td>后台进程，长轮询收发消息</td>
+</tr>
+<tr>
+<td>API Server</td>
+<td><code>http://127.0.0.1:8642</code></td>
+<td>REST API（可选）</td>
+</tr>
+</tbody></table>
+<p><code>9120</code> 是仪表盘，不是消息通道——这个区分之后会在排障时反复用到。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>那天的改动，也分三层。</p>
+<p><strong>最表面的是「实时化」三个字</strong>：从读表到每轮现算，把一段外部依赖收进了自己手里。</p>
+<p><strong>中间一层，是「提高门槛」这种反直觉的调法</strong>。交易频率低的时候，人的第一反应是放宽条件；但真正的问题往往是放得太宽。<strong>把 0.65 提到 0.80、再加一道共识，本质上是承认「信号多不等于信号好」。</strong> 系统当天一次都没开仓，恰恰是它第一次表现得像个有纪律的交易者。</p>
+<p><strong>最里面一层，是那个「摘掉中间表」的动作。</strong> 旧的 <code>mc_signals_latest</code> 没有消失，只是从交易链路挪到了展示链路。<strong>同一个组件，放在决策里是风险，放在展示里只是信息</strong>——分清这两者，比给它加多少监控都重要。</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>量化</tag>
+        <tag>架构</tag>
+        <tag>实时信号</tag>
       </tags>
   </entry>
   <entry>
@@ -1436,139 +1609,6 @@
       </tags>
   </entry>
   <entry>
-    <title>记录一次夜里的异常（2026-08-23）</title>
-    <url>/posts/ov0823/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次夜里的异常（2026-08-23）"><a href="#记录一次夜里的异常（2026-08-23）" class="headerlink" title="记录一次夜里的异常（2026-08-23）"></a>记录一次夜里的异常（2026-08-23）</h1><p><strong>一晚上三条&quot;死因&quot;，长得像同一个症状</strong></p>
-<p>有些夜里，你会以为在处理一个 bug，其实是四个。那天从 OOS 停写查起，查到最后发现：一条 3 天的数据空洞、一个设错位置的超时、一笔拖了 4.6 天才被硬止损的仓，还有一行缺了 <code>global</code> 的赋值。它们互不相干，却在同一晚一起发作。</p>
-<hr>
-<h2 id="一、停写三天的-OOS"><a href="#一、停写三天的-OOS" class="headerlink" title="一、停写三天的 OOS"></a>一、停写三天的 OOS</h2><p>先看最表面的：<code>factor_ic_oos.db.oos_ticks</code> 从 <strong>08-20 18:08</strong> 之后就再没写入了，空了 3 天。</p>
-<p><code>runtime_state</code> 给出了另一半答案：<code>next_run_at=None</code>，<code>last_run_at=1787220565</code>（≈08-20 18:08）——<strong>调度器在那之后就没再排下一次运行</strong>。automation 配置本身还是 ACTIVE，状态显示正常，那只是假象。</p>
-<p>代码侧的根因，是 <code>compute_regime()</code>（L177）里的 <code>fetch_candles</code> <strong>没有任何 try&#x2F;except</strong>：</p>
-<ul>
-<li>沙箱&#x2F;网络异常 → <code>fetch_candles</code> 抛异常 → 冒泡到 <code>main()</code>（无顶层捕获）→ 整个脚本崩溃；</li>
-<li><strong>Gate1-4 就算算好了，也写不进 DB</strong>。</li>
-</ul>
-<p>L178 只对&quot;返回空&quot;做了处理，漏掉了&quot;抛异常&quot;这一种。补上降级之后，在沙箱默认环境（联网被拦，等同 automation 执行环境）跑 <code>once</code> 不再崩，<code>oos_ticks</code> 从 42 → 43 写入成功。重新激活 automation，返回 <code>nextRunAt≈08-23 14:09</code>，调度恢复。写入恢复成 <strong>42@13:51 → 43@14:04 → 44@14:08</strong>，3 天的空洞补上了。</p>
-<p>顺带核了另一条采集线：<code>smart_money_oos.db.oos_samples</code> 有 7278 行，collect 进程正常——<strong>不是整条数据链都停了，只是 OOS 这一条断了。</strong> 这一点很重要，它把故障范围一下子缩到了一个进程。</p>
-<h2 id="二、超时设在了没用的地方"><a href="#二、超时设在了没用的地方" class="headerlink" title="二、超时设在了没用的地方"></a>二、超时设在了没用的地方</h2><p>另一条线是 <code>hl_connection.py</code>。<code>Info(self.api_url, skip_ws=True)</code> &#x2F; <code>Exchange(...)</code> 构造时没注入 timeout，底层 session 是 SDK 默认（无超时）——<strong>网络半死时永久 hang</strong>，这正是 trader 僵死的直接源头。</p>
-<p>第一版改法，是在 <code>connect()</code>&#x2F;<code>reconnect()</code> 构造完之后设 <code>session.timeout</code>。跑起来还是卡。翻 SDK 源码才明白：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># hyperliquid/api.py:23</span></span><br><span class="line">response = self.session.post(url, json=payload, timeout=self.timeout)</span><br></pre></td></tr></table></figure>
-
-<p><strong>SDK 用的是 <code>Info.timeout</code> &#x2F; <code>Exchange.timeout</code> 实例属性，不是 <code>session.timeout</code>。</strong> 设错对象，等于没设。</p>
-<p>改成两件一起做：既设 <code>obj.timeout</code>（SDK 真正读的那个），也设 <code>session.timeout</code>（冗余）。但还不够——<code>Info</code> 构造内部会立刻联网拉 <code>spot_meta()</code>，那一刻 timeout 还没设上。所以最终是把 timeout 直接传进构造函数：<code>timeout=(5,30)</code>，覆盖&quot;构造期联网&quot;这个场景。</p>
-<p>验证方式，是对一个不可达地址构造 <code>Info(..., timeout=(2,3))</code>，<strong>精确 3.0s 抛 ReadTimeout</strong>——证明构造期超时真的生效了。另一组诊断跑出来：<code>connect()</code> 成功（rtt&#x3D;2.8s），<code>info.timeout=(5.0, 30.0)</code> &#x2F; <code>exch.timeout=(5.0, 30.0)</code>，<code>user_state()</code> 0.2s 正常返回。<strong>超时这次是真的落到了 SDK 实际使用的那两个属性上。</strong></p>
-<h2 id="三、一笔拖了-4-6-天的仓"><a href="#三、一笔拖了-4-6-天的仓" class="headerlink" title="三、一笔拖了 4.6 天的仓"></a>三、一笔拖了 4.6 天的仓</h2><p>修 OOS 的过程中，发现 Gate 数据大幅恶化：<code>gate1_n=22, gate3=-3.229, gate4=218.8%</code>（上一个 tick 还是 21 &#x2F; +0.499 &#x2F; 88%）。</p>
-<p>追下去，多的那一笔是 <strong><code>id=98</code> APT（factor_ic SHORT）</strong>：<code>closed=2026-08-23T13:59:31</code>，<code>reason=hard_stop_loss (-13.6%)</code>，<code>pnl=-10.95</code>。它是 13:59 重启 trader 清 stale 仓时被平掉的 7 笔之一。</p>
-<p>关键在于它为什么亏这么多：<strong>trader 僵死了 4.6 天没及时平仓</strong>，重启之后才被硬止损。所以 gate3&#x2F;gate4 的翻转<strong>发生在 id43（14:04）那一个 tick</strong>，不是更早。<strong>这是僵死本身的历史代价，不是重启造成的 bug</strong>——但必须如实记下来。</p>
-<p>查的时候还踩了两个小坑：<code>sm_positions</code> 没有 <code>exit_price</code> 列；workbuddy.db 的路径写成 <code>/c/</code> 会被 Python 拼成 <code>C:\c\</code>。<strong>这些不算故障，但会让排查多绕一圈</strong>，值不值得记下来？值——下次同样的查询能省十分钟。</p>
-<h2 id="四、真正杀死进程的那一行"><a href="#四、真正杀死进程的那一行" class="headerlink" title="四、真正杀死进程的那一行"></a>四、真正杀死进程的那一行</h2><p>trader 能连上、日志里也有&quot;连接建立&quot;，但总是在启动 ~122s 后被 <code>[HEARTBEAT_WATCHDOG] 主循环僵死</code> 杀掉。faulthandler 的 dump 显示，main 线程停在 <strong>line 1574 那个正常的 <code>time.sleep</code><strong>——</strong>&quot;主循环真卡死&quot;这个判断，被证伪了</strong>。</p>
-<p>真正的根因在 <code>main()</code> 里：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">_LAST_HEARTBEAT = time.time()   <span class="comment"># 缺 global → 变成 main 的局部变量</span></span><br></pre></td></tr></table></figure>
-
-<p>少了 <code>global</code> 声明，这一行赋值就落在一个局部名字上；<strong>心跳线程读的那个模块级时间戳，永远停在 import 时刻</strong>，于是看门狗在启动约 120s 后，误杀了一个其实健康的进程。修复就是一行：<code>main()</code> 开头加 <code>global _LAST_HEARTBEAT</code>。改完 trader 稳定跑了 <strong>41.6 分钟</strong>，越过了 122s 的误杀窗口。</p>
-<p>这里最值得记的，是<strong>整个排查过程中被打脸的那几步</strong>：先怀疑 SDK 调用永久 hang，验完发现不是；再怀疑启动期重试循环，验完也不是；最后靠 faulthandler 把栈停在了一个正常的 <code>time.sleep</code> 上，才反向锁定了那一行缺的 <code>global</code>。<strong>一个&quot;进程僵死&quot;的表象，前后指向过三个不同的嫌疑人。</strong></p>
-<p>这一遍还顺带查出：watchdog 自己也早就僵了——<code>watchdog_loop.log</code> 停在 <strong>08-18 14:22</strong>，进程活着、循环早死，所以 trader 被杀之后它根本没拉起来。<strong>看门狗自己也要被看着</strong>，这句老话在那一晚又应验了一次。</p>
-<h2 id="五、顺手修的一个启动器坑"><a href="#五、顺手修的一个启动器坑" class="headerlink" title="五、顺手修的一个启动器坑"></a>五、顺手修的一个启动器坑</h2><p>还有一个更土的：旧代码用 <code>open(log,&#39;a&#39;)</code> 写日志，Windows 下遇到旧 trader 仍持着文件句柄（拒绝共享写）→ <code>PermissionError</code> → 启动器崩 → <strong>watchdog 每 5min 拉 trader 全部失败</strong>。改成退化到带时间戳的唯一日志，保证一定能启动。</p>
-<p>另外把 signal 进程也一并重启了（它加载的是旧 <code>hl_connection</code>，只读、不需要 secret，但同样要吃上新超时）。重启后 <code>signal_daemon.log</code> 显示正常扫描（SENTIMENT &#x2F; MF &#x2F; CVD &#x2F; FIC），无 import 错误；期间 testnet 抖动触发过两次 <code>心跳超时 120s → 重连 → 重连成功 2973 币种</code>，是优雅自愈而不是永久 hang——<strong>这恰好是超时修复的预期效果。</strong></p>
-<h2 id="六、天亮前的确认"><a href="#六、天亮前的确认" class="headerlink" title="六、天亮前的确认"></a>六、天亮前的确认</h2><p>修完之后，还差最后一步：<strong>等。</strong></p>
-<p>新拉起来的 trader 不能只看它启动日志好看，得等它越过 <strong>122s</strong> 那条线——因为之前每一次，都是死在这条线上。一直等到 <strong>41.6 分钟</strong>，确认它没被心跳看门狗误杀、主循环在正常转，才敢说这次是真的稳了。</p>
-<p>同一时间，把几件事对齐了一遍：<code>oos_ticks</code> 恢复每小时写入、watchdog 的循环重新开始走、signal 正常出信号。<strong>故障排除的终点，不是&quot;改动都提交了&quot;，而是&quot;系统在没人盯着的时候也站得住&quot;。</strong> 这一步没有捷径，就是等——等一个足够长、能覆盖掉误杀窗口的观察时间。</p>
-<hr>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>那晚的收获分三层。</p>
-<p><strong>最表面的是几个修复</strong>：OOS 的降级、SDK 超时的注入位置、<code>global</code> 那一行、启动器的日志退化。</p>
-<p><strong>中间一层是那条方法</strong>：<strong>不要停在&quot;症状相同&quot;就下结论</strong>。停写、卡死、被误杀、Gate 恶化，看起来都像&quot;进程僵死&quot;的一件事，拆开看却是几个独立的根因。<strong>一个症状背后到底是几个故障，只有把每条证据单独跑一遍才知道。</strong></p>
-<p><strong>最里面一层，是对&quot;如实记录&quot;的要求。</strong> APT 那笔 -10.95 让 gate3 翻负、gate4 冲到 218%，第一反应很容易是&quot;是不是重启搞出来的&quot;。但核到底，它是僵死拖了 4.6 天的旧账。<strong>把难听的部分算清楚、并且承认它不是新 bug，比修好它更重要</strong>——否则下一次，你会把真正的旧账继续往后拖。</p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>排障</tag>
-        <tag>交易系统</tag>
-        <tag>心跳</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录一次回测版本的公平化（2026-06-16）</title>
-    <url>/posts/ov0616/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次回测版本的公平化（2026-06-16）"><a href="#记录一次回测版本的公平化（2026-06-16）" class="headerlink" title="记录一次回测版本的公平化（2026-06-16）"></a>记录一次回测版本的公平化（2026-06-16）</h1><p><strong>一个版本跑得好，可能只是因为它被允许晚一点开始</strong></p>
-<p>前几天看榜单的时候，总觉得有些版本&quot;数据特别漂亮&quot;。但心里清楚：回测里每多一条规则，都可能是在给某一个版本开后门。</p>
-<p>所以这天不干别的，<strong>把回测器里那些不公平的地方一件件拆掉，让所有版本回到同一条起跑线上</strong>。</p>
-<hr>
-<h2 id="拆掉三处-起跑线偏差"><a href="#拆掉三处-起跑线偏差" class="headerlink" title="拆掉三处&quot;起跑线偏差&quot;"></a>拆掉三处&quot;起跑线偏差&quot;</h2><p><code>backtest_v12.py</code> 里有几处逻辑在执行&quot;区分对待&quot;，全部改掉：</p>
-<ol>
-<li><strong>去掉 v1.19 的 deploy_ts BUY 过滤</strong>（<code>backtest_v12.py</code> line 733-735）。原来每个 version 的候选被 <code>deploy_ts</code> 截断过一次，现在改成对 prefetch 的全量 hot token 独立评分，不再按时间窗口截。</li>
-<li><strong>去掉 v1.18 的 BacktestAccount 组合约束</strong>：<code>cash=inf, positions=[], recent_sells=[]</code>。也就是资金无限、不设已有仓位、不记已卖记录——只保留 <code>eng.check_buy_risk</code> 这一道单笔硬约束（holder &#x2F; liquidity &#x2F; sniper &#x2F; rug）。<code>BacktestAccount</code> 类保留、不删除，只是不再拿它当外挂的约束墙。</li>
-<li><strong><code>_simulate_sell</code> 的 sell_ts 截止改用 NOW_TS</strong>：<code>sell_ts = min(last[&quot;ts&quot;], NOW_TS)</code>。这句话的意思是——6&#x2F;16 之前的所有 token，都按&quot;持仓到今天&quot;来结算，而不是停在历史某一刻。</li>
-<li><strong>去掉 v18 返回字段</strong>，只留 <code>n_sell_before_buy</code> 和 <code>total_realized_pnl</code>。</li>
-</ol>
-<p>改完之后，v1.0 的 BUY 笔数从 <strong>7 笔涨到 221 笔</strong>，buy_ts 范围从 2026-06-13 一直延伸到 <strong>2026-06-16 23:51</strong>；限定在 808 候选池内的 <code>v1.0#baseline</code> 也有 <strong>215 笔</strong>。</p>
-<p>笔数涨了三十倍，不是因为策略变好了，而是因为<strong>它终于被允许看到全部候选</strong>。</p>
-<h2 id="数字变大不等于结论变好"><a href="#数字变大不等于结论变好" class="headerlink" title="数字变大不等于结论变好"></a>数字变大不等于结论变好</h2><p>这里要小心一件事：拆掉约束之后，所有版本的数字都会&quot;变好看&quot;，只是幅度不同。</p>
-<p>所以比较的重点不是绝对收益，而是<strong>同池、同时段下的相对表现</strong>。文档里那条线被单独标了出来——<code>v1.0</code> 自由池 +8782U、<code>baseline</code> +250U、<code>v1.22 maker</code> 信誉加权净 <strong>+76.02U</strong>。这些数字放在一起才有意义：同一个池子里的口径统一了，横向对比才站得住。</p>
-<p>反过来讲，公平化也意味着<strong>不能再拿老口径的数字给自己撑腰</strong>。之前那份&quot;v1.0 很能打&quot;的印象，有相当一部分是候选池给的，不是策略挣的。</p>
-<h2 id="一份文档，两种读法"><a href="#一份文档，两种读法" class="headerlink" title="一份文档，两种读法"></a>一份文档，两种读法</h2><p>同一天还有两件配套的活，都在给这套结论&quot;上索引&quot;。</p>
-<p>第一件是把 <code>references/v121-baseline-pool-fair-compare.md</code> 补全：头部新增一段&quot;配套总览&quot;，再加一张 9 行的关联文档索引表，覆盖 baseline 池方法、<code>restrict_to_baseline</code>、v1.0 的失真数字、v1.22 maker、CRONK lookahead 这些内容。同时在 <code>memory</code> 的 §15 末尾用 <code>viking_remember</code> 追加了关联。</p>
-<p>第二件是反向的：在 <code>mem_abba55eda6a6.md</code> 里追加 §16 关联文档索引，新增 7 个搜索关键词（<code>run_for_version</code>、<code>restrict_to_baseline</code>、v1.0 自由池 +8782U、baseline +250U、v1.22 maker 信誉加权净 +76.02U 等），再在 reference 顶部插一段&quot;配套总览&quot;指向 memory。</p>
-<p>一边是文档指向记忆，一边是记忆指向文档。<strong>目的是让下次搜索时，两个方向都能被召回。</strong></p>
-<p>验证做了 4 步：</p>
-<table>
-<thead>
-<tr>
-<th>搜索问题</th>
-<th>hit 数</th>
-<th>命中文档</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>baseline 池公平对比 &#x2F; 候选池选择偏差</td>
-<td>3</td>
-<td>mem_db6402c4f337、v121 reference、mem_abba55eda6a6</td>
-</tr>
-<tr>
-<td>11 号页 vs 12 号页 PnL 口径</td>
-<td>3</td>
-<td>v121 reference、12_page_buy_overcount、mem_abba55eda6a6</td>
-</tr>
-<tr>
-<td>v1.22 maker 信誉加权 实战</td>
-<td>3</td>
-<td>v122 reference、mem_0a599e69c41e、mem_4a0021d70fe8</td>
-</tr>
-<tr>
-<td>lookahead 假暴利 CRONK</td>
-<td>3</td>
-<td>t_xxxxxxx_cr_fix、mem_ab5c6d321804、反事实回测虚假收益修复</td>
-</tr>
-</tbody></table>
-<p>四步全部通过。</p>
-<p>还有一个细节值得记：<code>defi_dashboard</code> 目录<strong>不是 git 仓库</strong>（git history 为空、未初始化），拿不到 commit SHA。所以&quot;代码签名&quot;这条改成了用 <code>restrict_to_baseline</code> 这样的关键词替代，代码改动历史改通过 OpenViking 的 <code>session_search</code> 追溯。</p>
-<h2 id="页面也要说真话"><a href="#页面也要说真话" class="headerlink" title="页面也要说真话"></a>页面也要说真话</h2><p>同一天还修了一个不起眼、但更容易骗到人的问题：<strong>12 号反事实回测页面的数据时效</strong>。</p>
-<p><code>_load_summary()</code> 里新增了 <code>data_end_ts</code> 列，取值是 <code>bt_cf_trades</code> 的 <code>MAX(GREATEST(buy_ts, sell_ts))</code>。核下来 v1.16.4 的数据截止是 <strong>2026-06-14 23:57:51</strong>——不是之前说的 6&#x2F;12，而是最后一条 SELL 的时间。排名表格也加了一列「数据截止」，每一行都标清楚自己是哪天的数。</p>
-<p>时效警告直接重写成一句大白话：</p>
-<blockquote>
-<p>⚠️ <strong>数据已过时 — 这不是实时数据</strong></p>
-</blockquote>
-<p>并且说清楚三件事：这里展示的是 <code>backtest_runner.py</code> 预计算的<strong>快照回测结果</strong>，不是 <code>sim_decisions</code> 的实时数据；想看实时 BUY 去 11 号页 v1.23；想刷新 v1.16.4 得重跑 <code>backtest_runner.py</code>。警告阈值也从 3 天收紧到 <strong>1 天</strong>。</p>
-<p>改完之后，页面上&quot;我是不是在看一份过期报表&quot;这件事，一眼就能看出来。</p>
-<hr>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>这一天的收获也分三层。</p>
-<p><strong>最表面的是那 221 笔 BUY</strong>——数字涨了三十倍，看着像策略突然开窍了。但它其实什么都没变，只是约束被拿掉了。</p>
-<p><strong>中间一层是那条口径纪律</strong>：比较策略之前，先把候选池、时间段、约束条件对齐。对齐之前的一切绝对值，都是噪音。</p>
-<p><strong>最里面一层，是那句&quot;页面也要说真话&quot;。</strong></p>
-<p>公平对比不只是回测器里的事。<strong>一个显示着过期数据的漂亮页面，和一份被候选池喂出来的假收益，是同一种病</strong>——它们都在让人看到一个自己愿意相信的结论。拆掉 <code>deploy_ts</code> 的过滤容易，难的是<strong>主动把&quot;这数据其实已经三天没更新了&quot;这行字，也摆到最显眼的地方</strong>。</p>
-<p>那天之后我给自己加了一条：<strong>下结论之前，先问一句&quot;这个结果是它挣的，还是我给的&quot;。</strong></p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>量化</tag>
-        <tag>回测</tag>
-        <tag>文档</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>记录一次实盘前的复盘（2026-07-31）</title>
     <url>/posts/ov0731/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次实盘前的复盘（2026-07-31）"><a href="#记录一次实盘前的复盘（2026-07-31）" class="headerlink" title="记录一次实盘前的复盘（2026-07-31）"></a>记录一次实盘前的复盘（2026-07-31）</h1><p><strong>在真金白银进场之前，最有价值的动作不是再加一个策略，而是把「能不能加」的标准写死</strong></p>
@@ -1629,99 +1669,6 @@
       </tags>
   </entry>
   <entry>
-    <title>记录一次实时信号架构（2026-07-14）</title>
-    <url>/posts/ov0714/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次实时信号架构（2026-07-14）"><a href="#记录一次实时信号架构（2026-07-14）" class="headerlink" title="记录一次实时信号架构（2026-07-14）"></a>记录一次实时信号架构（2026-07-14）</h1><p><strong>把「读旧表交易」改成「每轮自己算信号」，是这套系统第一次真正意义上的实时化</strong></p>
-<p>前一天把止盈从 5% 调到 3%、又给信号刷新补了坑，第一批仓位陆续有了结果：三笔 +3% 附近止盈、两笔 -2% 止损，胜率 60%。数据能看，但更值得记的是那天对架构动的刀——<strong>主流币模拟交易从「读表」走向了「实时计算」</strong>。</p>
-<hr>
-<h2 id="三条并排的问题"><a href="#三条并排的问题" class="headerlink" title="三条并排的问题"></a>三条并排的问题</h2><p>改架构之前，问题其实是三条并列的：</p>
-<ol>
-<li>止盈 5% 太高 → 已经降到 3%</li>
-<li>信号每 2–4 小时才刷新一次 → 平仓之后没有新信号可用（旧信号被「过期 &gt; 4h」跳过）</li>
-<li>开仓太随意 → 只要有一条信号就想开仓，缺一道「够不够格」的判断</li>
-</ol>
-<p>前两条在前一天已经处理，第三条才是这天架构改造的动机。</p>
-<h2 id="从「读表交易」到「实时计算」"><a href="#从「读表交易」到「实时计算」" class="headerlink" title="从「读表交易」到「实时计算」"></a>从「读表交易」到「实时计算」</h2><p>旧架构是标准的三段式流水线：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mc_precompute.py（定时）→ mc_signals_latest 表 → maincoin_paper.py（读旧表交易）</span><br></pre></td></tr></table></figure>
-
-<p>它的命门很明显：中间那张 <code>mc_signals_latest</code> 一旦不刷新，整条链就断在「过期跳过」上——前一天那场「平仓后开不出新仓」，就是断在这里。</p>
-<p>新架构把中间那张表<strong>从交易主链路里摘出去</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">maincoin_paper.py 每轮实时拉数据 → 跑 14 个策略 → 共识判定 → 开仓</span><br></pre></td></tr></table></figure>
-
-<p>交易决策不再依赖「别人写好的表」，而是每一轮自己现算。</p>
-<h2 id="三个新函数"><a href="#三个新函数" class="headerlink" title="三个新函数"></a>三个新函数</h2><ul>
-<li><code>compute_realtime_signal(symbol, conn)</code>：实时拉永续合约数据（funding &#x2F; OI &#x2F; 多空比 &#x2F; 盘口 &#x2F; 鲸鱼），跑 14 个策略，返回共识结果</li>
-<li><code>get_entry_candidates(conn, open_positions, balance)</code>：遍历所有候选币种，筛出真正够高置信度的信号</li>
-<li><code>check_positions()</code>：判断信号反转时也改成实时计算，不再读 <code>mc_signals_latest</code></li>
-</ul>
-<h2 id="门槛从-0-65-提到-0-80，还加了共识"><a href="#门槛从-0-65-提到-0-80，还加了共识" class="headerlink" title="门槛从 0.65 提到 0.80，还加了共识"></a>门槛从 0.65 提到 0.80，还加了共识</h2><p>这一步是这次升级里最「反直觉」的地方——<strong>问题不是开仓不开仓，而是开得太随便，所以解决办法是把门槛调高</strong>：</p>
-<ul>
-<li><code>MIN_CONFIDENCE</code>：0.65 → <strong>0.80</strong></li>
-<li>新增 <code>MIN_CONSENSUS</code>：<strong>至少 2 个策略同方向</strong>才开仓</li>
-<li>信号反转平仓：同样要求 80% 以上置信度、有共识才执行</li>
-</ul>
-<p>提高门槛意味着会错过一些行情，但它换来的是<strong>「不因为一条吵得凶的信号就下单」</strong>。</p>
-<h2 id="第一轮：什么都没开"><a href="#第一轮：什么都没开" class="headerlink" title="第一轮：什么都没开"></a>第一轮：什么都没开</h2><p>改完第一次跑，结果是「信号 0、平仓 0、持仓 5」——一笔都没开。看着像坏了，其实是设计如此：</p>
-<ul>
-<li>TRX 有 5 个 LONG 对 1 个 SHORT，多空冲突、无共识 → HOLD</li>
-<li>WLD 有 2 个 LONG（90%），方向够齐但没到 80% 的门槛 → 不达标</li>
-<li>结论：<strong>市场当时没有高质量信号，系统正确地拒绝开仓</strong></li>
-</ul>
-<p>这一条我特意记了下来。<strong>一个系统「什么都不做」和「做错」是两回事</strong>，前者是纪律，后者是故障。能看到前者，说明门槛真的在起作用。</p>
-<h2 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h2><p>新的实时计算不是免费的：<strong>每轮扫描约 2.5 分钟</strong>（10 个币种 × 14 个策略，外加 API 调用）。5 分钟的循环间隔刚好能覆盖住，所以不额外压缩周期。</p>
-<h2 id="保留的两件事"><a href="#保留的两件事" class="headerlink" title="保留的两件事"></a>保留的两件事</h2><p>架构换了，但不是所有东西都推倒：</p>
-<ul>
-<li><code>scan_signals()</code> 保留下来，专门给仪表盘展示用</li>
-<li><code>refresh_signals()</code> 保留，每 2 小时刷新一次 <code>mc_signals_latest</code>，同样是给 17 号页看的</li>
-<li>5 分钟循环不变，只是每轮从「读表」变成了「实时算」</li>
-</ul>
-<p>也就是说，<strong>那张旧表现在只服务于「看」，不服务于「交易」</strong>。</p>
-<h2 id="附：Hermes-连接个人微信的调研"><a href="#附：Hermes-连接个人微信的调研" class="headerlink" title="附：Hermes 连接个人微信的调研"></a>附：Hermes 连接个人微信的调研</h2><p>同一天还顺手查了另一件事——Hermes 能不能连微信。结论是能，走的是腾讯的 <strong>iLink Bot API</strong>，只支持个人微信，企业微信要用另一套 WeCom 适配器。步骤记一下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 1. 装依赖</span></span><br><span class="line">pip install aiohttp cryptography</span><br><span class="line"><span class="built_in">cd</span> ~/.hermes/hermes-agent &amp;&amp; uv pip install -e <span class="string">&quot;.[messaging]&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 设置向导（手机扫码登录）</span></span><br><span class="line">hermes gateway setup</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 启动网关</span></span><br><span class="line">hermes gateway</span><br></pre></td></tr></table></figure>
-
-<p>扫码成功后凭据自动存到 <code>~/.hermes/weixin/accounts/</code>，<code>~/.hermes/.env</code> 里配 <code>WEIXIN_ACCOUNT_ID</code>（<code>WEIXIN_TOKEN</code> 由向导自动保存，一般不用手动设）。</p>
-<p>限制要提前知道：<strong>连上的是 iLink bot 身份，不是你本人的微信号</strong>——它不能被拉进普通微信群，群消息大概率收不到，实际只有私聊 DM 是稳定可用的。</p>
-<p>顺带把端口也确认了一遍，免得和「网关」混起来：</p>
-<table>
-<thead>
-<tr>
-<th>服务</th>
-<th>地址</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Dashboard</td>
-<td><code>http://127.0.0.1:9120</code></td>
-<td>Web 仪表盘（嵌入式 TUI、PTY、WebSocket）</td>
-</tr>
-<tr>
-<td>消息网关</td>
-<td>无 HTTP 端口</td>
-<td>后台进程，长轮询收发消息</td>
-</tr>
-<tr>
-<td>API Server</td>
-<td><code>http://127.0.0.1:8642</code></td>
-<td>REST API（可选）</td>
-</tr>
-</tbody></table>
-<p><code>9120</code> 是仪表盘，不是消息通道——这个区分之后会在排障时反复用到。</p>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>那天的改动，也分三层。</p>
-<p><strong>最表面的是「实时化」三个字</strong>：从读表到每轮现算，把一段外部依赖收进了自己手里。</p>
-<p><strong>中间一层，是「提高门槛」这种反直觉的调法</strong>。交易频率低的时候，人的第一反应是放宽条件；但真正的问题往往是放得太宽。<strong>把 0.65 提到 0.80、再加一道共识，本质上是承认「信号多不等于信号好」。</strong> 系统当天一次都没开仓，恰恰是它第一次表现得像个有纪律的交易者。</p>
-<p><strong>最里面一层，是那个「摘掉中间表」的动作。</strong> 旧的 <code>mc_signals_latest</code> 没有消失，只是从交易链路挪到了展示链路。<strong>同一个组件，放在决策里是风险，放在展示里只是信息</strong>——分清这两者，比给它加多少监控都重要。</p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>量化</tag>
-        <tag>架构</tag>
-        <tag>实时信号</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>记录一次工作台的清点（2026-04-18）</title>
     <url>/posts/ov0418/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次工作台的清点（2026-04-18）"><a href="#记录一次工作台的清点（2026-04-18）" class="headerlink" title="记录一次工作台的清点（2026-04-18）"></a>记录一次工作台的清点（2026-04-18）</h1><p><strong>机器用久了，会攒下一堆只有自己知道的事</strong></p>
@@ -1774,6 +1721,111 @@
       <tags>
         <tag>记录</tag>
         <tag>自动化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录一次夜里的异常（2026-08-23）</title>
+    <url>/posts/ov0823/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次夜里的异常（2026-08-23）"><a href="#记录一次夜里的异常（2026-08-23）" class="headerlink" title="记录一次夜里的异常（2026-08-23）"></a>记录一次夜里的异常（2026-08-23）</h1><p><strong>一晚上三条&quot;死因&quot;，长得像同一个症状</strong></p>
+<p>有些夜里，你会以为在处理一个 bug，其实是四个。那天从 OOS 停写查起，查到最后发现：一条 3 天的数据空洞、一个设错位置的超时、一笔拖了 4.6 天才被硬止损的仓，还有一行缺了 <code>global</code> 的赋值。它们互不相干，却在同一晚一起发作。</p>
+<hr>
+<h2 id="一、停写三天的-OOS"><a href="#一、停写三天的-OOS" class="headerlink" title="一、停写三天的 OOS"></a>一、停写三天的 OOS</h2><p>先看最表面的：<code>factor_ic_oos.db.oos_ticks</code> 从 <strong>08-20 18:08</strong> 之后就再没写入了，空了 3 天。</p>
+<p><code>runtime_state</code> 给出了另一半答案：<code>next_run_at=None</code>，<code>last_run_at=1787220565</code>（≈08-20 18:08）——<strong>调度器在那之后就没再排下一次运行</strong>。automation 配置本身还是 ACTIVE，状态显示正常，那只是假象。</p>
+<p>代码侧的根因，是 <code>compute_regime()</code>（L177）里的 <code>fetch_candles</code> <strong>没有任何 try&#x2F;except</strong>：</p>
+<ul>
+<li>沙箱&#x2F;网络异常 → <code>fetch_candles</code> 抛异常 → 冒泡到 <code>main()</code>（无顶层捕获）→ 整个脚本崩溃；</li>
+<li><strong>Gate1-4 就算算好了，也写不进 DB</strong>。</li>
+</ul>
+<p>L178 只对&quot;返回空&quot;做了处理，漏掉了&quot;抛异常&quot;这一种。补上降级之后，在沙箱默认环境（联网被拦，等同 automation 执行环境）跑 <code>once</code> 不再崩，<code>oos_ticks</code> 从 42 → 43 写入成功。重新激活 automation，返回 <code>nextRunAt≈08-23 14:09</code>，调度恢复。写入恢复成 <strong>42@13:51 → 43@14:04 → 44@14:08</strong>，3 天的空洞补上了。</p>
+<p>顺带核了另一条采集线：<code>smart_money_oos.db.oos_samples</code> 有 7278 行，collect 进程正常——<strong>不是整条数据链都停了，只是 OOS 这一条断了。</strong> 这一点很重要，它把故障范围一下子缩到了一个进程。</p>
+<h2 id="二、超时设在了没用的地方"><a href="#二、超时设在了没用的地方" class="headerlink" title="二、超时设在了没用的地方"></a>二、超时设在了没用的地方</h2><p>另一条线是 <code>hl_connection.py</code>。<code>Info(self.api_url, skip_ws=True)</code> &#x2F; <code>Exchange(...)</code> 构造时没注入 timeout，底层 session 是 SDK 默认（无超时）——<strong>网络半死时永久 hang</strong>，这正是 trader 僵死的直接源头。</p>
+<p>第一版改法，是在 <code>connect()</code>&#x2F;<code>reconnect()</code> 构造完之后设 <code>session.timeout</code>。跑起来还是卡。翻 SDK 源码才明白：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># hyperliquid/api.py:23</span></span><br><span class="line">response = self.session.post(url, json=payload, timeout=self.timeout)</span><br></pre></td></tr></table></figure>
+
+<p><strong>SDK 用的是 <code>Info.timeout</code> &#x2F; <code>Exchange.timeout</code> 实例属性，不是 <code>session.timeout</code>。</strong> 设错对象，等于没设。</p>
+<p>改成两件一起做：既设 <code>obj.timeout</code>（SDK 真正读的那个），也设 <code>session.timeout</code>（冗余）。但还不够——<code>Info</code> 构造内部会立刻联网拉 <code>spot_meta()</code>，那一刻 timeout 还没设上。所以最终是把 timeout 直接传进构造函数：<code>timeout=(5,30)</code>，覆盖&quot;构造期联网&quot;这个场景。</p>
+<p>验证方式，是对一个不可达地址构造 <code>Info(..., timeout=(2,3))</code>，<strong>精确 3.0s 抛 ReadTimeout</strong>——证明构造期超时真的生效了。另一组诊断跑出来：<code>connect()</code> 成功（rtt&#x3D;2.8s），<code>info.timeout=(5.0, 30.0)</code> &#x2F; <code>exch.timeout=(5.0, 30.0)</code>，<code>user_state()</code> 0.2s 正常返回。<strong>超时这次是真的落到了 SDK 实际使用的那两个属性上。</strong></p>
+<h2 id="三、一笔拖了-4-6-天的仓"><a href="#三、一笔拖了-4-6-天的仓" class="headerlink" title="三、一笔拖了 4.6 天的仓"></a>三、一笔拖了 4.6 天的仓</h2><p>修 OOS 的过程中，发现 Gate 数据大幅恶化：<code>gate1_n=22, gate3=-3.229, gate4=218.8%</code>（上一个 tick 还是 21 &#x2F; +0.499 &#x2F; 88%）。</p>
+<p>追下去，多的那一笔是 <strong><code>id=98</code> APT（factor_ic SHORT）</strong>：<code>closed=2026-08-23T13:59:31</code>，<code>reason=hard_stop_loss (-13.6%)</code>，<code>pnl=-10.95</code>。它是 13:59 重启 trader 清 stale 仓时被平掉的 7 笔之一。</p>
+<p>关键在于它为什么亏这么多：<strong>trader 僵死了 4.6 天没及时平仓</strong>，重启之后才被硬止损。所以 gate3&#x2F;gate4 的翻转<strong>发生在 id43（14:04）那一个 tick</strong>，不是更早。<strong>这是僵死本身的历史代价，不是重启造成的 bug</strong>——但必须如实记下来。</p>
+<p>查的时候还踩了两个小坑：<code>sm_positions</code> 没有 <code>exit_price</code> 列；workbuddy.db 的路径写成 <code>/c/</code> 会被 Python 拼成 <code>C:\c\</code>。<strong>这些不算故障，但会让排查多绕一圈</strong>，值不值得记下来？值——下次同样的查询能省十分钟。</p>
+<h2 id="四、真正杀死进程的那一行"><a href="#四、真正杀死进程的那一行" class="headerlink" title="四、真正杀死进程的那一行"></a>四、真正杀死进程的那一行</h2><p>trader 能连上、日志里也有&quot;连接建立&quot;，但总是在启动 ~122s 后被 <code>[HEARTBEAT_WATCHDOG] 主循环僵死</code> 杀掉。faulthandler 的 dump 显示，main 线程停在 <strong>line 1574 那个正常的 <code>time.sleep</code><strong>——</strong>&quot;主循环真卡死&quot;这个判断，被证伪了</strong>。</p>
+<p>真正的根因在 <code>main()</code> 里：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">_LAST_HEARTBEAT = time.time()   <span class="comment"># 缺 global → 变成 main 的局部变量</span></span><br></pre></td></tr></table></figure>
+
+<p>少了 <code>global</code> 声明，这一行赋值就落在一个局部名字上；<strong>心跳线程读的那个模块级时间戳，永远停在 import 时刻</strong>，于是看门狗在启动约 120s 后，误杀了一个其实健康的进程。修复就是一行：<code>main()</code> 开头加 <code>global _LAST_HEARTBEAT</code>。改完 trader 稳定跑了 <strong>41.6 分钟</strong>，越过了 122s 的误杀窗口。</p>
+<p>这里最值得记的，是<strong>整个排查过程中被打脸的那几步</strong>：先怀疑 SDK 调用永久 hang，验完发现不是；再怀疑启动期重试循环，验完也不是；最后靠 faulthandler 把栈停在了一个正常的 <code>time.sleep</code> 上，才反向锁定了那一行缺的 <code>global</code>。<strong>一个&quot;进程僵死&quot;的表象，前后指向过三个不同的嫌疑人。</strong></p>
+<p>这一遍还顺带查出：watchdog 自己也早就僵了——<code>watchdog_loop.log</code> 停在 <strong>08-18 14:22</strong>，进程活着、循环早死，所以 trader 被杀之后它根本没拉起来。<strong>看门狗自己也要被看着</strong>，这句老话在那一晚又应验了一次。</p>
+<h2 id="五、顺手修的一个启动器坑"><a href="#五、顺手修的一个启动器坑" class="headerlink" title="五、顺手修的一个启动器坑"></a>五、顺手修的一个启动器坑</h2><p>还有一个更土的：旧代码用 <code>open(log,&#39;a&#39;)</code> 写日志，Windows 下遇到旧 trader 仍持着文件句柄（拒绝共享写）→ <code>PermissionError</code> → 启动器崩 → <strong>watchdog 每 5min 拉 trader 全部失败</strong>。改成退化到带时间戳的唯一日志，保证一定能启动。</p>
+<p>另外把 signal 进程也一并重启了（它加载的是旧 <code>hl_connection</code>，只读、不需要 secret，但同样要吃上新超时）。重启后 <code>signal_daemon.log</code> 显示正常扫描（SENTIMENT &#x2F; MF &#x2F; CVD &#x2F; FIC），无 import 错误；期间 testnet 抖动触发过两次 <code>心跳超时 120s → 重连 → 重连成功 2973 币种</code>，是优雅自愈而不是永久 hang——<strong>这恰好是超时修复的预期效果。</strong></p>
+<h2 id="六、天亮前的确认"><a href="#六、天亮前的确认" class="headerlink" title="六、天亮前的确认"></a>六、天亮前的确认</h2><p>修完之后，还差最后一步：<strong>等。</strong></p>
+<p>新拉起来的 trader 不能只看它启动日志好看，得等它越过 <strong>122s</strong> 那条线——因为之前每一次，都是死在这条线上。一直等到 <strong>41.6 分钟</strong>，确认它没被心跳看门狗误杀、主循环在正常转，才敢说这次是真的稳了。</p>
+<p>同一时间，把几件事对齐了一遍：<code>oos_ticks</code> 恢复每小时写入、watchdog 的循环重新开始走、signal 正常出信号。<strong>故障排除的终点，不是&quot;改动都提交了&quot;，而是&quot;系统在没人盯着的时候也站得住&quot;。</strong> 这一步没有捷径，就是等——等一个足够长、能覆盖掉误杀窗口的观察时间。</p>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>那晚的收获分三层。</p>
+<p><strong>最表面的是几个修复</strong>：OOS 的降级、SDK 超时的注入位置、<code>global</code> 那一行、启动器的日志退化。</p>
+<p><strong>中间一层是那条方法</strong>：<strong>不要停在&quot;症状相同&quot;就下结论</strong>。停写、卡死、被误杀、Gate 恶化，看起来都像&quot;进程僵死&quot;的一件事，拆开看却是几个独立的根因。<strong>一个症状背后到底是几个故障，只有把每条证据单独跑一遍才知道。</strong></p>
+<p><strong>最里面一层，是对&quot;如实记录&quot;的要求。</strong> APT 那笔 -10.95 让 gate3 翻负、gate4 冲到 218%，第一反应很容易是&quot;是不是重启搞出来的&quot;。但核到底，它是僵死拖了 4.6 天的旧账。<strong>把难听的部分算清楚、并且承认它不是新 bug，比修好它更重要</strong>——否则下一次，你会把真正的旧账继续往后拖。</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>排障</tag>
+        <tag>交易系统</tag>
+        <tag>心跳</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录一次心跳的修复（2026-09-10）</title>
+    <url>/posts/ov0910/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次心跳的修复（2026-09-10）"><a href="#记录一次心跳的修复（2026-09-10）" class="headerlink" title="记录一次心跳的修复（2026-09-10）"></a>记录一次心跳的修复（2026-09-10）</h1><p><strong>最危险的不是进程死了，而是它还活着，却已经很久没说过一句话</strong></p>
+<p>这天前后处理了几件看起来不相干的事：换掉一个 VLM 模型、给一个本地转发进程补 timeout、修交易 worker 的心跳、核正一份自动判定、读一份策略审计。等它们在记录里排到一起才发现，说的其实是同一件事——<strong>每一个长期运行的环节，都得持续向系统证明自己还活着</strong>。一旦它不再说话，系统不会立刻崩，它只会安静地做出一个错误的判断。</p>
+<p>下面按当天实际处理的顺序记。</p>
+<hr>
+<h2 id="从一条-130-秒的规律开始"><a href="#从一条-130-秒的规律开始" class="headerlink" title="从一条 130 秒的规律开始"></a>从一条 130 秒的规律开始</h2><p>监控里最先扎眼的是这个数：交易 worker 每隔约 <strong>130 秒</strong>就重连一次，节律几乎不抖。</p>
+<p>反复核过之后，这个 130 秒不是巧合——它刚好等于<strong>连接守卫的超时阈值 + 平均一次重连所需的耗时</strong>。也就是说，重连不是网络断了，是被守卫&quot;误判&quot;成断了：它等了太久没等到该有的时间戳刷新，就按超时处理，断线，重连，然后 130 秒后再来一遍。日志里这种由&quot;陈旧&quot;引发的心跳超时，一次会话里数到了 <strong>3885 次</strong>。</p>
+<h2 id="顺着-last-success-ts-往下挖"><a href="#顺着-last-success-ts-往下挖" class="headerlink" title="顺着 _last_success_ts 往下挖"></a>顺着 <code>_last_success_ts</code> 往下挖</h2><p>连接守卫的判定本身很简单：当 <code>_last_success_ts</code> 比 <code>HL_CONN_HEARTBEAT_SEC</code> 更老，就触发超时。所以问题不在守卫，在于<strong>这个时间戳为什么没被刷新</strong>。</p>
+<p>把静态代码顺着读下来，链条是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">连接守卫判定:  now - _last_success_ts &gt; HL_CONN_HEARTBEAT_SEC  →  触发超时</span><br><span class="line">_last_success_ts 的更新点:  只有 _get_mid_price()</span><br><span class="line">_get_mid_price() 的执行条件:  只在 signals 非空的 if 分支里跑</span><br><span class="line">signal daemon 心跳过期 → signals 为空 → 该分支不进入 → 时间戳不刷新</span><br></pre></td></tr></table></figure>
+
+<p>结论就出来了：<strong>上游 signal daemon 心跳过期，导致 signals 为空，<code>_get_mid_price()</code> 那条分支永远进不去，时间戳一直不刷新，守卫于是报出一次假超时。</strong> 这是一条&quot;只有信号为空时才会走&quot;的失效路径。</p>
+<p>此前其实已经修过一轮——在价格查询的 missing-symbol 分支上补了一个 <code>record_success()</code>（7 行），用来兜住&quot;健康但为空&quot;的响应。但那种兜法管不到这里：<strong>当 signals 整体为空时，<code>_get_mid_price()</code> 连函数都进不去，分支里的兜底自然也不会执行</strong>。前一次的补丁没有覆盖这一次的场景，这也是差点被忽略的地方。</p>
+<h2 id="三个选项里，选最便宜的那个"><a href="#三个选项里，选最便宜的那个" class="headerlink" title="三个选项里，选最便宜的那个"></a>三个选项里，选最便宜的那个</h2><p>剖析完之后，按&quot;实现成本 + 结构正确性&quot;排了三个选项：</p>
+<ol>
+<li><strong>最低成本</strong>：在 main loop 每次 tick 的顶部加一行心跳 ping，调一次 <code>_info.all_mids()</code> 并把 <code>_conn_guard.record_success()</code> 刷新掉。这一下能同时消掉主循环心跳超时、HL 重连和 watchdog kill。</li>
+<li><strong>中等</strong>：直接把连接心跳超时阈值抬高，减少误判频率——治标。</li>
+<li><strong>结构性</strong>：单独开一个 P2，去查 signal daemon 心跳为什么会过期。</li>
+</ol>
+<p>选的是第 1 个，第 3 个单独挂账。理由很直白：<strong>根因不是超时太短，而是时间戳的刷新点没被走到；抬高阈值只是让错误晚一点暴露。</strong> 顺手核了一遍 diff，确认只动了该动的分支，没有把原来正确的逻辑一起改掉。</p>
+<h2 id="修完之后，先把话收回来"><a href="#修完之后，先把话收回来" class="headerlink" title="修完之后，先把话收回来"></a>修完之后，先把话收回来</h2><p>修复上线后跑了 <strong>30 分钟</strong>的 soak 观察。自动判定给出的初判是 <code>FIX_PARTIAL</code>——看起来只修好了一半。</p>
+<p>但把原始日志逐条对完之后发现，这是<strong>分类器的 bug</strong>：它用的粗匹配把 <strong>signal daemon 的超时</strong>也算进了 HL 心跳里，于是&quot;目标错误&quot;的计数被另一个守护进程的超时污染了。剔掉这类噪声再看，目标路径是 <strong>100% 消除</strong>，主循环心跳超时、HL 重连、watchdog kill 全部归零。</p>
+<p>判定于是从 <code>FIX_PARTIAL</code> 改正为 <code>FIX_WORKS</code>。留在账上的还有一条：signal daemon 心跳过期本身没解决，交给 P2。</p>
+<h2 id="另一头：一个不会再说话的服务"><a href="#另一头：一个不会再说话的服务" class="headerlink" title="另一头：一个不会再说话的服务"></a>另一头：一个不会再说话的服务</h2><p>同一天还有一条平行的线。OpenVikingService 的 VLM 换了模型，从 <code>volcengine/doubao-seed-2-0-pro-260215</code> 换成 <code>litellm/openai/MiniMax-M3</code>，目的是省 token。改的是 <code>ov.conf</code> 里的模型项，改完重启服务。</p>
+<p>麻烦在于，这台机器上的 **SYSTEM DNS 解析不了 <code>api.minimaxi.com</code>**。直连是连不上的，只能绕：让请求先走一个本地转发进程。</p>
+<p><code>mx_http_proxy</code> 就是这条绕路方案：一个 <strong>0.0.0.0:8443</strong> 的明文 HTTP 监听，转给 <code>https://api.minimaxi.com</code>，并把 Host 头改写成 <code>api.minimaxi.com</code>——这样上游的 TLS SNI 和路由才对得上。客户端的 <code>base_url</code> 指向 <code>http://127.0.0.1:&lt;port&gt;/v1</code>，<code>extra_headers</code> 里带上 <code>Host: api.minimaxi.com</code>。</p>
+<p>这个设计有一个必须记住的前提：<strong>转发进程得一直活着。</strong> 它一死，所有 VLM 调用立刻断掉，而且是手动的，没人会自动把它拉起来。</p>
+<p>那天它就真的死了。旧进程 PID 3424 跑了约 <strong>4.5 小时</strong>之后，在 15:28 前后退出。捞代理日志时看到 <strong>5 次 <code>proxy_err</code>（60 秒读超时）</strong>，其中几次正撞上 M3 生成大文件——大响应偶尔要 70–80 秒，而 urllib 默认的 timeout 只有 60 秒，于是超时、报错，WM update 的 tool_call 跟着超时。</p>
+<p>所以这次不只是重启，顺手把补丁也打了：<strong>urllib timeout 从 60 秒改成 180 秒</strong>。新进程在 15:33:50 起来，PID 13828，探针 <code>PONG_180</code> 在 <strong>2.6 秒</strong>内返回，说明新阈值已经生效。修完再核一遍，6 次 M3 调用里最大的响应 20048 字节、花了 36 秒，离 180 秒的预算还很远，<code>proxy_err</code> 计数归零。</p>
+<p>这是它第三次因为单点故障出事。<strong>自动拉起还没接</strong>（记成 P0），备选是 WinSW 包装，或者登录时触发的计划任务，两条路都要提权。</p>
+<h2 id="心跳过期的源头"><a href="#心跳过期的源头" class="headerlink" title="心跳过期的源头"></a>心跳过期的源头</h2><p>回头看那条 signal daemon。它当天重启过一次，PID 6216，在跑，输出三类信号：<code>factor_ic</code>、<code>market_flow</code>、<code>cvd_momentum</code>（其中 <code>market_flow</code> 按此前的 <code>MAINNET_VERDICT</code> 基本已经退役）。但从 <strong>08:49</strong> 开始，它调 HL API 时会间歇性地抛 <code>ConnectionResetError(10054)</code>，可能造成偶发的 0 信号写入。</p>
+<p>这就是前面那条链的源头：<strong>它一旦写不出信号，trader 那边的时间戳就不刷新，心跳就假超时。</strong> 两头其实是同一件事。</p>
+<h2 id="早上的那本账"><a href="#早上的那本账" class="headerlink" title="早上的那本账"></a>早上的那本账</h2><p>技术活之外，当天早上还过了一遍策略审计：按策略拆 PnL、看信号触发频率、核 signal 与 trader 的状态一致性、清 orphan 仓位。翻出来的最重一条是 <strong>P1：仓位同步 bug</strong>——数据库里的开仓记录和链上对不上，<code>sim_equity</code> 与 <code>chain_equity</code> 之间有明显背离。P0 的几项确认已完成。口径上也顺手钉了一条：<strong>仓位状态不能只看数据库，必须和链上交叉核</strong>。</p>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>这天的收获分三层。</p>
+<p><strong>最表面的一层，是三件具体的事</strong>：换掉一个模型、补一个 timeout、修一处心跳。它们各有一个 PID、一个端口、一个数值，改完都能验。</p>
+<p><strong>中间一层，是那条把它们串起来的线</strong>：出问题的地方，都是某个环节停止了&quot;说话&quot;。trader 的心跳超时，是它没收到信号；forwarder 的单点故障，是它不再响应；signal daemon 的过期心跳，是它写不出数据。<strong>系统很少因为某个进程死掉而崩溃，它更容易因为某个进程沉默而判错。</strong></p>
+<p><strong>最里面一层，是那条被我改回来的判定。</strong></p>
+<p>自动工具给的初判是 <code>FIX_PARTIAL</code>。如果我当时收工，这份记录就会写&quot;只修好了一半&quot;，然后带着一个其实已经修好的目标路径继续往上叠。是逐条对原始日志之后，才发现那个&quot;一半&quot;是分类器把别的守护进程的超时算了进来。<strong>工具会替你算，但结论得自己对一遍</strong>——这笔账和代码本身无关，却比任何一处补丁都值钱。</p>
+<p>而且修完并不算完。forwarder 现在还是手动重启，心跳是接回来了，可它自己还不会跳。<strong>一次心跳，和一直在跳，是两回事</strong>——这是当天留下的、下一件要做的事。</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>量化</tag>
+        <tag>运维</tag>
+        <tag>复盘</tag>
       </tags>
   </entry>
   <entry>
@@ -1882,58 +1934,6 @@
         <tag>并发控制</tag>
         <tag>工具链</tag>
         <tag>模型选型</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录一次心跳的修复（2026-09-10）</title>
-    <url>/posts/ov0910/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次心跳的修复（2026-09-10）"><a href="#记录一次心跳的修复（2026-09-10）" class="headerlink" title="记录一次心跳的修复（2026-09-10）"></a>记录一次心跳的修复（2026-09-10）</h1><p><strong>最危险的不是进程死了，而是它还活着，却已经很久没说过一句话</strong></p>
-<p>这天前后处理了几件看起来不相干的事：换掉一个 VLM 模型、给一个本地转发进程补 timeout、修交易 worker 的心跳、核正一份自动判定、读一份策略审计。等它们在记录里排到一起才发现，说的其实是同一件事——<strong>每一个长期运行的环节，都得持续向系统证明自己还活着</strong>。一旦它不再说话，系统不会立刻崩，它只会安静地做出一个错误的判断。</p>
-<p>下面按当天实际处理的顺序记。</p>
-<hr>
-<h2 id="从一条-130-秒的规律开始"><a href="#从一条-130-秒的规律开始" class="headerlink" title="从一条 130 秒的规律开始"></a>从一条 130 秒的规律开始</h2><p>监控里最先扎眼的是这个数：交易 worker 每隔约 <strong>130 秒</strong>就重连一次，节律几乎不抖。</p>
-<p>反复核过之后，这个 130 秒不是巧合——它刚好等于<strong>连接守卫的超时阈值 + 平均一次重连所需的耗时</strong>。也就是说，重连不是网络断了，是被守卫&quot;误判&quot;成断了：它等了太久没等到该有的时间戳刷新，就按超时处理，断线，重连，然后 130 秒后再来一遍。日志里这种由&quot;陈旧&quot;引发的心跳超时，一次会话里数到了 <strong>3885 次</strong>。</p>
-<h2 id="顺着-last-success-ts-往下挖"><a href="#顺着-last-success-ts-往下挖" class="headerlink" title="顺着 _last_success_ts 往下挖"></a>顺着 <code>_last_success_ts</code> 往下挖</h2><p>连接守卫的判定本身很简单：当 <code>_last_success_ts</code> 比 <code>HL_CONN_HEARTBEAT_SEC</code> 更老，就触发超时。所以问题不在守卫，在于<strong>这个时间戳为什么没被刷新</strong>。</p>
-<p>把静态代码顺着读下来，链条是这样的：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">连接守卫判定:  now - _last_success_ts &gt; HL_CONN_HEARTBEAT_SEC  →  触发超时</span><br><span class="line">_last_success_ts 的更新点:  只有 _get_mid_price()</span><br><span class="line">_get_mid_price() 的执行条件:  只在 signals 非空的 if 分支里跑</span><br><span class="line">signal daemon 心跳过期 → signals 为空 → 该分支不进入 → 时间戳不刷新</span><br></pre></td></tr></table></figure>
-
-<p>结论就出来了：<strong>上游 signal daemon 心跳过期，导致 signals 为空，<code>_get_mid_price()</code> 那条分支永远进不去，时间戳一直不刷新，守卫于是报出一次假超时。</strong> 这是一条&quot;只有信号为空时才会走&quot;的失效路径。</p>
-<p>此前其实已经修过一轮——在价格查询的 missing-symbol 分支上补了一个 <code>record_success()</code>（7 行），用来兜住&quot;健康但为空&quot;的响应。但那种兜法管不到这里：<strong>当 signals 整体为空时，<code>_get_mid_price()</code> 连函数都进不去，分支里的兜底自然也不会执行</strong>。前一次的补丁没有覆盖这一次的场景，这也是差点被忽略的地方。</p>
-<h2 id="三个选项里，选最便宜的那个"><a href="#三个选项里，选最便宜的那个" class="headerlink" title="三个选项里，选最便宜的那个"></a>三个选项里，选最便宜的那个</h2><p>剖析完之后，按&quot;实现成本 + 结构正确性&quot;排了三个选项：</p>
-<ol>
-<li><strong>最低成本</strong>：在 main loop 每次 tick 的顶部加一行心跳 ping，调一次 <code>_info.all_mids()</code> 并把 <code>_conn_guard.record_success()</code> 刷新掉。这一下能同时消掉主循环心跳超时、HL 重连和 watchdog kill。</li>
-<li><strong>中等</strong>：直接把连接心跳超时阈值抬高，减少误判频率——治标。</li>
-<li><strong>结构性</strong>：单独开一个 P2，去查 signal daemon 心跳为什么会过期。</li>
-</ol>
-<p>选的是第 1 个，第 3 个单独挂账。理由很直白：<strong>根因不是超时太短，而是时间戳的刷新点没被走到；抬高阈值只是让错误晚一点暴露。</strong> 顺手核了一遍 diff，确认只动了该动的分支，没有把原来正确的逻辑一起改掉。</p>
-<h2 id="修完之后，先把话收回来"><a href="#修完之后，先把话收回来" class="headerlink" title="修完之后，先把话收回来"></a>修完之后，先把话收回来</h2><p>修复上线后跑了 <strong>30 分钟</strong>的 soak 观察。自动判定给出的初判是 <code>FIX_PARTIAL</code>——看起来只修好了一半。</p>
-<p>但把原始日志逐条对完之后发现，这是<strong>分类器的 bug</strong>：它用的粗匹配把 <strong>signal daemon 的超时</strong>也算进了 HL 心跳里，于是&quot;目标错误&quot;的计数被另一个守护进程的超时污染了。剔掉这类噪声再看，目标路径是 <strong>100% 消除</strong>，主循环心跳超时、HL 重连、watchdog kill 全部归零。</p>
-<p>判定于是从 <code>FIX_PARTIAL</code> 改正为 <code>FIX_WORKS</code>。留在账上的还有一条：signal daemon 心跳过期本身没解决，交给 P2。</p>
-<h2 id="另一头：一个不会再说话的服务"><a href="#另一头：一个不会再说话的服务" class="headerlink" title="另一头：一个不会再说话的服务"></a>另一头：一个不会再说话的服务</h2><p>同一天还有一条平行的线。OpenVikingService 的 VLM 换了模型，从 <code>volcengine/doubao-seed-2-0-pro-260215</code> 换成 <code>litellm/openai/MiniMax-M3</code>，目的是省 token。改的是 <code>ov.conf</code> 里的模型项，改完重启服务。</p>
-<p>麻烦在于，这台机器上的 **SYSTEM DNS 解析不了 <code>api.minimaxi.com</code>**。直连是连不上的，只能绕：让请求先走一个本地转发进程。</p>
-<p><code>mx_http_proxy</code> 就是这条绕路方案：一个 <strong>0.0.0.0:8443</strong> 的明文 HTTP 监听，转给 <code>https://api.minimaxi.com</code>，并把 Host 头改写成 <code>api.minimaxi.com</code>——这样上游的 TLS SNI 和路由才对得上。客户端的 <code>base_url</code> 指向 <code>http://127.0.0.1:&lt;port&gt;/v1</code>，<code>extra_headers</code> 里带上 <code>Host: api.minimaxi.com</code>。</p>
-<p>这个设计有一个必须记住的前提：<strong>转发进程得一直活着。</strong> 它一死，所有 VLM 调用立刻断掉，而且是手动的，没人会自动把它拉起来。</p>
-<p>那天它就真的死了。旧进程 PID 3424 跑了约 <strong>4.5 小时</strong>之后，在 15:28 前后退出。捞代理日志时看到 <strong>5 次 <code>proxy_err</code>（60 秒读超时）</strong>，其中几次正撞上 M3 生成大文件——大响应偶尔要 70–80 秒，而 urllib 默认的 timeout 只有 60 秒，于是超时、报错，WM update 的 tool_call 跟着超时。</p>
-<p>所以这次不只是重启，顺手把补丁也打了：<strong>urllib timeout 从 60 秒改成 180 秒</strong>。新进程在 15:33:50 起来，PID 13828，探针 <code>PONG_180</code> 在 <strong>2.6 秒</strong>内返回，说明新阈值已经生效。修完再核一遍，6 次 M3 调用里最大的响应 20048 字节、花了 36 秒，离 180 秒的预算还很远，<code>proxy_err</code> 计数归零。</p>
-<p>这是它第三次因为单点故障出事。<strong>自动拉起还没接</strong>（记成 P0），备选是 WinSW 包装，或者登录时触发的计划任务，两条路都要提权。</p>
-<h2 id="心跳过期的源头"><a href="#心跳过期的源头" class="headerlink" title="心跳过期的源头"></a>心跳过期的源头</h2><p>回头看那条 signal daemon。它当天重启过一次，PID 6216，在跑，输出三类信号：<code>factor_ic</code>、<code>market_flow</code>、<code>cvd_momentum</code>（其中 <code>market_flow</code> 按此前的 <code>MAINNET_VERDICT</code> 基本已经退役）。但从 <strong>08:49</strong> 开始，它调 HL API 时会间歇性地抛 <code>ConnectionResetError(10054)</code>，可能造成偶发的 0 信号写入。</p>
-<p>这就是前面那条链的源头：<strong>它一旦写不出信号，trader 那边的时间戳就不刷新，心跳就假超时。</strong> 两头其实是同一件事。</p>
-<h2 id="早上的那本账"><a href="#早上的那本账" class="headerlink" title="早上的那本账"></a>早上的那本账</h2><p>技术活之外，当天早上还过了一遍策略审计：按策略拆 PnL、看信号触发频率、核 signal 与 trader 的状态一致性、清 orphan 仓位。翻出来的最重一条是 <strong>P1：仓位同步 bug</strong>——数据库里的开仓记录和链上对不上，<code>sim_equity</code> 与 <code>chain_equity</code> 之间有明显背离。P0 的几项确认已完成。口径上也顺手钉了一条：<strong>仓位状态不能只看数据库，必须和链上交叉核</strong>。</p>
-<hr>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>这天的收获分三层。</p>
-<p><strong>最表面的一层，是三件具体的事</strong>：换掉一个模型、补一个 timeout、修一处心跳。它们各有一个 PID、一个端口、一个数值，改完都能验。</p>
-<p><strong>中间一层，是那条把它们串起来的线</strong>：出问题的地方，都是某个环节停止了&quot;说话&quot;。trader 的心跳超时，是它没收到信号；forwarder 的单点故障，是它不再响应；signal daemon 的过期心跳，是它写不出数据。<strong>系统很少因为某个进程死掉而崩溃，它更容易因为某个进程沉默而判错。</strong></p>
-<p><strong>最里面一层，是那条被我改回来的判定。</strong></p>
-<p>自动工具给的初判是 <code>FIX_PARTIAL</code>。如果我当时收工，这份记录就会写&quot;只修好了一半&quot;，然后带着一个其实已经修好的目标路径继续往上叠。是逐条对原始日志之后，才发现那个&quot;一半&quot;是分类器把别的守护进程的超时算了进来。<strong>工具会替你算，但结论得自己对一遍</strong>——这笔账和代码本身无关，却比任何一处补丁都值钱。</p>
-<p>而且修完并不算完。forwarder 现在还是手动重启，心跳是接回来了，可它自己还不会跳。<strong>一次心跳，和一直在跳，是两回事</strong>——这是当天留下的、下一件要做的事。</p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>量化</tag>
-        <tag>运维</tag>
-        <tag>复盘</tag>
       </tags>
   </entry>
   <entry>
@@ -2136,120 +2136,6 @@
         <tag>量化</tag>
         <tag>主流币</tag>
         <tag>换赛道</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录一次接口文档的系统学习（2026-06-11）</title>
-    <url>/posts/ov0611/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次接口文档的系统学习（2026-06-11）"><a href="#记录一次接口文档的系统学习（2026-06-11）" class="headerlink" title="记录一次接口文档的系统学习（2026-06-11）"></a>记录一次接口文档的系统学习（2026-06-11）</h1><p><strong>踩坑能教会你一个点，系统读一遍才能连成一条线</strong></p>
-<p>过去用 GMGN，方式是打通一个用一个，踩到坑就记一条。这样攒下来的东西很实用，但它是碎片——你能说清&quot;这个字段是字符串&quot;，却说不清&quot;整套认证到底怎么设计&quot;。</p>
-<p>所以这天没有改任何策略代码，只做一件事：<strong>把 GMGN 的接口文档从头到尾系统读一遍</strong>。</p>
-<hr>
-<h2 id="三份笔记，一个仓库"><a href="#三份笔记，一个仓库" class="headerlink" title="三份笔记，一个仓库"></a>三份笔记，一个仓库</h2><p>学习分了三路，最后合成一份。</p>
-<p>第一路 <code>t_066ec7da</code>：完整读了 <code>GMGN/gmgn-skills</code> 仓库里所有核心 <code>SKILL.md</code>，覆盖 6 个模块、<code>Readme</code> 和 <code>Wiki</code>。产出是约 19000 字的 <code>GMGN_OpenAPI_学习笔记.md</code>，放在 <code>C:/Users/Administrator/.hermes/kanban/workspaces/t_066ec7da/</code> 下。</p>
-<p>第二路 <code>t_d13a7d02</code>：读 <code>docs.gmgn.ai</code> 官方文档，并用 <code>OpenApiClient.ts</code> 源码对着验证，产出 <code>GMGN_官方文档学习报告.md</code>。</p>
-<p>第三路 <code>t_c4e8bab0</code>：把前两份整合成 <code>GMGN_综合学习笔记_T1+T2+T3.md</code>（约 15KB），并补了一批实战踩坑修正。</p>
-<p>这一路的定位很清楚：<strong>它是在系统学习，和本地那份 <code>gmgn-openapi-quirks</code> skill 正好互补</strong>——quirks 记的是&quot;我在哪踩了坑&quot;，笔记记的是&quot;这套东西本来是怎么设计的&quot;。</p>
-<h2 id="被文档纠正的六个假设"><a href="#被文档纠正的六个假设" class="headerlink" title="被文档纠正的六个假设"></a>被文档纠正的六个假设</h2><p>系统读下来，最值钱的是那几条<strong>纠正</strong>。它们中的每一条，过去都可能是写进代码里的错误。</p>
-<ol>
-<li>**热榜真端点是 <code>GET /v1/market/rank</code>，不是 trenches trending_***。旧代码里一直用的那组 <code>trending_*</code> 接口，压根不是热榜接口。</li>
-<li><strong><code>smartmoney</code> &#x2F; <code>kol</code> 是成交流，不是用户列表</strong>。它跟 <code>/v1/user/kol</code> 的 maker 0 数据重合，属于两个独立信源，数据延迟 5-15 秒。</li>
-<li><strong><code>is_honeypot</code> 是字符串类型</strong>。这个坑很典型：<code>bool(&quot;no&quot;) == True</code>，于是&quot;不是蜜罐&quot;会被误判成蜜罐。</li>
-<li><strong><code>signal_type</code> 14&#x2F;15&#x2F;16 禁止传入</strong>，传了会返回 400。</li>
-<li><strong><code>progress completed type</code> 永远是 0</strong>。</li>
-<li><strong><code>top_10_holder_rate</code> 大多返回 None</strong>。</li>
-</ol>
-<p>这六条里，第 3 条最贵。一个类型判断的疏忽，能让整批&quot;非蜜罐&quot;的币被挡在门外，而且不会报错——它只是安静地少买。后来这条被排进了改造清单的 P0。</p>
-<h2 id="认证与限速：Ed25519-与-leaky-bucket"><a href="#认证与限速：Ed25519-与-leaky-bucket" class="headerlink" title="认证与限速：Ed25519 与 leaky-bucket"></a>认证与限速：Ed25519 与 leaky-bucket</h2><p>系统读的另一个收获，是把之前零散用着的东西看清楚了。</p>
-<p>认证是 <strong>Ed25519 双认证体系</strong>，限速是 <strong>leaky-bucket（漏桶）</strong>。这些机制以前是&quot;知道要这么传&quot;，现在是&quot;知道为什么这么设计&quot;。</p>
-<p>配合前面那六个假设，还有一条关于数据的发现：**<code>completed</code> type 的 <code>swaps_24h</code> 中位数是 248，是 <code>new_creation</code> 的 10 倍**。也就是说，这两种 type 的调参必须分开处理——用一个门槛去卡两种分布完全不同的数据，必然有一边是错的。</p>
-<p>平台还有默认过滤规则：sol 链默认过滤 <code>renounced</code>、<code>frozen</code>；evm 链默认过滤 <code>not_honeypot</code>、<code>verified</code>、<code>renounced</code>。另外，<strong>Cooking 功能以及 TP&#x2F;SL、追踪止盈等策略单相关功能，官方文档里已经覆盖了</strong>，之前那份旧 skill 没记进去。</p>
-<h2 id="从学习到清单：9-条改造项"><a href="#从学习到清单：9-条改造项" class="headerlink" title="从学习到清单：9 条改造项"></a>从学习到清单：9 条改造项</h2><p>读完不是终点，能落地才算。<code>t_4401c58c</code> 把三份来源（<code>gmgn-openapi-quirks</code> SKILL、<code>gmgn-endpoints-27.md</code>、T1+T2+T3 综合笔记）整合成一份 <code>GMGN_策略改造启发清单.md</code>（约 8.5KB），梳理出 9 条改造项：</p>
-<table>
-<thead>
-<tr>
-<th>优先级</th>
-<th>改造项</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>P0</strong></td>
-<td>is_honeypot 字符串修法</td>
-<td>Bug fix：<code>bool(&quot;no&quot;)==True</code> 误判蜜罐 → 改字符串比对</td>
-</tr>
-<tr>
-<td><strong>P1</strong></td>
-<td>rank 动量子策略</td>
-<td><code>GET /v1/market/rank</code> 5m interval，早 1-2h 发现启动信号</td>
-</tr>
-<tr>
-<td><strong>P1</strong></td>
-<td>SmartMoney&#x2F;KOL 实时成交流</td>
-<td>5-15s 时延，每 30s 轮询，集群体信号 ≥5 maker</td>
-</tr>
-<tr>
-<td><strong>P2</strong></td>
-<td>Signal API 多 type 并行</td>
-<td><code>signal_type</code> 1&#x2F;3&#x2F;5&#x2F;7&#x2F;9&#x2F;11，<code>signal_times&gt;=3</code> 强信号</td>
-</tr>
-<tr>
-<td><strong>P2</strong></td>
-<td>combo 多子策略并行</td>
-<td>A&#x2F;B&#x2F;C&#x2F;D&#x2F;E 五路独立评分，max 路由</td>
-</tr>
-<tr>
-<td><strong>P3</strong></td>
-<td>platform&#x3D;Pump.fun 过滤</td>
-<td>专注新币，减少 rug</td>
-</tr>
-<tr>
-<td><strong>P3</strong></td>
-<td>creator open_ratio 加权</td>
-<td>创作者成功率 &lt;30% 降权</td>
-</tr>
-<tr>
-<td><strong>P3</strong></td>
-<td>GMGN filter 参数自动化</td>
-<td>renounced &#x2F; has_social &#x2F; not_wash_trading 服务端过滤</td>
-</tr>
-<tr>
-<td><strong>P3</strong></td>
-<td>BSC&#x2F;Base 多链扩展</td>
-<td>三路并行（sol&#x2F;bsc&#x2F;base）</td>
-</tr>
-</tbody></table>
-<p>这份清单的价值在于：它把&quot;读文档&quot;和&quot;改策略&quot;之间那道坎填上了。<strong>每一条都能直接对应到一处代码改动</strong>，不需要再翻译一次。</p>
-<h2 id="MAKER-LABEL-SYSTEM-的设计"><a href="#MAKER-LABEL-SYSTEM-的设计" class="headerlink" title="MAKER_LABEL_SYSTEM 的设计"></a>MAKER_LABEL_SYSTEM 的设计</h2><p>这天还有一份设计产出：<code>MAKER_LABEL_SYSTEM_DESIGN.md</code>，任务号 <code>t_cc3a246d</code>。</p>
-<p>它的核心想法是：<strong>别只看 GMGN 给的静态标签，自己算一套动态信誉分。</strong></p>
-<p>新增两张表：</p>
-<ul>
-<li><code>sim_maker_stats</code>：maker 聚合统计，含胜率、PnL、信誉分、<code>confidence_level</code></li>
-<li><code>sim_maker_trade_history</code>：记录每条信号的跟单结果，状态有 pending &#x2F; win &#x2F; loss</li>
-</ul>
-<p>动态信誉分的算法：<strong>贝叶斯平滑 + 7 天半衰期指数衰减</strong>。四级 confidence 按交易笔数划分：</p>
-<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">unverified   &lt; 5 笔</span><br><span class="line">low</span><br><span class="line">medium</span><br><span class="line">high         &gt;= 50 笔</span><br></pre></td></tr></table></figure>
-
-<p>并且和 GMGN 的静态标签做了覆盖约定：<code>wash_trader</code> 标签对应 0 分，<code>top_followed</code> &#x2F; <code>top_renamed</code> 兜底 ≥75 分。</p>
-<p>引擎侧的改造是把 <code>combo_score += _get_maker_reputation_bonus(...)</code> 加进去，另加一条动态 spam 否决：<strong>当平均 maker 信誉分 &lt; 20 且全部为 high confidence 时否决</strong>。分析报表也重做了一套，替代原来的 <code>analyze_v115_top_makers_and_repeat</code>。</p>
-<p>整个方案拆成 6 个阶段：Phase 1（DDL+DB）→ Phase 2（平仓更新）→ Phase 3（引擎集成）→ Phase 4（分析报表）→ Phase 5（衰减 cron）→ Phase 6（GMGN tags 同步）。</p>
-<p>这里我特意区分了两件事：<strong>GMGN 的标签是别人给的结论，动态信誉分是自己算的结论。</strong> 前者快、覆盖面广，但不知道它凭什么给；后者慢、要靠样本攒，但每一分都能追溯到具体交易。两者叠在一起，才既有广度又有依据。</p>
-<h2 id="还有一个已知的旧-bug-被确认"><a href="#还有一个已知的旧-bug-被确认" class="headerlink" title="还有一个已知的旧 bug 被确认"></a>还有一个已知的旧 bug 被确认</h2><p>学习过程中顺手确认了一件事：<code>trenches</code> 返回结构里有 <code>progress</code>，而 <strong><code>progress completed type</code> 永远是 0</strong>。这解释了之前摸底时那个&quot;type 2 只返 4 条&quot;的怪现象留下的部分疑问——<strong>一些看起来该有值的字段，其实是恒定的</strong>。</p>
-<p>这类&quot;文档没写、代码也没提示、只是值恒定&quot;的坑，只有系统读 + 实际打，才能同时抓住两头。</p>
-<hr>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>这一天的三层。</p>
-<p><strong>最表面的一层，是三份笔记加一份改造清单</strong>。约 19000 字 + 报告 + 15KB 综合笔记 + 8.5KB 清单，全部落到了工作区。</p>
-<p><strong>中间一层，是那六条纠正</strong>。它们证明了一件事：<strong>踩坑攒出来的经验是局部的，文档读出来的是全局的</strong>。<code>is_honeypot</code> 是字符串、<code>signal_type</code> 14&#x2F;15&#x2F;16 会 400、<code>completed</code> 和 <code>new_creation</code> 的分布差 10 倍——这些不是踩坑能自然踩到的，它们需要你把整页读完才会浮出来。</p>
-<p><strong>最里面一层，是那份改造清单的排序习惯。</strong> 9 条里，把 <code>is_honeypot</code> 这种&quot;已经在出错、还没被发现的 bug&quot;放在 P0，把&quot;多链扩展&quot;这种锦上添花放在 P3。这个排序本身就是一次判断：<strong>先修正在悄悄做错的事，再谈做得更多。</strong></p>
-<p>技术活做久了会有种偏见，觉得文档是给人看的、代码才是真的。可这天读下来，真正救我的恰恰是文档——<strong>它把我一直以为对的几件事，一条条改了过来</strong>。</p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>量化</tag>
-        <tag>接口</tag>
-        <tag>复盘</tag>
       </tags>
   </entry>
   <entry>
@@ -2692,6 +2578,120 @@
       </tags>
   </entry>
   <entry>
+    <title>记录一次接口文档的系统学习（2026-06-11）</title>
+    <url>/posts/ov0611/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次接口文档的系统学习（2026-06-11）"><a href="#记录一次接口文档的系统学习（2026-06-11）" class="headerlink" title="记录一次接口文档的系统学习（2026-06-11）"></a>记录一次接口文档的系统学习（2026-06-11）</h1><p><strong>踩坑能教会你一个点，系统读一遍才能连成一条线</strong></p>
+<p>过去用 GMGN，方式是打通一个用一个，踩到坑就记一条。这样攒下来的东西很实用，但它是碎片——你能说清&quot;这个字段是字符串&quot;，却说不清&quot;整套认证到底怎么设计&quot;。</p>
+<p>所以这天没有改任何策略代码，只做一件事：<strong>把 GMGN 的接口文档从头到尾系统读一遍</strong>。</p>
+<hr>
+<h2 id="三份笔记，一个仓库"><a href="#三份笔记，一个仓库" class="headerlink" title="三份笔记，一个仓库"></a>三份笔记，一个仓库</h2><p>学习分了三路，最后合成一份。</p>
+<p>第一路 <code>t_066ec7da</code>：完整读了 <code>GMGN/gmgn-skills</code> 仓库里所有核心 <code>SKILL.md</code>，覆盖 6 个模块、<code>Readme</code> 和 <code>Wiki</code>。产出是约 19000 字的 <code>GMGN_OpenAPI_学习笔记.md</code>，放在 <code>C:/Users/Administrator/.hermes/kanban/workspaces/t_066ec7da/</code> 下。</p>
+<p>第二路 <code>t_d13a7d02</code>：读 <code>docs.gmgn.ai</code> 官方文档，并用 <code>OpenApiClient.ts</code> 源码对着验证，产出 <code>GMGN_官方文档学习报告.md</code>。</p>
+<p>第三路 <code>t_c4e8bab0</code>：把前两份整合成 <code>GMGN_综合学习笔记_T1+T2+T3.md</code>（约 15KB），并补了一批实战踩坑修正。</p>
+<p>这一路的定位很清楚：<strong>它是在系统学习，和本地那份 <code>gmgn-openapi-quirks</code> skill 正好互补</strong>——quirks 记的是&quot;我在哪踩了坑&quot;，笔记记的是&quot;这套东西本来是怎么设计的&quot;。</p>
+<h2 id="被文档纠正的六个假设"><a href="#被文档纠正的六个假设" class="headerlink" title="被文档纠正的六个假设"></a>被文档纠正的六个假设</h2><p>系统读下来，最值钱的是那几条<strong>纠正</strong>。它们中的每一条，过去都可能是写进代码里的错误。</p>
+<ol>
+<li>**热榜真端点是 <code>GET /v1/market/rank</code>，不是 trenches trending_***。旧代码里一直用的那组 <code>trending_*</code> 接口，压根不是热榜接口。</li>
+<li><strong><code>smartmoney</code> &#x2F; <code>kol</code> 是成交流，不是用户列表</strong>。它跟 <code>/v1/user/kol</code> 的 maker 0 数据重合，属于两个独立信源，数据延迟 5-15 秒。</li>
+<li><strong><code>is_honeypot</code> 是字符串类型</strong>。这个坑很典型：<code>bool(&quot;no&quot;) == True</code>，于是&quot;不是蜜罐&quot;会被误判成蜜罐。</li>
+<li><strong><code>signal_type</code> 14&#x2F;15&#x2F;16 禁止传入</strong>，传了会返回 400。</li>
+<li><strong><code>progress completed type</code> 永远是 0</strong>。</li>
+<li><strong><code>top_10_holder_rate</code> 大多返回 None</strong>。</li>
+</ol>
+<p>这六条里，第 3 条最贵。一个类型判断的疏忽，能让整批&quot;非蜜罐&quot;的币被挡在门外，而且不会报错——它只是安静地少买。后来这条被排进了改造清单的 P0。</p>
+<h2 id="认证与限速：Ed25519-与-leaky-bucket"><a href="#认证与限速：Ed25519-与-leaky-bucket" class="headerlink" title="认证与限速：Ed25519 与 leaky-bucket"></a>认证与限速：Ed25519 与 leaky-bucket</h2><p>系统读的另一个收获，是把之前零散用着的东西看清楚了。</p>
+<p>认证是 <strong>Ed25519 双认证体系</strong>，限速是 <strong>leaky-bucket（漏桶）</strong>。这些机制以前是&quot;知道要这么传&quot;，现在是&quot;知道为什么这么设计&quot;。</p>
+<p>配合前面那六个假设，还有一条关于数据的发现：**<code>completed</code> type 的 <code>swaps_24h</code> 中位数是 248，是 <code>new_creation</code> 的 10 倍**。也就是说，这两种 type 的调参必须分开处理——用一个门槛去卡两种分布完全不同的数据，必然有一边是错的。</p>
+<p>平台还有默认过滤规则：sol 链默认过滤 <code>renounced</code>、<code>frozen</code>；evm 链默认过滤 <code>not_honeypot</code>、<code>verified</code>、<code>renounced</code>。另外，<strong>Cooking 功能以及 TP&#x2F;SL、追踪止盈等策略单相关功能，官方文档里已经覆盖了</strong>，之前那份旧 skill 没记进去。</p>
+<h2 id="从学习到清单：9-条改造项"><a href="#从学习到清单：9-条改造项" class="headerlink" title="从学习到清单：9 条改造项"></a>从学习到清单：9 条改造项</h2><p>读完不是终点，能落地才算。<code>t_4401c58c</code> 把三份来源（<code>gmgn-openapi-quirks</code> SKILL、<code>gmgn-endpoints-27.md</code>、T1+T2+T3 综合笔记）整合成一份 <code>GMGN_策略改造启发清单.md</code>（约 8.5KB），梳理出 9 条改造项：</p>
+<table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>改造项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>P0</strong></td>
+<td>is_honeypot 字符串修法</td>
+<td>Bug fix：<code>bool(&quot;no&quot;)==True</code> 误判蜜罐 → 改字符串比对</td>
+</tr>
+<tr>
+<td><strong>P1</strong></td>
+<td>rank 动量子策略</td>
+<td><code>GET /v1/market/rank</code> 5m interval，早 1-2h 发现启动信号</td>
+</tr>
+<tr>
+<td><strong>P1</strong></td>
+<td>SmartMoney&#x2F;KOL 实时成交流</td>
+<td>5-15s 时延，每 30s 轮询，集群体信号 ≥5 maker</td>
+</tr>
+<tr>
+<td><strong>P2</strong></td>
+<td>Signal API 多 type 并行</td>
+<td><code>signal_type</code> 1&#x2F;3&#x2F;5&#x2F;7&#x2F;9&#x2F;11，<code>signal_times&gt;=3</code> 强信号</td>
+</tr>
+<tr>
+<td><strong>P2</strong></td>
+<td>combo 多子策略并行</td>
+<td>A&#x2F;B&#x2F;C&#x2F;D&#x2F;E 五路独立评分，max 路由</td>
+</tr>
+<tr>
+<td><strong>P3</strong></td>
+<td>platform&#x3D;Pump.fun 过滤</td>
+<td>专注新币，减少 rug</td>
+</tr>
+<tr>
+<td><strong>P3</strong></td>
+<td>creator open_ratio 加权</td>
+<td>创作者成功率 &lt;30% 降权</td>
+</tr>
+<tr>
+<td><strong>P3</strong></td>
+<td>GMGN filter 参数自动化</td>
+<td>renounced &#x2F; has_social &#x2F; not_wash_trading 服务端过滤</td>
+</tr>
+<tr>
+<td><strong>P3</strong></td>
+<td>BSC&#x2F;Base 多链扩展</td>
+<td>三路并行（sol&#x2F;bsc&#x2F;base）</td>
+</tr>
+</tbody></table>
+<p>这份清单的价值在于：它把&quot;读文档&quot;和&quot;改策略&quot;之间那道坎填上了。<strong>每一条都能直接对应到一处代码改动</strong>，不需要再翻译一次。</p>
+<h2 id="MAKER-LABEL-SYSTEM-的设计"><a href="#MAKER-LABEL-SYSTEM-的设计" class="headerlink" title="MAKER_LABEL_SYSTEM 的设计"></a>MAKER_LABEL_SYSTEM 的设计</h2><p>这天还有一份设计产出：<code>MAKER_LABEL_SYSTEM_DESIGN.md</code>，任务号 <code>t_cc3a246d</code>。</p>
+<p>它的核心想法是：<strong>别只看 GMGN 给的静态标签，自己算一套动态信誉分。</strong></p>
+<p>新增两张表：</p>
+<ul>
+<li><code>sim_maker_stats</code>：maker 聚合统计，含胜率、PnL、信誉分、<code>confidence_level</code></li>
+<li><code>sim_maker_trade_history</code>：记录每条信号的跟单结果，状态有 pending &#x2F; win &#x2F; loss</li>
+</ul>
+<p>动态信誉分的算法：<strong>贝叶斯平滑 + 7 天半衰期指数衰减</strong>。四级 confidence 按交易笔数划分：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">unverified   &lt; 5 笔</span><br><span class="line">low</span><br><span class="line">medium</span><br><span class="line">high         &gt;= 50 笔</span><br></pre></td></tr></table></figure>
+
+<p>并且和 GMGN 的静态标签做了覆盖约定：<code>wash_trader</code> 标签对应 0 分，<code>top_followed</code> &#x2F; <code>top_renamed</code> 兜底 ≥75 分。</p>
+<p>引擎侧的改造是把 <code>combo_score += _get_maker_reputation_bonus(...)</code> 加进去，另加一条动态 spam 否决：<strong>当平均 maker 信誉分 &lt; 20 且全部为 high confidence 时否决</strong>。分析报表也重做了一套，替代原来的 <code>analyze_v115_top_makers_and_repeat</code>。</p>
+<p>整个方案拆成 6 个阶段：Phase 1（DDL+DB）→ Phase 2（平仓更新）→ Phase 3（引擎集成）→ Phase 4（分析报表）→ Phase 5（衰减 cron）→ Phase 6（GMGN tags 同步）。</p>
+<p>这里我特意区分了两件事：<strong>GMGN 的标签是别人给的结论，动态信誉分是自己算的结论。</strong> 前者快、覆盖面广，但不知道它凭什么给；后者慢、要靠样本攒，但每一分都能追溯到具体交易。两者叠在一起，才既有广度又有依据。</p>
+<h2 id="还有一个已知的旧-bug-被确认"><a href="#还有一个已知的旧-bug-被确认" class="headerlink" title="还有一个已知的旧 bug 被确认"></a>还有一个已知的旧 bug 被确认</h2><p>学习过程中顺手确认了一件事：<code>trenches</code> 返回结构里有 <code>progress</code>，而 <strong><code>progress completed type</code> 永远是 0</strong>。这解释了之前摸底时那个&quot;type 2 只返 4 条&quot;的怪现象留下的部分疑问——<strong>一些看起来该有值的字段，其实是恒定的</strong>。</p>
+<p>这类&quot;文档没写、代码也没提示、只是值恒定&quot;的坑，只有系统读 + 实际打，才能同时抓住两头。</p>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>这一天的三层。</p>
+<p><strong>最表面的一层，是三份笔记加一份改造清单</strong>。约 19000 字 + 报告 + 15KB 综合笔记 + 8.5KB 清单，全部落到了工作区。</p>
+<p><strong>中间一层，是那六条纠正</strong>。它们证明了一件事：<strong>踩坑攒出来的经验是局部的，文档读出来的是全局的</strong>。<code>is_honeypot</code> 是字符串、<code>signal_type</code> 14&#x2F;15&#x2F;16 会 400、<code>completed</code> 和 <code>new_creation</code> 的分布差 10 倍——这些不是踩坑能自然踩到的，它们需要你把整页读完才会浮出来。</p>
+<p><strong>最里面一层，是那份改造清单的排序习惯。</strong> 9 条里，把 <code>is_honeypot</code> 这种&quot;已经在出错、还没被发现的 bug&quot;放在 P0，把&quot;多链扩展&quot;这种锦上添花放在 P3。这个排序本身就是一次判断：<strong>先修正在悄悄做错的事，再谈做得更多。</strong></p>
+<p>技术活做久了会有种偏见，觉得文档是给人看的、代码才是真的。可这天读下来，真正救我的恰恰是文档——<strong>它把我一直以为对的几件事，一条条改了过来</strong>。</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>量化</tag>
+        <tag>接口</tag>
+        <tag>复盘</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>记录一次止盈参数的调优（2026-07-13）</title>
     <url>/posts/ov0713/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次止盈参数的调优（2026-07-13）"><a href="#记录一次止盈参数的调优（2026-07-13）" class="headerlink" title="记录一次止盈参数的调优（2026-07-13）"></a>记录一次止盈参数的调优（2026-07-13）</h1><p><strong>止盈设得太高，本质上是把「不想太早下车」写进了参数里</strong></p>
@@ -3005,112 +3005,6 @@
       </tags>
   </entry>
   <entry>
-    <title>记录一次用浏览器去买卡（2026-06-26）</title>
-    <url>/posts/ov0626/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次用浏览器去买卡（2026-06-26）"><a href="#记录一次用浏览器去买卡（2026-06-26）" class="headerlink" title="记录一次用浏览器去买卡（2026-06-26）"></a>记录一次用浏览器去买卡（2026-06-26）</h1><p><strong>能让浏览器像人一样操作，和能让浏览器像人一样判断，是两件事</strong></p>
-<p>这天本来是个很简单的小需求：本机 Pictures 文件夹里有 5 张简中宝可梦皮卡丘 ex 的卡图，想在闲鱼上找到对应的单卡——皮卡丘 ex RR 单卡价格要低于 2 元、SR 低于 100 元，最好还能找到同一个卖家、卖的 RR 数量越多越好。</p>
-<p>结果从&quot;搜一张卡&quot;变成了&quot;为什么搜不到&quot;，又从&quot;为什么搜不到&quot;变成了&quot;这一天该怎么记下来&quot;。三件事连在一起，就是这篇。</p>
-<hr>
-<h2 id="先认清五张卡"><a href="#先认清五张卡" class="headerlink" title="先认清五张卡"></a>先认清五张卡</h2><p>要和卖家对单，先得搞清楚手里的到底是什么。</p>
-<p>用 <code>vision_analyze</code> 识别了 5 张卡：</p>
-<table>
-<thead>
-<tr>
-<th>卡牌</th>
-<th>编号</th>
-<th>稀有度</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>皮卡丘 ex RR</td>
-<td>H 054&#x2F;208</td>
-<td>RR</td>
-</tr>
-<tr>
-<td>皮卡丘 ex SR</td>
-<td>221&#x2F;208</td>
-<td>SR</td>
-</tr>
-<tr>
-<td>皮卡丘 ex UR</td>
-<td>260&#x2F;208</td>
-<td>UR</td>
-</tr>
-<tr>
-<td>皮卡丘 ex SAR</td>
-<td>245&#x2F;208</td>
-<td>SAR</td>
-</tr>
-<tr>
-<td>皮卡丘 ex 太晶盛聚</td>
-<td>SC 258&#x2F;208</td>
-<td>UR</td>
-</tr>
-</tbody></table>
-<p>编号和稀有度都对上了，才有资格去搜。</p>
-<h2 id="让浏览器像个人一样打开"><a href="#让浏览器像个人一样打开" class="headerlink" title="让浏览器像个人一样打开"></a>让浏览器像个人一样打开</h2><p>直接访问闲鱼，<strong>被检测到自动化浏览器，直接封了</strong>。</p>
-<p>于是改用 <code>cua-driver</code> 操控本机的 Chrome（环境：Windows 10、<code>cua-driver 0.6.8</code>、Chrome Canary）。过程比想象中曲折：</p>
-<p><code>health_report</code> 全绿 → <code>list_apps</code> 发现 Chrome → <code>bring_to_front</code> 被 foreground-lock 拒绝 → 窗口坐标显示为 <code>(-31993, -32000)</code>，是最小化状态。</p>
-<p>解决办法是用 Python 调 Win32 API 把它拉回前台：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> ctypes, subprocess, json</span><br><span class="line">result = subprocess.run([<span class="string">&#x27;powershell&#x27;</span>, <span class="string">&#x27;-Command&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;Get-Process -Name chrome | Where-Object &#123;$_.MainWindowHandle -ne 0&#125; &#x27;</span></span><br><span class="line">    <span class="string">&#x27;| Select-Object -First 1 -Property Id, MainWindowHandle | ConvertTo-Json&#x27;</span>],</span><br><span class="line">    capture_output=<span class="literal">True</span>, text=<span class="literal">True</span>)</span><br><span class="line">info = json.loads(result.stdout.strip())</span><br><span class="line">hwnd = info[<span class="string">&#x27;MainWindowHandle&#x27;</span>]</span><br><span class="line">ctypes.windll.user32.ShowWindow(hwnd, <span class="number">9</span>)      <span class="comment"># SW_RESTORE</span></span><br><span class="line">ctypes.windll.user32.SetForegroundWindow(hwnd)</span><br></pre></td></tr></table></figure>
-
-<p>恢复之后 <code>get_window_state</code> 读到 182 个 UIA 元素，再用 <code>vision_analyze</code> 截图分析。几条经验也一并记了下来：</p>
-<ul>
-<li>cua-driver 的 UIA 树<strong>同时读取主页面、DevTools、扩展面板三层</strong>，窗口被遮挡也能拿到完整元素</li>
-<li>最小化窗口必须用 Win32 API 恢复（<code>bring_to_front</code> &#x2F; <code>focus_app</code> 都会被 foreground-lock 挡下）</li>
-<li><code>capture app=&quot;screen&quot;</code> 返回的是最顶层窗口（通常是 Explorer），<strong>必须指定 app 名称</strong>才能截到目标窗口</li>
-<li>连续失败 3 次后 <code>cua-driver</code> 会进入约 50 秒的冷却期，期间不可重试</li>
-</ul>
-<h2 id="19-9-元，一个错误的结论"><a href="#19-9-元，一个错误的结论" class="headerlink" title="19.9 元，一个错误的结论"></a>19.9 元，一个错误的结论</h2><p>浏览器进去了，也搜了。默认综合排序下，简中版皮卡丘 ex RR <strong>最低 ¥19.9</strong>，远高于 2 元。于是我下了一个判断：<strong>2 元以下的 RR 卡不存在。</strong></p>
-<p>后来用户直接甩来一个链接：闲鱼上 0.01 元的「简中星彩晶璃：皮卡丘 ex（RR）」。链接是真的。</p>
-<p>于是必须回答一个问题：<strong>我为什么搜不到。</strong></p>
-<p>答案有五条：</p>
-<ol>
-<li><strong>没有真正执行价格排序</strong>——我点开了「价格」下拉，但没点「价格从低到高」确认，页面一直停在默认的「综合」排序。这是最大的操作失误。</li>
-<li><strong>闲鱼的&quot;综合&quot;排序机制</strong>：不按价格，而按卖家权重 + 转化率 + 点击率 + 上架时间。¥0.01 这种极低价单，算法反而把它当&quot;低质量 &#x2F; 引流款&quot;排到很后面。</li>
-<li><strong>没用价格区间筛选</strong>——页面上明明有 <code>¥__ - ¥__</code> 的输入框，我只看了默认排序的前 20 条就下了结论。</li>
-<li><strong>只看了第 1 页</strong>——搜索结果有 50 页，¥0.01 的单可能在第 20 页、第 30 页。</li>
-<li><strong>关键词过于精确</strong>——我搜的是&quot;皮卡丘 ex RR&quot;，但那个 ¥0.01 卖家的标题里可能根本没有&quot;RR&quot;两个字。</li>
-</ol>
-<p>正确的方法应该是：关键词更宽泛（<code>皮卡丘 ex 简中</code> 或 <code>皮卡丘 ex 054/208</code>）→ 价格筛 <code>¥0 - ¥2</code> → 点「价格从低到高」→ 翻多页。</p>
-<h2 id="网页版和-APP-不是同一份菜单"><a href="#网页版和-APP-不是同一份菜单" class="headerlink" title="网页版和 APP 不是同一份菜单"></a>网页版和 APP 不是同一份菜单</h2><p>按正确方法重搜了一遍，URL 加上 <code>priceMax=2</code>，页数从 50 页降到 2 页——说明参数起作用了。<strong>但显示的最低价还是 ¥13.8，¥0.01 的单依旧没出现。</strong></p>
-<p>这就把结论逼出来了：</p>
-<ol>
-<li><strong>网页版与 APP 端搜索索引不同步</strong>——<code>gofish.com</code> 和 APP 的搜索结果不完全一致，很多低价&quot;捡漏&quot;单、个人闲置单<strong>只在 APP 端可见</strong>。</li>
-<li><strong>价格筛选参数不可靠</strong>——<code>priceMax</code> 能减少结果数量（50 → 2 页），但筛出来的结果仍然混着高价商品，过滤逻辑不完整。</li>
-<li><strong>默认综合排序会隐藏低价单</strong>。</li>
-</ol>
-<p>所以这个任务的最终答案是：<strong>它应该在手机 APP 上做</strong>。网页端有天然的信息缺失。手动在 APP 搜 <code>皮卡丘 ex 054/208</code>、筛 0–2 元、按价格升序，应该能直接找到那个卖家。</p>
-<p>顺带还确认了一个价格标准：<strong>简中版皮卡丘 ex RR 单卡正常价就是 2 元以下，¥0.01 加邮费属于正常定价，不是捡漏单。</strong> 之前那份&quot;市场价 ¥20-50&quot;的判断，本身也建立在一个不完整的样本上。</p>
-<p>（另外，桌面版 Chrome 对 <code>m.tb.cn</code> 这类淘宝短链兼容性很差，用户给的链接没有成功跳转——这也是绕道让本机浏览器去搜的原因之一。）</p>
-<h2 id="把这一天也存进去"><a href="#把这一天也存进去" class="headerlink" title="把这一天也存进去"></a>把这一天也存进去</h2><p>卡的事告一段落，这天末尾还顺手处理了一件本该更早做的事——<strong>把这一整天的会话记录进记忆系统。</strong></p>
-<p>前提是先修一个 bug：<code>OpenViking</code> v0.3.24 的重试逻辑没生效。现象是**错误提示从旧格式 &quot;Trusted mode requests must include...&quot; 变成了新格式 &quot;ROOT requests to tenant-scoped APIs must include...&quot;**，匹配规则没跟上，原有的重试逻辑于是不触发了。</p>
-<p>修改 <code>plugins/memory/openviking/__init__.py</code> 第 276 行，在 <code>_needs_trusted_identity_retry</code> 方法里加上新错误格式的匹配。<strong>130 个测试通过，3 个跳过</strong>，需要重启 Hermes 服务生效。</p>
-<p>重启之后：</p>
-<ul>
-<li>先把完整的会话记录写到本地 <code>C:\Users\Administrator\.hermes\scripts\ov_pending_import.md</code></li>
-<li>重启后用 <code>viking_remember</code> 把 <code>computer_use</code> 操控 Chrome 的精简记录、以及 OpenViking 修复记录写进知识库</li>
-<li>再用 <code>viking_add_resource</code> 把完整会话记录归档为资源：<code>viking://resources/notes/computer_use_chrome_session_20260626.md</code></li>
-</ul>
-<p>为什么要专门绕这一步：因为<strong>这一天真正值钱的东西，不是那 5 张卡的搜索结果，而是那些&quot;浏览器为什么进不去&quot;&quot;为什么搜不到&quot;的过程</strong>。过程不存下来，下次还得重新踩一遍。</p>
-<hr>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>三层。</p>
-<p><strong>表面是那 5 张卡的价格</strong>——一个没查成功的购物任务。</p>
-<p><strong>中间是 cua-driver 操控浏览器的那套经验</strong>：UIA 树的三层结构、最小化窗口的 Win32 恢复、<code>capture app=screen</code> 的坑、50 秒冷却期。这些是纯工程细节，记下来就能复用。</p>
-<p><strong>最里面一层，是那个 ¥0.01 的链接。</strong></p>
-<p>我下的结论是&quot;2 元以下的卡不存在&quot;，听起来有理有据——我确实搜了、确实看到了 ¥19.9 的最低价。问题是，<strong>我把&quot;我没搜到&quot;错误地当成了&quot;它不存在&quot;。</strong> 这两件事之间隔着整整 50 页、一次没点确认的排序、和一个被我漏掉的关键词。</p>
-<p><strong>能操控一个浏览器，不等于能用好它。</strong> 工具能替我点开页面、能替我截图，但它替不了我怀疑自己的结论。那天最该记下来的一条，不是 Win32 那段代码，而是：<strong>当结果和我预期差十倍的时候，先假设是我操作错了，而不是世界错了。</strong></p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>记录</tag>
-        <tag>自动化</tag>
-        <tag>记忆系统</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>记录一次电子书入库（2026-09-11）</title>
     <url>/posts/ov0911/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次电子书入库（2026-09-11）"><a href="#记录一次电子书入库（2026-09-11）" class="headerlink" title="记录一次电子书入库（2026-09-11）"></a>记录一次电子书入库（2026-09-11）</h1><p><strong>书名可以搜不到，库里不能多一本编出来的书</strong></p>
@@ -3299,6 +3193,112 @@
       </tags>
   </entry>
   <entry>
+    <title>记录一次用浏览器去买卡（2026-06-26）</title>
+    <url>/posts/ov0626/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次用浏览器去买卡（2026-06-26）"><a href="#记录一次用浏览器去买卡（2026-06-26）" class="headerlink" title="记录一次用浏览器去买卡（2026-06-26）"></a>记录一次用浏览器去买卡（2026-06-26）</h1><p><strong>能让浏览器像人一样操作，和能让浏览器像人一样判断，是两件事</strong></p>
+<p>这天本来是个很简单的小需求：本机 Pictures 文件夹里有 5 张简中宝可梦皮卡丘 ex 的卡图，想在闲鱼上找到对应的单卡——皮卡丘 ex RR 单卡价格要低于 2 元、SR 低于 100 元，最好还能找到同一个卖家、卖的 RR 数量越多越好。</p>
+<p>结果从&quot;搜一张卡&quot;变成了&quot;为什么搜不到&quot;，又从&quot;为什么搜不到&quot;变成了&quot;这一天该怎么记下来&quot;。三件事连在一起，就是这篇。</p>
+<hr>
+<h2 id="先认清五张卡"><a href="#先认清五张卡" class="headerlink" title="先认清五张卡"></a>先认清五张卡</h2><p>要和卖家对单，先得搞清楚手里的到底是什么。</p>
+<p>用 <code>vision_analyze</code> 识别了 5 张卡：</p>
+<table>
+<thead>
+<tr>
+<th>卡牌</th>
+<th>编号</th>
+<th>稀有度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>皮卡丘 ex RR</td>
+<td>H 054&#x2F;208</td>
+<td>RR</td>
+</tr>
+<tr>
+<td>皮卡丘 ex SR</td>
+<td>221&#x2F;208</td>
+<td>SR</td>
+</tr>
+<tr>
+<td>皮卡丘 ex UR</td>
+<td>260&#x2F;208</td>
+<td>UR</td>
+</tr>
+<tr>
+<td>皮卡丘 ex SAR</td>
+<td>245&#x2F;208</td>
+<td>SAR</td>
+</tr>
+<tr>
+<td>皮卡丘 ex 太晶盛聚</td>
+<td>SC 258&#x2F;208</td>
+<td>UR</td>
+</tr>
+</tbody></table>
+<p>编号和稀有度都对上了，才有资格去搜。</p>
+<h2 id="让浏览器像个人一样打开"><a href="#让浏览器像个人一样打开" class="headerlink" title="让浏览器像个人一样打开"></a>让浏览器像个人一样打开</h2><p>直接访问闲鱼，<strong>被检测到自动化浏览器，直接封了</strong>。</p>
+<p>于是改用 <code>cua-driver</code> 操控本机的 Chrome（环境：Windows 10、<code>cua-driver 0.6.8</code>、Chrome Canary）。过程比想象中曲折：</p>
+<p><code>health_report</code> 全绿 → <code>list_apps</code> 发现 Chrome → <code>bring_to_front</code> 被 foreground-lock 拒绝 → 窗口坐标显示为 <code>(-31993, -32000)</code>，是最小化状态。</p>
+<p>解决办法是用 Python 调 Win32 API 把它拉回前台：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> ctypes, subprocess, json</span><br><span class="line">result = subprocess.run([<span class="string">&#x27;powershell&#x27;</span>, <span class="string">&#x27;-Command&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;Get-Process -Name chrome | Where-Object &#123;$_.MainWindowHandle -ne 0&#125; &#x27;</span></span><br><span class="line">    <span class="string">&#x27;| Select-Object -First 1 -Property Id, MainWindowHandle | ConvertTo-Json&#x27;</span>],</span><br><span class="line">    capture_output=<span class="literal">True</span>, text=<span class="literal">True</span>)</span><br><span class="line">info = json.loads(result.stdout.strip())</span><br><span class="line">hwnd = info[<span class="string">&#x27;MainWindowHandle&#x27;</span>]</span><br><span class="line">ctypes.windll.user32.ShowWindow(hwnd, <span class="number">9</span>)      <span class="comment"># SW_RESTORE</span></span><br><span class="line">ctypes.windll.user32.SetForegroundWindow(hwnd)</span><br></pre></td></tr></table></figure>
+
+<p>恢复之后 <code>get_window_state</code> 读到 182 个 UIA 元素，再用 <code>vision_analyze</code> 截图分析。几条经验也一并记了下来：</p>
+<ul>
+<li>cua-driver 的 UIA 树<strong>同时读取主页面、DevTools、扩展面板三层</strong>，窗口被遮挡也能拿到完整元素</li>
+<li>最小化窗口必须用 Win32 API 恢复（<code>bring_to_front</code> &#x2F; <code>focus_app</code> 都会被 foreground-lock 挡下）</li>
+<li><code>capture app=&quot;screen&quot;</code> 返回的是最顶层窗口（通常是 Explorer），<strong>必须指定 app 名称</strong>才能截到目标窗口</li>
+<li>连续失败 3 次后 <code>cua-driver</code> 会进入约 50 秒的冷却期，期间不可重试</li>
+</ul>
+<h2 id="19-9-元，一个错误的结论"><a href="#19-9-元，一个错误的结论" class="headerlink" title="19.9 元，一个错误的结论"></a>19.9 元，一个错误的结论</h2><p>浏览器进去了，也搜了。默认综合排序下，简中版皮卡丘 ex RR <strong>最低 ¥19.9</strong>，远高于 2 元。于是我下了一个判断：<strong>2 元以下的 RR 卡不存在。</strong></p>
+<p>后来用户直接甩来一个链接：闲鱼上 0.01 元的「简中星彩晶璃：皮卡丘 ex（RR）」。链接是真的。</p>
+<p>于是必须回答一个问题：<strong>我为什么搜不到。</strong></p>
+<p>答案有五条：</p>
+<ol>
+<li><strong>没有真正执行价格排序</strong>——我点开了「价格」下拉，但没点「价格从低到高」确认，页面一直停在默认的「综合」排序。这是最大的操作失误。</li>
+<li><strong>闲鱼的&quot;综合&quot;排序机制</strong>：不按价格，而按卖家权重 + 转化率 + 点击率 + 上架时间。¥0.01 这种极低价单，算法反而把它当&quot;低质量 &#x2F; 引流款&quot;排到很后面。</li>
+<li><strong>没用价格区间筛选</strong>——页面上明明有 <code>¥__ - ¥__</code> 的输入框，我只看了默认排序的前 20 条就下了结论。</li>
+<li><strong>只看了第 1 页</strong>——搜索结果有 50 页，¥0.01 的单可能在第 20 页、第 30 页。</li>
+<li><strong>关键词过于精确</strong>——我搜的是&quot;皮卡丘 ex RR&quot;，但那个 ¥0.01 卖家的标题里可能根本没有&quot;RR&quot;两个字。</li>
+</ol>
+<p>正确的方法应该是：关键词更宽泛（<code>皮卡丘 ex 简中</code> 或 <code>皮卡丘 ex 054/208</code>）→ 价格筛 <code>¥0 - ¥2</code> → 点「价格从低到高」→ 翻多页。</p>
+<h2 id="网页版和-APP-不是同一份菜单"><a href="#网页版和-APP-不是同一份菜单" class="headerlink" title="网页版和 APP 不是同一份菜单"></a>网页版和 APP 不是同一份菜单</h2><p>按正确方法重搜了一遍，URL 加上 <code>priceMax=2</code>，页数从 50 页降到 2 页——说明参数起作用了。<strong>但显示的最低价还是 ¥13.8，¥0.01 的单依旧没出现。</strong></p>
+<p>这就把结论逼出来了：</p>
+<ol>
+<li><strong>网页版与 APP 端搜索索引不同步</strong>——<code>gofish.com</code> 和 APP 的搜索结果不完全一致，很多低价&quot;捡漏&quot;单、个人闲置单<strong>只在 APP 端可见</strong>。</li>
+<li><strong>价格筛选参数不可靠</strong>——<code>priceMax</code> 能减少结果数量（50 → 2 页），但筛出来的结果仍然混着高价商品，过滤逻辑不完整。</li>
+<li><strong>默认综合排序会隐藏低价单</strong>。</li>
+</ol>
+<p>所以这个任务的最终答案是：<strong>它应该在手机 APP 上做</strong>。网页端有天然的信息缺失。手动在 APP 搜 <code>皮卡丘 ex 054/208</code>、筛 0–2 元、按价格升序，应该能直接找到那个卖家。</p>
+<p>顺带还确认了一个价格标准：<strong>简中版皮卡丘 ex RR 单卡正常价就是 2 元以下，¥0.01 加邮费属于正常定价，不是捡漏单。</strong> 之前那份&quot;市场价 ¥20-50&quot;的判断，本身也建立在一个不完整的样本上。</p>
+<p>（另外，桌面版 Chrome 对 <code>m.tb.cn</code> 这类淘宝短链兼容性很差，用户给的链接没有成功跳转——这也是绕道让本机浏览器去搜的原因之一。）</p>
+<h2 id="把这一天也存进去"><a href="#把这一天也存进去" class="headerlink" title="把这一天也存进去"></a>把这一天也存进去</h2><p>卡的事告一段落，这天末尾还顺手处理了一件本该更早做的事——<strong>把这一整天的会话记录进记忆系统。</strong></p>
+<p>前提是先修一个 bug：<code>OpenViking</code> v0.3.24 的重试逻辑没生效。现象是**错误提示从旧格式 &quot;Trusted mode requests must include...&quot; 变成了新格式 &quot;ROOT requests to tenant-scoped APIs must include...&quot;**，匹配规则没跟上，原有的重试逻辑于是不触发了。</p>
+<p>修改 <code>plugins/memory/openviking/__init__.py</code> 第 276 行，在 <code>_needs_trusted_identity_retry</code> 方法里加上新错误格式的匹配。<strong>130 个测试通过，3 个跳过</strong>，需要重启 Hermes 服务生效。</p>
+<p>重启之后：</p>
+<ul>
+<li>先把完整的会话记录写到本地 <code>C:\Users\Administrator\.hermes\scripts\ov_pending_import.md</code></li>
+<li>重启后用 <code>viking_remember</code> 把 <code>computer_use</code> 操控 Chrome 的精简记录、以及 OpenViking 修复记录写进知识库</li>
+<li>再用 <code>viking_add_resource</code> 把完整会话记录归档为资源：<code>viking://resources/notes/computer_use_chrome_session_20260626.md</code></li>
+</ul>
+<p>为什么要专门绕这一步：因为<strong>这一天真正值钱的东西，不是那 5 张卡的搜索结果，而是那些&quot;浏览器为什么进不去&quot;&quot;为什么搜不到&quot;的过程</strong>。过程不存下来，下次还得重新踩一遍。</p>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>三层。</p>
+<p><strong>表面是那 5 张卡的价格</strong>——一个没查成功的购物任务。</p>
+<p><strong>中间是 cua-driver 操控浏览器的那套经验</strong>：UIA 树的三层结构、最小化窗口的 Win32 恢复、<code>capture app=screen</code> 的坑、50 秒冷却期。这些是纯工程细节，记下来就能复用。</p>
+<p><strong>最里面一层，是那个 ¥0.01 的链接。</strong></p>
+<p>我下的结论是&quot;2 元以下的卡不存在&quot;，听起来有理有据——我确实搜了、确实看到了 ¥19.9 的最低价。问题是，<strong>我把&quot;我没搜到&quot;错误地当成了&quot;它不存在&quot;。</strong> 这两件事之间隔着整整 50 页、一次没点确认的排序、和一个被我漏掉的关键词。</p>
+<p><strong>能操控一个浏览器，不等于能用好它。</strong> 工具能替我点开页面、能替我截图，但它替不了我怀疑自己的结论。那天最该记下来的一条，不是 Win32 那段代码，而是：<strong>当结果和我预期差十倍的时候，先假设是我操作错了，而不是世界错了。</strong></p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>记录</tag>
+        <tag>自动化</tag>
+        <tag>记忆系统</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>记录一次策略的体检（2026-08-05）</title>
     <url>/posts/ov0805/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次策略的体检（2026-08-05）"><a href="#记录一次策略的体检（2026-08-05）" class="headerlink" title="记录一次策略的体检（2026-08-05）"></a>记录一次策略的体检（2026-08-05）</h1><p><strong>一条策略的体质，不是它今天赚了多少，是它亏的时候怎么亏。</strong></p>
@@ -3367,6 +3367,43 @@
         <tag>量化</tag>
         <tag>策略</tag>
         <tag>复盘</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录一次记忆服务的升级（2026-08-03）</title>
+    <url>/posts/ov0803/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次记忆服务的升级（2026-08-03）"><a href="#记录一次记忆服务的升级（2026-08-03）" class="headerlink" title="记录一次记忆服务的升级（2026-08-03）"></a>记录一次记忆服务的升级（2026-08-03）</h1><p><strong>跨大版本升级，先想清楚怎么退回去，比升级本身更重要</strong></p>
+<p>OpenViking 从 0.3.24 升到 0.4.12，跨度不小。这天没有新功能，只有一次升级和围绕它的几件收尾——因为记忆服务是对所有「上面」的项目都生效的那一层，不能升一半。</p>
+<hr>
+<h2 id="一次跨大版本的升级"><a href="#一次跨大版本的升级" class="headerlink" title="一次跨大版本的升级"></a>一次跨大版本的升级</h2><p>从 <strong>0.3.24 → 0.4.12</strong>，升级成功。</p>
+<p>跨度大，意味着大概率有破坏性变更。这一版确实有。</p>
+<h2 id="破坏性变更：root-key-不能访问-tenant-数据"><a href="#破坏性变更：root-key-不能访问-tenant-数据" class="headerlink" title="破坏性变更：root key 不能访问 tenant 数据"></a>破坏性变更：root key 不能访问 tenant 数据</h2><p>最直接的一条：<strong>升级后，root key 不能再访问 tenant 数据 API。</strong></p>
+<p>之前用 root key 一把梭的方式失效了。处理办法是按新规则签发一个 <code>default/wu</code> 的 admin user key，并更新 <code>hermes</code> 的 <code>.env</code>，让它改用这把新 key 访问数据。</p>
+<p>这条不处理，「记忆写不进去」这类问题会以很奇怪的形式冒出来——所以它排在升级清单的第一项。</p>
+<h2 id="agent-evolution-显式开启"><a href="#agent-evolution-显式开启" class="headerlink" title="agent_evolution 显式开启"></a>agent_evolution 显式开启</h2><p>第二件事是把 <code>agent_evolution</code> <strong>显式开启</strong>。</p>
+<p>新版里它的默认行为可能变了，为了保持原来的行为，选择把它明确写进配置，而不是依赖默认值。</p>
+<p><strong>显式声明和依赖默认值，差别不在功能，在于以后升级时会不会再踩一次。</strong></p>
+<h2 id="回滚方案"><a href="#回滚方案" class="headerlink" title="回滚方案"></a>回滚方案</h2><p>升级前准备好了回滚，路径在 <code>C:/openviking/upgrade_backup/</code>，里面包含三样：</p>
+<ul>
+<li>wheel</li>
+<li>data</li>
+<li>conf</li>
+</ul>
+<p>wheel 是程序本体、data 是数据、conf 是配置——<strong>三样都在，才能退回到一个能跑起来的状态</strong>。这也是我给「升级」定的标准动作：先想好怎么退，再动手升。</p>
+<h2 id="插件-retry-匹配的补丁"><a href="#插件-retry-匹配的补丁" class="headerlink" title="插件 retry 匹配的补丁"></a>插件 retry 匹配的补丁</h2><p>最后一件事：插件里针对错误文案的 retry 匹配，补上了 0.3.24+ 的版本。</p>
+<p>0.4.12 的错误文案和之前不一样，原来的匹配匹配不到了，retry 逻辑会失效。把新版本的文案补进去之后，重试才恢复正常。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>升级这件事，也分三层。</p>
+<p><strong>最表面的是那行版本号</strong>：0.3.24 到 0.4.12。</p>
+<p><strong>中间一层是那条破坏性变更</strong>——root key 不能再访问 tenant 数据。它提醒我：<strong>大版本之间的「能用」，往往换了一套前提</strong>。旧的前提（root key 一把梭）没了，就得去找新的前提（<code>default/wu</code> admin user key），而不是把报错当成偶发故障反复重试。</p>
+<p><strong>最里面一层，是 <code>C:/openviking/upgrade_backup/</code> 那个目录。</strong> 升级成功的时候，它一点用都没有；但它的存在，决定了<strong>你敢不敢升</strong>。记忆服务这种东西，一旦升坏，影响的是所有依赖它的项目——所以升级前先留好退路，不是谨慎，是必要。</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>运维</tag>
+        <tag>记忆服务</tag>
+        <tag>升级</tag>
       </tags>
   </entry>
   <entry>
@@ -3489,106 +3526,6 @@
         <tag>量化</tag>
         <tag>回测</tag>
         <tag>复盘</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录一次记忆服务的升级（2026-08-03）</title>
-    <url>/posts/ov0803/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次记忆服务的升级（2026-08-03）"><a href="#记录一次记忆服务的升级（2026-08-03）" class="headerlink" title="记录一次记忆服务的升级（2026-08-03）"></a>记录一次记忆服务的升级（2026-08-03）</h1><p><strong>跨大版本升级，先想清楚怎么退回去，比升级本身更重要</strong></p>
-<p>OpenViking 从 0.3.24 升到 0.4.12，跨度不小。这天没有新功能，只有一次升级和围绕它的几件收尾——因为记忆服务是对所有「上面」的项目都生效的那一层，不能升一半。</p>
-<hr>
-<h2 id="一次跨大版本的升级"><a href="#一次跨大版本的升级" class="headerlink" title="一次跨大版本的升级"></a>一次跨大版本的升级</h2><p>从 <strong>0.3.24 → 0.4.12</strong>，升级成功。</p>
-<p>跨度大，意味着大概率有破坏性变更。这一版确实有。</p>
-<h2 id="破坏性变更：root-key-不能访问-tenant-数据"><a href="#破坏性变更：root-key-不能访问-tenant-数据" class="headerlink" title="破坏性变更：root key 不能访问 tenant 数据"></a>破坏性变更：root key 不能访问 tenant 数据</h2><p>最直接的一条：<strong>升级后，root key 不能再访问 tenant 数据 API。</strong></p>
-<p>之前用 root key 一把梭的方式失效了。处理办法是按新规则签发一个 <code>default/wu</code> 的 admin user key，并更新 <code>hermes</code> 的 <code>.env</code>，让它改用这把新 key 访问数据。</p>
-<p>这条不处理，「记忆写不进去」这类问题会以很奇怪的形式冒出来——所以它排在升级清单的第一项。</p>
-<h2 id="agent-evolution-显式开启"><a href="#agent-evolution-显式开启" class="headerlink" title="agent_evolution 显式开启"></a>agent_evolution 显式开启</h2><p>第二件事是把 <code>agent_evolution</code> <strong>显式开启</strong>。</p>
-<p>新版里它的默认行为可能变了，为了保持原来的行为，选择把它明确写进配置，而不是依赖默认值。</p>
-<p><strong>显式声明和依赖默认值，差别不在功能，在于以后升级时会不会再踩一次。</strong></p>
-<h2 id="回滚方案"><a href="#回滚方案" class="headerlink" title="回滚方案"></a>回滚方案</h2><p>升级前准备好了回滚，路径在 <code>C:/openviking/upgrade_backup/</code>，里面包含三样：</p>
-<ul>
-<li>wheel</li>
-<li>data</li>
-<li>conf</li>
-</ul>
-<p>wheel 是程序本体、data 是数据、conf 是配置——<strong>三样都在，才能退回到一个能跑起来的状态</strong>。这也是我给「升级」定的标准动作：先想好怎么退，再动手升。</p>
-<h2 id="插件-retry-匹配的补丁"><a href="#插件-retry-匹配的补丁" class="headerlink" title="插件 retry 匹配的补丁"></a>插件 retry 匹配的补丁</h2><p>最后一件事：插件里针对错误文案的 retry 匹配，补上了 0.3.24+ 的版本。</p>
-<p>0.4.12 的错误文案和之前不一样，原来的匹配匹配不到了，retry 逻辑会失效。把新版本的文案补进去之后，重试才恢复正常。</p>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>升级这件事，也分三层。</p>
-<p><strong>最表面的是那行版本号</strong>：0.3.24 到 0.4.12。</p>
-<p><strong>中间一层是那条破坏性变更</strong>——root key 不能再访问 tenant 数据。它提醒我：<strong>大版本之间的「能用」，往往换了一套前提</strong>。旧的前提（root key 一把梭）没了，就得去找新的前提（<code>default/wu</code> admin user key），而不是把报错当成偶发故障反复重试。</p>
-<p><strong>最里面一层，是 <code>C:/openviking/upgrade_backup/</code> 那个目录。</strong> 升级成功的时候，它一点用都没有；但它的存在，决定了<strong>你敢不敢升</strong>。记忆服务这种东西，一旦升坏，影响的是所有依赖它的项目——所以升级前先留好退路，不是谨慎，是必要。</p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>记忆服务</tag>
-        <tag>运维</tag>
-        <tag>升级</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录一次记忆服务的升级与验证（2026-09-05）</title>
-    <url>/posts/ov0905/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次记忆服务的升级与验证（2026-09-05）"><a href="#记录一次记忆服务的升级与验证（2026-09-05）" class="headerlink" title="记录一次记忆服务的升级与验证（2026-09-05）"></a>记录一次记忆服务的升级与验证（2026-09-05）</h1><p><strong>升级这件事，难的不是升上去，是证明它真的升上去了</strong></p>
-<p>记忆服务 OpenViking 从 0.4.12 升到 0.4.17.1，动作本身不复杂——停服务、替换、起服务。但这次我盯得比较紧：一次升级如果不做验证就宣布完成，等于把风险留到了下一次真正用它的时候。</p>
-<hr>
-<h2 id="一、0-4-12-→-0-4-17-1"><a href="#一、0-4-12-→-0-4-17-1" class="headerlink" title="一、0.4.12 → 0.4.17.1"></a>一、0.4.12 → 0.4.17.1</h2><p>升级在 Windows 上做，服务用 WinSW 管理。重启这一步有个前提：<strong>直接走 SCM 路径会被 Medium Integrity 拒绝</strong>，所以实际用的是 WinSW CLI 的 stopwait + start 命令。</p>
-<p>一条经验先记下：<strong>别在验证通过之前就把升级标成完成</strong>。目标版本号是明确的，健康端点返回的版本必须和它<strong>精确一致</strong>，差一个小版本都不算数。</p>
-<p>这种&quot;精确一致&quot;的要求，看着有点较真，但它挡的是一类很隐蔽的问题：<strong>版本没换成功、但服务还能起</strong>。如果只看&quot;服务起来了&quot;，你会以为升级完成了；只有把返回的版本号跟目标版本逐个字符对上，才能排除&quot;起了个旧版本&quot;这种可能。</p>
-<h2 id="二、验证分两步：端点-完整读"><a href="#二、验证分两步：端点-完整读" class="headerlink" title="二、验证分两步：端点 + 完整读"></a>二、验证分两步：端点 + 完整读</h2><p>第一步是<strong>版本确认</strong>——查健康端点，看返回的版本号是不是 <code>0.4.17.1</code>。</p>
-<p>第二步更重要：<strong>跑一次完整的 <code>session_start</code> 读测试</strong>，确认核心读取功能真的在工作，而不是只有健康端点好看。记忆服务这类组件，坏的方式很隐蔽——端点活着，但写进去的东西读不出来，比整服务宕掉更难发现。所以&quot;能读完整&quot;才是它健康的真证据。</p>
-<p>这两步其实对应着那次验收清单里的两块：<strong>版本确认</strong>和<strong>系统健康检查</strong>各占四成权重，剩下两成留给&quot;把重启时踩到的坑记下来&quot;。<strong>把坑也算进验收项</strong>，是我越来越认可的一件事——一次升级的产出里，应该包括&quot;下次遇到同类问题能少绕的弯路&quot;。</p>
-<h2 id="三、那道门前的门槛"><a href="#三、那道门前的门槛" class="headerlink" title="三、那道门前的门槛"></a>三、那道门前的门槛</h2><p>重启时遇到过权限拒绝：非 SCM 路径的服务重启，会被 Medium Integrity 挡下。这条被单独记进了经验：<strong>这类重启，走 SCM 路径是不行的，最终是用 WinSW CLI 的 stopwait + start 完成的。</strong></p>
-<p>这条经验还带了边界：<strong>它只适用于 Windows 上用 WinSW 管理服务的场景。</strong> 换到非 Windows、或者有足够权限、走 SCM 正常的部署，就不能照搬。<strong>把&quot;什么时候不适用&quot;一起写下来，经验才不会变成教条。</strong></p>
-<p>另一个是版本级的已知坑：<strong>0.4.12 里 <code>/api/v1/content/write</code> 返回 404</strong>，写内容得走 <code>add_resource</code> 路径、用 <code>k=v</code> 标签传参——升级前后都得记着。</p>
-<p>这两类坑其实不一样：<strong>权限问题是&quot;这次能不能动&quot;，版本问题是&quot;动了之后还灵不灵&quot;。</strong> 前者拦在操作之前，后者藏在操作之后。它们都得被记下来，因为下一次未必还记着。</p>
-<h2 id="四、顺带把会话日志接上"><a href="#四、顺带把会话日志接上" class="headerlink" title="四、顺带把会话日志接上"></a>四、顺带把会话日志接上</h2><p>升级之外，当天还接上了会话日志：</p>
-<ul>
-<li><code>SESSION_LOG_5</code> —— 跟踪配置变更、任务里程碑、验证事件</li>
-<li><code>SESSION_LOG_6</code> —— 一个 append-only 的会话流水，记录 Codex 交易系统的会话活动、进程状态、待办任务和已知的设计债</li>
-</ul>
-<p>日志这东西平时看不出价值，<strong>它的作用在&quot;出问题那天&quot;才兑现</strong>——那天你能翻到&quot;当时到底改过什么&quot;。而且它是 append-only 的：只往后加，不回头改。<strong>一份可以随时改写的日志，等于没有日志。</strong></p>
-<h2 id="五、下发的两个交易参数"><a href="#五、下发的两个交易参数" class="headerlink" title="五、下发的两个交易参数"></a>五、下发的两个交易参数</h2><p>记忆服务之外，还顺手做了一次参数下发。队列 #3 里的两个参数被改掉：</p>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>旧值</th>
-<th>新值</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>TAKE_PROFIT_PCT</code></td>
-<td>0.15</td>
-<td>0.04</td>
-</tr>
-<tr>
-<td><code>MAX_HOLD_HOURS</code></td>
-<td>48</td>
-<td>24</td>
-</tr>
-</tbody></table>
-<p>这次不是自己直接改的，而是<strong>委派出去执行</strong>：改值、重载 trader 进程、验证、再出一份 review 报告。流程走完的结果是——<code>rg</code> + AST 校验代码通过，日志里打出了生效横幅，review 标 PASS。</p>
-<p>这里有个刻意的克制：<strong>只改被点名的这两个值，不碰任何别的字段。</strong> 参数下发的边界就应该是这么窄——<strong>多改一个&quot;顺手&quot;的常量，都可能把一次简单的调整变成一次事故。</strong> 而且改值和&quot;确认它真的生效&quot;是两件事，少了后半步，你甚至不知道跑着的还是不是旧值。</p>
-<p>委派还有一层好处：<strong>结论不由执行方单独说了算</strong>。日志里要打出生效横幅、代码要过 <code>rg</code> + AST 校验，两份证据各自成立，最后再落一份可查的 review。<strong>让&quot;做&quot;和&quot;验&quot;各有各的证据，是防止自证清白最朴素的办法。</strong></p>
-<h2 id="六、升级留下的尾巴"><a href="#六、升级留下的尾巴" class="headerlink" title="六、升级留下的尾巴"></a>六、升级留下的尾巴</h2><p>升级不是终点，它总会留下几条待办：需要进一步授权才能做的动作、需要观察一段时间才能确认的效果，都被单独记下来，交回给下一轮处理。</p>
-<p><strong>把尾巴写清楚，和把升级做完成一样重要。</strong> 一次升级如果&quot;报完成功就结束&quot;，那些待办就会散掉；而它们记在案上，下一个接手的人（很可能是几周后的我自己）才知道该从哪儿继续。</p>
-<p>清单化的好处，是把&quot;我还没做完&quot;从一句歉意，变成一条可追踪的条目。<strong>尾巴写下来，它就会被处理；尾巴留在脑子里，它就只会在下一次出问题时被重新想起。</strong></p>
-<hr>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>这次升级分三层。</p>
-<p><strong>最表面的是版本号变了</strong>：从 0.4.12 到 0.4.17.1。</p>
-<p><strong>中间一层是那套验证顺序</strong>：先确认端点版本，再跑完整读测试，两步都过才算数。<strong>一个服务&quot;起来了&quot;和它&quot;是对的&quot;，中间隔着的就是这一步。</strong></p>
-<p><strong>最里面一层，是对&quot;完成&quot;的定义。</strong> 升级、改参数、接日志，这些动作都很容易在&quot;命令返回成功&quot;的那一刻被宣布完成。但每次我都逼自己多问一句——<strong>我怎么知道它真的生效了？</strong> 端点的版本号、完整读的回执、日志里的生效横幅，这些才是答案。命令成功只是开始。</p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>记忆服务</tag>
-        <tag>验证</tag>
-        <tag>升级</tag>
       </tags>
   </entry>
   <entry>
@@ -3779,6 +3716,69 @@
       </tags>
   </entry>
   <entry>
+    <title>记录一次记忆服务的升级与验证（2026-09-05）</title>
+    <url>/posts/ov0905/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次记忆服务的升级与验证（2026-09-05）"><a href="#记录一次记忆服务的升级与验证（2026-09-05）" class="headerlink" title="记录一次记忆服务的升级与验证（2026-09-05）"></a>记录一次记忆服务的升级与验证（2026-09-05）</h1><p><strong>升级这件事，难的不是升上去，是证明它真的升上去了</strong></p>
+<p>记忆服务 OpenViking 从 0.4.12 升到 0.4.17.1，动作本身不复杂——停服务、替换、起服务。但这次我盯得比较紧：一次升级如果不做验证就宣布完成，等于把风险留到了下一次真正用它的时候。</p>
+<hr>
+<h2 id="一、0-4-12-→-0-4-17-1"><a href="#一、0-4-12-→-0-4-17-1" class="headerlink" title="一、0.4.12 → 0.4.17.1"></a>一、0.4.12 → 0.4.17.1</h2><p>升级在 Windows 上做，服务用 WinSW 管理。重启这一步有个前提：<strong>直接走 SCM 路径会被 Medium Integrity 拒绝</strong>，所以实际用的是 WinSW CLI 的 stopwait + start 命令。</p>
+<p>一条经验先记下：<strong>别在验证通过之前就把升级标成完成</strong>。目标版本号是明确的，健康端点返回的版本必须和它<strong>精确一致</strong>，差一个小版本都不算数。</p>
+<p>这种&quot;精确一致&quot;的要求，看着有点较真，但它挡的是一类很隐蔽的问题：<strong>版本没换成功、但服务还能起</strong>。如果只看&quot;服务起来了&quot;，你会以为升级完成了；只有把返回的版本号跟目标版本逐个字符对上，才能排除&quot;起了个旧版本&quot;这种可能。</p>
+<h2 id="二、验证分两步：端点-完整读"><a href="#二、验证分两步：端点-完整读" class="headerlink" title="二、验证分两步：端点 + 完整读"></a>二、验证分两步：端点 + 完整读</h2><p>第一步是<strong>版本确认</strong>——查健康端点，看返回的版本号是不是 <code>0.4.17.1</code>。</p>
+<p>第二步更重要：<strong>跑一次完整的 <code>session_start</code> 读测试</strong>，确认核心读取功能真的在工作，而不是只有健康端点好看。记忆服务这类组件，坏的方式很隐蔽——端点活着，但写进去的东西读不出来，比整服务宕掉更难发现。所以&quot;能读完整&quot;才是它健康的真证据。</p>
+<p>这两步其实对应着那次验收清单里的两块：<strong>版本确认</strong>和<strong>系统健康检查</strong>各占四成权重，剩下两成留给&quot;把重启时踩到的坑记下来&quot;。<strong>把坑也算进验收项</strong>，是我越来越认可的一件事——一次升级的产出里，应该包括&quot;下次遇到同类问题能少绕的弯路&quot;。</p>
+<h2 id="三、那道门前的门槛"><a href="#三、那道门前的门槛" class="headerlink" title="三、那道门前的门槛"></a>三、那道门前的门槛</h2><p>重启时遇到过权限拒绝：非 SCM 路径的服务重启，会被 Medium Integrity 挡下。这条被单独记进了经验：<strong>这类重启，走 SCM 路径是不行的，最终是用 WinSW CLI 的 stopwait + start 完成的。</strong></p>
+<p>这条经验还带了边界：<strong>它只适用于 Windows 上用 WinSW 管理服务的场景。</strong> 换到非 Windows、或者有足够权限、走 SCM 正常的部署，就不能照搬。<strong>把&quot;什么时候不适用&quot;一起写下来，经验才不会变成教条。</strong></p>
+<p>另一个是版本级的已知坑：<strong>0.4.12 里 <code>/api/v1/content/write</code> 返回 404</strong>，写内容得走 <code>add_resource</code> 路径、用 <code>k=v</code> 标签传参——升级前后都得记着。</p>
+<p>这两类坑其实不一样：<strong>权限问题是&quot;这次能不能动&quot;，版本问题是&quot;动了之后还灵不灵&quot;。</strong> 前者拦在操作之前，后者藏在操作之后。它们都得被记下来，因为下一次未必还记着。</p>
+<h2 id="四、顺带把会话日志接上"><a href="#四、顺带把会话日志接上" class="headerlink" title="四、顺带把会话日志接上"></a>四、顺带把会话日志接上</h2><p>升级之外，当天还接上了会话日志：</p>
+<ul>
+<li><code>SESSION_LOG_5</code> —— 跟踪配置变更、任务里程碑、验证事件</li>
+<li><code>SESSION_LOG_6</code> —— 一个 append-only 的会话流水，记录 Codex 交易系统的会话活动、进程状态、待办任务和已知的设计债</li>
+</ul>
+<p>日志这东西平时看不出价值，<strong>它的作用在&quot;出问题那天&quot;才兑现</strong>——那天你能翻到&quot;当时到底改过什么&quot;。而且它是 append-only 的：只往后加，不回头改。<strong>一份可以随时改写的日志，等于没有日志。</strong></p>
+<h2 id="五、下发的两个交易参数"><a href="#五、下发的两个交易参数" class="headerlink" title="五、下发的两个交易参数"></a>五、下发的两个交易参数</h2><p>记忆服务之外，还顺手做了一次参数下发。队列 #3 里的两个参数被改掉：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>旧值</th>
+<th>新值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>TAKE_PROFIT_PCT</code></td>
+<td>0.15</td>
+<td>0.04</td>
+</tr>
+<tr>
+<td><code>MAX_HOLD_HOURS</code></td>
+<td>48</td>
+<td>24</td>
+</tr>
+</tbody></table>
+<p>这次不是自己直接改的，而是<strong>委派出去执行</strong>：改值、重载 trader 进程、验证、再出一份 review 报告。流程走完的结果是——<code>rg</code> + AST 校验代码通过，日志里打出了生效横幅，review 标 PASS。</p>
+<p>这里有个刻意的克制：<strong>只改被点名的这两个值，不碰任何别的字段。</strong> 参数下发的边界就应该是这么窄——<strong>多改一个&quot;顺手&quot;的常量，都可能把一次简单的调整变成一次事故。</strong> 而且改值和&quot;确认它真的生效&quot;是两件事，少了后半步，你甚至不知道跑着的还是不是旧值。</p>
+<p>委派还有一层好处：<strong>结论不由执行方单独说了算</strong>。日志里要打出生效横幅、代码要过 <code>rg</code> + AST 校验，两份证据各自成立，最后再落一份可查的 review。<strong>让&quot;做&quot;和&quot;验&quot;各有各的证据，是防止自证清白最朴素的办法。</strong></p>
+<h2 id="六、升级留下的尾巴"><a href="#六、升级留下的尾巴" class="headerlink" title="六、升级留下的尾巴"></a>六、升级留下的尾巴</h2><p>升级不是终点，它总会留下几条待办：需要进一步授权才能做的动作、需要观察一段时间才能确认的效果，都被单独记下来，交回给下一轮处理。</p>
+<p><strong>把尾巴写清楚，和把升级做完成一样重要。</strong> 一次升级如果&quot;报完成功就结束&quot;，那些待办就会散掉；而它们记在案上，下一个接手的人（很可能是几周后的我自己）才知道该从哪儿继续。</p>
+<p>清单化的好处，是把&quot;我还没做完&quot;从一句歉意，变成一条可追踪的条目。<strong>尾巴写下来，它就会被处理；尾巴留在脑子里，它就只会在下一次出问题时被重新想起。</strong></p>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>这次升级分三层。</p>
+<p><strong>最表面的是版本号变了</strong>：从 0.4.12 到 0.4.17.1。</p>
+<p><strong>中间一层是那套验证顺序</strong>：先确认端点版本，再跑完整读测试，两步都过才算数。<strong>一个服务&quot;起来了&quot;和它&quot;是对的&quot;，中间隔着的就是这一步。</strong></p>
+<p><strong>最里面一层，是对&quot;完成&quot;的定义。</strong> 升级、改参数、接日志，这些动作都很容易在&quot;命令返回成功&quot;的那一刻被宣布完成。但每次我都逼自己多问一句——<strong>我怎么知道它真的生效了？</strong> 端点的版本号、完整读的回执、日志里的生效横幅，这些才是答案。命令成功只是开始。</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>验证</tag>
+        <tag>记忆服务</tag>
+        <tag>升级</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>记录一次量化策略的&quot;内部喊单&quot;改造（v1.15）</title>
     <url>/posts/ov1/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次量化策略的-内部喊单-改造（v1-15）"><a href="#记录一次量化策略的-内部喊单-改造（v1-15）" class="headerlink" title="记录一次量化策略的&quot;内部喊单&quot;改造（v1.15）"></a>记录一次量化策略的&quot;内部喊单&quot;改造（v1.15）</h1><p><strong>事情的起因很朴素，就是亏钱</strong></p>
@@ -3829,138 +3829,6 @@
       <tags>
         <tag>量化</tag>
         <tag>交易</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录一次黑窗口的排查（2026-06-01）</title>
-    <url>/posts/ov0601/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次黑窗口的排查（2026-06-01）"><a href="#记录一次黑窗口的排查（2026-06-01）" class="headerlink" title="记录一次黑窗口的排查（2026-06-01）"></a>记录一次黑窗口的排查（2026-06-01）</h1><p><strong>如果你发现自己在打补丁，先退一步：上游修了吗</strong></p>
-<p>那天要解决的毛病很小——小到可以忍，但每次都在提醒你它的存在。</p>
-<hr>
-<h2 id="那个一闪而过的黑窗口"><a href="#那个一闪而过的黑窗口" class="headerlink" title="那个一闪而过的黑窗口"></a>那个一闪而过的黑窗口</h2><p>现象是：<strong>每执行一次终端命令，屏幕上就闪一下黑色的 cmd 窗口</strong>。</p>
-<p>它不影响结果，命令照跑，输出也正常。但一天下来闪几百次，人会烦。更要命的是它给人一种&quot;这东西没做干净&quot;的感觉。</p>
-<p>查下来是本地装的 <strong>Hermes 0.14.0</strong>（v2026.5.16，2026-05-18 发布）的一个已知 bug：Windows 上每次调用终端都会弹一个控制台窗口。</p>
-<h2 id="先查上游，再动手改"><a href="#先查上游，再动手改" class="headerlink" title="先查上游，再动手改"></a>先查上游，再动手改</h2><p>第一反应当然是&quot;把弹窗的地方关掉&quot;——找到 <code>Popen</code> 的调用点，加个 Windows 专用的隐藏标志就行。</p>
-<p>但我先多做了一步：<strong>去看看上游有没有修</strong>。</p>
-<p>结果很干脆：<strong>这个 bug 在 0.15.0（v2026.5.28）里已经修了</strong>，做法是加了一个 <code>windows_hide_flags()</code> 的辅助函数。而当时 PyPI 上最新是 <strong>0.15.2</strong>（v2026.5.29.2）——本地落后了整整两个补丁版本。</p>
-<p>那正确的修法就只有一条：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install --upgrade hermes-agent</span><br></pre></td></tr></table></figure>
-
-<p><strong>不是自己去改源码。</strong></p>
-<p>这一步看起来简单，但它其实是个分水岭。如果我当时直接动手打补丁，会有两个后果：</p>
-<ol>
-<li>我改的是<strong>旧版本</strong>，问题在上游早就解决了</li>
-<li>我打的补丁会<strong>覆盖掉未来的升级</strong>——下次升级还得先记住&quot;这里有个我自己改的地方&quot;</li>
-</ol>
-<p>自己动手改上游代码，最贵的不是改的成本，是**以后每次升级都要重新想一遍&quot;我改过什么&quot;**。</p>
-<h2 id="一条更通用的排查方法"><a href="#一条更通用的排查方法" class="headerlink" title="一条更通用的排查方法"></a>一条更通用的排查方法</h2><p>那天顺手把一套&quot;<strong>本地装的到底是不是最新</strong>&quot;的查法沉淀了下来。</p>
-<p>常规做法是去查 GitHub API，但未认证的情况下一小时只有约 60 次请求——稍微折腾几轮就见底了。</p>
-<p>更好的办法是直接对着 <strong>raw 内容</strong>比：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">raw.githubusercontent.com/&lt;repo&gt;/&lt;tag&gt;/&lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<p>它<strong>不需要认证，也没有限流</strong>。把本地 <code>site-packages</code> 里的文件和对应 tag 上的原始文件拉下来一比，就知道本地到底是哪个版本、有没有被改动过。</p>
-<p>这个小技巧后来一直在用。凡是要判断&quot;我装的这个是不是旧的&quot;&quot;这个 bug 修了没有&quot;，第一反应就是它。</p>
-<h2 id="顺便办了两件事"><a href="#顺便办了两件事" class="headerlink" title="顺便办了两件事"></a>顺便办了两件事</h2><p>那天除了修窗口，还顺手处理了两个相关的：</p>
-<p><strong>一是 OpenViking 的账号结构。</strong> 确认了当前的版本（0.3.17）运行正常，底下挂着 <code>default</code>、<code>wu-account</code>、<code>memtest</code> 几个账号空间。同时给 <code>wu</code> 这个用户建了正式的访问密钥——<code>account: default</code>、<code>user: wu</code>、<code>role: admin</code>，密钥本身就隐含绑定了账户和用户，直接当 <code>x-api-key</code> 用就行，不用再额外带头。</p>
-<p><strong>二是升级卡住了。</strong> 想往 0.3.21 走，但一直报 <code>EmbeddingRebuildRequiredError</code>，也就是向量重建过不去。这条没解决，只能先记下&quot;卡在这里，需要联系上游&quot;。</p>
-<p>有意思的是，这件事和黑窗口刚好是<strong>两个方向的对照组</strong>：黑窗口是&quot;上游已经修好了，你只要升级&quot;；而这次是&quot;上游还没好，你只能等&quot;。<strong>先查上游</strong>这个动作，对两种情形的价值是一样的——一个让你省掉白干，一个让你省掉瞎猜。</p>
-<hr>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>那天最大的收获不是窗口不闪了，而是那句话：<strong>在动手改之前，先确认这个改动该不该由我来做。</strong></p>
-<p>打补丁这件事有一种虚假的成就感——你确实解决了问题，代码也确实变了。但如果上游两星期前就修好了，你做的其实是<strong>在给一个正在被淘汰的版本增加维护负担</strong>。</p>
-<p>区分这两件事的办法很朴素：<strong>花五分钟去看一眼上游</strong>。这五分钟买到的，可能是省下一整轮返工，也可能是确认&quot;确实只能自己动手&quot;——两种结果都不亏。</p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>排障</tag>
-        <tag>工具链</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录十几年的折腾资产之路（一）</title>
-    <url>/posts/zt1/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（一）"><a href="#记录十几年的折腾资产之路（一）" class="headerlink" title="记录十几年的折腾资产之路（一）"></a>记录十几年的折腾资产之路（一）</h1><p><strong>我的投资史，其实就是工作史，也算是成长史</strong></p>
-<ol>
-<li>1990-2012，无产阶级</li>
-<li>2012-2015，无投资阶段</li>
-<li>2015-2019，国内投资阶段</li>
-<li>2019-2021，国外投资阶段</li>
-<li>2021-2022，数藏投资阶段</li>
-<li>2022-至今，币圈投资</li>
-</ol>
-<h2 id="1990-2012，无产阶级"><a href="#1990-2012，无产阶级" class="headerlink" title="1990-2012，无产阶级"></a>1990-2012，无产阶级</h2><p><strong>22年的上学路</strong></p>
-<ul>
-<li>单纯的上学路，学习，玩；上大学前对钱没概念，也没有零用钱，家里普通的百姓。</li>
-<li>2018年上大学后，有了自己的生活费，但自己对未来的规划还停留在勤劳致富。我比较节省，生活费上并没有太大压力；没有勤工俭学，也没有太多花钱的地方。花销比较多的是上网吧，大四整了不到千元手机玩，那时iPhone4横空出世，有条件的同学都买了，我也买不起。</li>
-<li>对钱的想法是找个好工作，读了重点大学，希望1月1w的工作，当时想来是很高了，回头来看，比较少了。</li>
-</ul>
-<h2 id="2012-2015，无投资阶段"><a href="#2012-2015，无投资阶段" class="headerlink" title="2012-2015，无投资阶段"></a>2012-2015，无投资阶段</h2><p><strong>毕业后，经历一段波折，最终还是步入社会</strong></p>
-<ul>
-<li>刚工作的时期，工资是很低的，同时想的是怎么快速成长，融入工作圈，结识新朋友。闲暇的时候还是喜欢游戏，运动，买东西追赶潮流。13年买房，15年买车，家里面帮了忙，但自己都把工作的积蓄清空了。</li>
-<li>这段时期无投资其实是比较遗憾的事情，当时看过一些理财的书籍，知道价值投资，股市，基金，复利，年化收益。</li>
-<li>毕竟那时的冰糖橙可能不到RMB千元。很早就知道冰糖橙了，记忆模糊中是一个朋友亦或新闻中提及的。我喜欢游戏，对IT技术有天然的好感，当时觉得区块链是很酷的技术。</li>
-<li>14年的时候冰糖橙火了一把，清楚记得当时还体验了一把挖矿，又在网上买了几十块钱的冰糖橙，但当时真的没放在心上，没有保存下来。</li>
-</ul>
-<h2 id="2015-2019，国内投资阶段"><a href="#2015-2019，国内投资阶段" class="headerlink" title="2015-2019，国内投资阶段"></a>2015-2019，国内投资阶段</h2><p><strong>时间来到了15年，A股最活跃的一年</strong></p>
-<ul>
-<li>谈闻A股已经听麻了，其中最吸引人的故事，一个同事几千炒到了几十万，他亲口说是真的；但是后面崩盘，他只保了本出来。牛市的时候周围都在炒股，但我没积蓄，一直到年底，那时线上券商还不普遍，还要线下开户，拿着几万块钱，冲进了股市。</li>
-<li>刚进股市，不知道买啥标底，周围同事普遍不肯推荐，只能网上自学。最喜欢那些财经节目，听股评师吹牛，听多了就有冲动，但常常买进去，要么是涨一点，马上就跌下来，要么没什么动静，卖了之后狂拉。</li>
-<li>15年底到19年底差不多炒了3年，小亏没赚到钱，最深刻的一次炒新能源，涨了两个板，赚了快小万，突然回调利润全无，后面大盘崩盘直接亏损。</li>
-<li>对A股没有感情，不管短拿长拿都不好赚钱，很多个股几年没有涨幅，能翻倍的股票就像中彩票，太难了。一入股市深似海，千金散尽不复来，追涨杀跌是常态，从此君郎是韭菜。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>回忆录</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录十几年的折腾资产之路（三）——续</title>
-    <url>/posts/zt3-1/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（三）——续"><a href="#记录十几年的折腾资产之路（三）——续" class="headerlink" title="记录十几年的折腾资产之路（三）——续"></a>记录十几年的折腾资产之路（三）——续</h1><h2 id="今天就简单聊一聊数藏第一人吧"><a href="#今天就简单聊一聊数藏第一人吧" class="headerlink" title="今天就简单聊一聊数藏第一人吧"></a>今天就简单聊一聊数藏第一人吧</h2><p>国内数藏圈虽然圈子不大，但是创造神话。臭名昭著的18先生的很多传奇故事。18先生（柏松先生）这个名号在数藏圈也是无人不知无人不晓，更是很多割友心目中的数藏第一人。  </p>
-<p>“啦啦啦，气氛搞起来”是18先生在群里最常说的口头禅，在整个数藏圈最能搞气氛的也是他。<br>听说18先生最早是在b圈搞合约出身，被1b老板邀请加入了1b，那个时候1b的狰单价还只是几百块，谁能想到18先生加入后被炒到30w呢，狰自己应该也想不到吧，这无疑是一个造富神话。</p>
-<p>数藏时代的造富机会，18先生首创了优先购、合成、空投等套娃玩法，还吸纳币圈的玩法井结合数藏圈的独特性进行了玩法升级，曾经一手将1b带到了99亿市值（由于当时没有实时的看盘软件，所以这个数字是估量），日交易额猜测最高达7亿元以上。</p>
-<p>不得不说那时候的数藏圈像一场灿烂的烟花秀，起势迅猛而热烈，也是寄托了无数割友暴富梦。</p>
-<p>当初一个盲盒的赋能图都能卖到6万多元，无数大户蜂拥而至来数藏圈大浪淘金。还记得起名字的有林斌、杨文斌、辛德勒、阿达、余欢喜、水境先生等人，在社群内疯狂CX，发布截图带着各位割友们彻底疯狂。当时一张sorry大帝价值有1800元之高，一张N卡最高炒到1万元以上，凡是18先生在群里提到的某个藏品，都能瞬间10万退市。</p>
-<p>那个时候他的影响力至今无人能敌，18先生也不愧是数藏第一人。<br>后来因为分蛋糕问题，18先生很遗憾的离开了1b，同时加入了42这个新台子，一样的谱写了一番新高度。再之后18先生创立了新台子名为十八数藏，在数藏圈再次炸裂来袭，运粮鼠1元一只上线，最高暴涨到8000元+，8000多倍的利润，能有谁可以做到啊?</p>
-<p>虽然数藏圈的热度正在慢慢下降，但是围绕18先生的话题还在不断上涨，割友们对18先生也是爱恨交加。<br>18先生是第一个提出2.0置换玩法，在数藏环境不佳的情况下仍旧能保持日交易额千万以上，相对18先生抛弃的1b当时在低估的时候日均交易额也只有几万元，说不定还是左手倒右手。</p>
-<p>18先生传奇的经历不止这些，他的神话自1b始，尚未终结。2024年18据说又联合了国家队搞什么数字资产，音乐版权，重回巅峰不知道是不是梦。</p>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>回忆录</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录十几年的折腾资产之路（二）</title>
-    <url>/posts/zt2/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（二）"><a href="#记录十几年的折腾资产之路（二）" class="headerlink" title="记录十几年的折腾资产之路（二）"></a>记录十几年的折腾资产之路（二）</h1><h2 id="2019-2021，国外投资阶段"><a href="#2019-2021，国外投资阶段" class="headerlink" title="2019-2021，国外投资阶段"></a>2019-2021，国外投资阶段</h2><ul>
-<li>2019年我对A股没了信心，做了两件事</li>
-</ul>
-<ol>
-<li>无意中发现了美港股，因为用东方财富，看到了东财国际版的广告，抱着试一试的态度，打开了一扇门。网上学了一圈，发现国内著名的软件富途牛牛已经进军美港股几年了。</li>
-<li>2019年底重返币圈，玩了美港股不过瘾，想着多几个赛道。更早之前几百块也玩过币，但当时一门心思玩A股，2019年底又想起币圈。</li>
-</ol>
-<h3 id="港股打新，美港交易"><a href="#港股打新，美港交易" class="headerlink" title="港股打新，美港交易"></a>港股打新，美港交易</h3><ul>
-<li>阿里巴巴重回港股，当时给港股打新添了一把火。我记得应该是东财上看到了，才入了这个坑。港股打新特色是可以融资，其次是暗盘交易。记得阿里融了资中了几签，利润有好几千呢，我一下子沸腾了，全部all in，港股打新真的是赚过一笔的。</li>
-<li>但港股打新的节奏是比较慢的，要选优质的新股，不然容易破发，周期长要等机会。我不甘寂寞，当时看了美港走势天天涨，忍不住还是冲进去。我依稀记得当时最火的是新能源汽车，特斯拉，蔚来，小鹏等，后来不幸碰到疫情，美股史诗级跌熔断，熔断了几次，亏了一些，想起真是令人唏嘘。</li>
-</ul>
-<h3 id="币圈"><a href="#币圈" class="headerlink" title="币圈"></a>币圈</h3><ul>
-<li>当时最火的是defi抵押借贷，还有流动挖矿，新概念天天吹，吹的我也着了魔，又把钱拿出来一部分，前后用defi借贷，一口气拿了快三十多个以太（依稀记得260u以上的成本），意淫着起飞。结果天天跌，没多久跌了两三成，卧槽，心里滴血。</li>
-<li>疫情来了，币圈和美股有同步，不同的是币圈只用了一个晚上。我清楚的记得是一个寒风阵阵的傍晚，暴跌，3k大饼，80u的以太都看到过，仓位都快到脚脖子了。紧接着第二天行情也没太起来，恐怖的是defi抵押借贷快触及平仓线，那样就爆仓归零了，连忙又拿应急的钱买了5千rmb的以太。</li>
-<li>之后对币圈有点灰心了，亏了几万，也不舍得割肉，但神奇的也是，疫情的时候那么恐慌，币价却没怎么再跌。我套了大半年，神奇的又回来了，后面nft爆火，我不干寂寞又卖了以太，玩别的去了，成功错过了21年币圈大牛。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Docs文檔</category>
-      </categories>
-      <tags>
-        <tag>回忆录</tag>
       </tags>
   </entry>
   <entry>
@@ -4087,6 +3955,71 @@
       </tags>
   </entry>
   <entry>
+    <title>记录一次黑窗口的排查（2026-06-01）</title>
+    <url>/posts/ov0601/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次黑窗口的排查（2026-06-01）"><a href="#记录一次黑窗口的排查（2026-06-01）" class="headerlink" title="记录一次黑窗口的排查（2026-06-01）"></a>记录一次黑窗口的排查（2026-06-01）</h1><p><strong>如果你发现自己在打补丁，先退一步：上游修了吗</strong></p>
+<p>那天要解决的毛病很小——小到可以忍，但每次都在提醒你它的存在。</p>
+<hr>
+<h2 id="那个一闪而过的黑窗口"><a href="#那个一闪而过的黑窗口" class="headerlink" title="那个一闪而过的黑窗口"></a>那个一闪而过的黑窗口</h2><p>现象是：<strong>每执行一次终端命令，屏幕上就闪一下黑色的 cmd 窗口</strong>。</p>
+<p>它不影响结果，命令照跑，输出也正常。但一天下来闪几百次，人会烦。更要命的是它给人一种&quot;这东西没做干净&quot;的感觉。</p>
+<p>查下来是本地装的 <strong>Hermes 0.14.0</strong>（v2026.5.16，2026-05-18 发布）的一个已知 bug：Windows 上每次调用终端都会弹一个控制台窗口。</p>
+<h2 id="先查上游，再动手改"><a href="#先查上游，再动手改" class="headerlink" title="先查上游，再动手改"></a>先查上游，再动手改</h2><p>第一反应当然是&quot;把弹窗的地方关掉&quot;——找到 <code>Popen</code> 的调用点，加个 Windows 专用的隐藏标志就行。</p>
+<p>但我先多做了一步：<strong>去看看上游有没有修</strong>。</p>
+<p>结果很干脆：<strong>这个 bug 在 0.15.0（v2026.5.28）里已经修了</strong>，做法是加了一个 <code>windows_hide_flags()</code> 的辅助函数。而当时 PyPI 上最新是 <strong>0.15.2</strong>（v2026.5.29.2）——本地落后了整整两个补丁版本。</p>
+<p>那正确的修法就只有一条：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install --upgrade hermes-agent</span><br></pre></td></tr></table></figure>
+
+<p><strong>不是自己去改源码。</strong></p>
+<p>这一步看起来简单，但它其实是个分水岭。如果我当时直接动手打补丁，会有两个后果：</p>
+<ol>
+<li>我改的是<strong>旧版本</strong>，问题在上游早就解决了</li>
+<li>我打的补丁会<strong>覆盖掉未来的升级</strong>——下次升级还得先记住&quot;这里有个我自己改的地方&quot;</li>
+</ol>
+<p>自己动手改上游代码，最贵的不是改的成本，是**以后每次升级都要重新想一遍&quot;我改过什么&quot;**。</p>
+<h2 id="一条更通用的排查方法"><a href="#一条更通用的排查方法" class="headerlink" title="一条更通用的排查方法"></a>一条更通用的排查方法</h2><p>那天顺手把一套&quot;<strong>本地装的到底是不是最新</strong>&quot;的查法沉淀了下来。</p>
+<p>常规做法是去查 GitHub API，但未认证的情况下一小时只有约 60 次请求——稍微折腾几轮就见底了。</p>
+<p>更好的办法是直接对着 <strong>raw 内容</strong>比：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">raw.githubusercontent.com/&lt;repo&gt;/&lt;tag&gt;/&lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p>它<strong>不需要认证，也没有限流</strong>。把本地 <code>site-packages</code> 里的文件和对应 tag 上的原始文件拉下来一比，就知道本地到底是哪个版本、有没有被改动过。</p>
+<p>这个小技巧后来一直在用。凡是要判断&quot;我装的这个是不是旧的&quot;&quot;这个 bug 修了没有&quot;，第一反应就是它。</p>
+<h2 id="顺便办了两件事"><a href="#顺便办了两件事" class="headerlink" title="顺便办了两件事"></a>顺便办了两件事</h2><p>那天除了修窗口，还顺手处理了两个相关的：</p>
+<p><strong>一是 OpenViking 的账号结构。</strong> 确认了当前的版本（0.3.17）运行正常，底下挂着 <code>default</code>、<code>wu-account</code>、<code>memtest</code> 几个账号空间。同时给 <code>wu</code> 这个用户建了正式的访问密钥——<code>account: default</code>、<code>user: wu</code>、<code>role: admin</code>，密钥本身就隐含绑定了账户和用户，直接当 <code>x-api-key</code> 用就行，不用再额外带头。</p>
+<p><strong>二是升级卡住了。</strong> 想往 0.3.21 走，但一直报 <code>EmbeddingRebuildRequiredError</code>，也就是向量重建过不去。这条没解决，只能先记下&quot;卡在这里，需要联系上游&quot;。</p>
+<p>有意思的是，这件事和黑窗口刚好是<strong>两个方向的对照组</strong>：黑窗口是&quot;上游已经修好了，你只要升级&quot;；而这次是&quot;上游还没好，你只能等&quot;。<strong>先查上游</strong>这个动作，对两种情形的价值是一样的——一个让你省掉白干，一个让你省掉瞎猜。</p>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>那天最大的收获不是窗口不闪了，而是那句话：<strong>在动手改之前，先确认这个改动该不该由我来做。</strong></p>
+<p>打补丁这件事有一种虚假的成就感——你确实解决了问题，代码也确实变了。但如果上游两星期前就修好了，你做的其实是<strong>在给一个正在被淘汰的版本增加维护负担</strong>。</p>
+<p>区分这两件事的办法很朴素：<strong>花五分钟去看一眼上游</strong>。这五分钟买到的，可能是省下一整轮返工，也可能是确认&quot;确实只能自己动手&quot;——两种结果都不亏。</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>排障</tag>
+        <tag>工具链</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录十几年的折腾资产之路（三）——续</title>
+    <url>/posts/zt3-1/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（三）——续"><a href="#记录十几年的折腾资产之路（三）——续" class="headerlink" title="记录十几年的折腾资产之路（三）——续"></a>记录十几年的折腾资产之路（三）——续</h1><h2 id="今天就简单聊一聊数藏第一人吧"><a href="#今天就简单聊一聊数藏第一人吧" class="headerlink" title="今天就简单聊一聊数藏第一人吧"></a>今天就简单聊一聊数藏第一人吧</h2><p>国内数藏圈虽然圈子不大，但是创造神话。臭名昭著的18先生的很多传奇故事。18先生（柏松先生）这个名号在数藏圈也是无人不知无人不晓，更是很多割友心目中的数藏第一人。  </p>
+<p>“啦啦啦，气氛搞起来”是18先生在群里最常说的口头禅，在整个数藏圈最能搞气氛的也是他。<br>听说18先生最早是在b圈搞合约出身，被1b老板邀请加入了1b，那个时候1b的狰单价还只是几百块，谁能想到18先生加入后被炒到30w呢，狰自己应该也想不到吧，这无疑是一个造富神话。</p>
+<p>数藏时代的造富机会，18先生首创了优先购、合成、空投等套娃玩法，还吸纳币圈的玩法井结合数藏圈的独特性进行了玩法升级，曾经一手将1b带到了99亿市值（由于当时没有实时的看盘软件，所以这个数字是估量），日交易额猜测最高达7亿元以上。</p>
+<p>不得不说那时候的数藏圈像一场灿烂的烟花秀，起势迅猛而热烈，也是寄托了无数割友暴富梦。</p>
+<p>当初一个盲盒的赋能图都能卖到6万多元，无数大户蜂拥而至来数藏圈大浪淘金。还记得起名字的有林斌、杨文斌、辛德勒、阿达、余欢喜、水境先生等人，在社群内疯狂CX，发布截图带着各位割友们彻底疯狂。当时一张sorry大帝价值有1800元之高，一张N卡最高炒到1万元以上，凡是18先生在群里提到的某个藏品，都能瞬间10万退市。</p>
+<p>那个时候他的影响力至今无人能敌，18先生也不愧是数藏第一人。<br>后来因为分蛋糕问题，18先生很遗憾的离开了1b，同时加入了42这个新台子，一样的谱写了一番新高度。再之后18先生创立了新台子名为十八数藏，在数藏圈再次炸裂来袭，运粮鼠1元一只上线，最高暴涨到8000元+，8000多倍的利润，能有谁可以做到啊?</p>
+<p>虽然数藏圈的热度正在慢慢下降，但是围绕18先生的话题还在不断上涨，割友们对18先生也是爱恨交加。<br>18先生是第一个提出2.0置换玩法，在数藏环境不佳的情况下仍旧能保持日交易额千万以上，相对18先生抛弃的1b当时在低估的时候日均交易额也只有几万元，说不定还是左手倒右手。</p>
+<p>18先生传奇的经历不止这些，他的神话自1b始，尚未终结。2024年18据说又联合了国家队搞什么数字资产，音乐版权，重回巅峰不知道是不是梦。</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>回忆录</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>记录十几年的折腾资产之路（三）</title>
     <url>/posts/zt3/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（三）"><a href="#记录十几年的折腾资产之路（三）" class="headerlink" title="记录十几年的折腾资产之路（三）"></a>记录十几年的折腾资产之路（三）</h1><h2 id="2021-2022，数藏投资阶段"><a href="#2021-2022，数藏投资阶段" class="headerlink" title="2021-2022，数藏投资阶段"></a>2021-2022，数藏投资阶段</h2><ul>
@@ -4122,6 +4055,73 @@
 <p><strong>就这样ibox在2022年5月份迎来了大牛市，基本ibox一个顶的上其它所有台子，一个最便宜藏品的价格都三四千，持续了半个月，随便新藏品出来都是万元甚至十万！那时ibox还短暂上过微博热搜，老玩家心里的白月光。</strong></p>
 <hr>
 <p><img src="https://passagepic.4everland.store/CNNFT_his.jpg" alt="数藏平台上线历程-ibox老平台" title="数藏平台上线历程-ibox老平台"></p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>回忆录</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录十几年的折腾资产之路（二）</title>
+    <url>/posts/zt2/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（二）"><a href="#记录十几年的折腾资产之路（二）" class="headerlink" title="记录十几年的折腾资产之路（二）"></a>记录十几年的折腾资产之路（二）</h1><h2 id="2019-2021，国外投资阶段"><a href="#2019-2021，国外投资阶段" class="headerlink" title="2019-2021，国外投资阶段"></a>2019-2021，国外投资阶段</h2><ul>
+<li>2019年我对A股没了信心，做了两件事</li>
+</ul>
+<ol>
+<li>无意中发现了美港股，因为用东方财富，看到了东财国际版的广告，抱着试一试的态度，打开了一扇门。网上学了一圈，发现国内著名的软件富途牛牛已经进军美港股几年了。</li>
+<li>2019年底重返币圈，玩了美港股不过瘾，想着多几个赛道。更早之前几百块也玩过币，但当时一门心思玩A股，2019年底又想起币圈。</li>
+</ol>
+<h3 id="港股打新，美港交易"><a href="#港股打新，美港交易" class="headerlink" title="港股打新，美港交易"></a>港股打新，美港交易</h3><ul>
+<li>阿里巴巴重回港股，当时给港股打新添了一把火。我记得应该是东财上看到了，才入了这个坑。港股打新特色是可以融资，其次是暗盘交易。记得阿里融了资中了几签，利润有好几千呢，我一下子沸腾了，全部all in，港股打新真的是赚过一笔的。</li>
+<li>但港股打新的节奏是比较慢的，要选优质的新股，不然容易破发，周期长要等机会。我不甘寂寞，当时看了美港走势天天涨，忍不住还是冲进去。我依稀记得当时最火的是新能源汽车，特斯拉，蔚来，小鹏等，后来不幸碰到疫情，美股史诗级跌熔断，熔断了几次，亏了一些，想起真是令人唏嘘。</li>
+</ul>
+<h3 id="币圈"><a href="#币圈" class="headerlink" title="币圈"></a>币圈</h3><ul>
+<li>当时最火的是defi抵押借贷，还有流动挖矿，新概念天天吹，吹的我也着了魔，又把钱拿出来一部分，前后用defi借贷，一口气拿了快三十多个以太（依稀记得260u以上的成本），意淫着起飞。结果天天跌，没多久跌了两三成，卧槽，心里滴血。</li>
+<li>疫情来了，币圈和美股有同步，不同的是币圈只用了一个晚上。我清楚的记得是一个寒风阵阵的傍晚，暴跌，3k大饼，80u的以太都看到过，仓位都快到脚脖子了。紧接着第二天行情也没太起来，恐怖的是defi抵押借贷快触及平仓线，那样就爆仓归零了，连忙又拿应急的钱买了5千rmb的以太。</li>
+<li>之后对币圈有点灰心了，亏了几万，也不舍得割肉，但神奇的也是，疫情的时候那么恐慌，币价却没怎么再跌。我套了大半年，神奇的又回来了，后面nft爆火，我不干寂寞又卖了以太，玩别的去了，成功错过了21年币圈大牛。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>回忆录</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录十几年的折腾资产之路（一）</title>
+    <url>/posts/zt1/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录十几年的折腾资产之路（一）"><a href="#记录十几年的折腾资产之路（一）" class="headerlink" title="记录十几年的折腾资产之路（一）"></a>记录十几年的折腾资产之路（一）</h1><p><strong>我的投资史，其实就是工作史，也算是成长史</strong></p>
+<ol>
+<li>1990-2012，无产阶级</li>
+<li>2012-2015，无投资阶段</li>
+<li>2015-2019，国内投资阶段</li>
+<li>2019-2021，国外投资阶段</li>
+<li>2021-2022，数藏投资阶段</li>
+<li>2022-至今，币圈投资</li>
+</ol>
+<h2 id="1990-2012，无产阶级"><a href="#1990-2012，无产阶级" class="headerlink" title="1990-2012，无产阶级"></a>1990-2012，无产阶级</h2><p><strong>22年的上学路</strong></p>
+<ul>
+<li>单纯的上学路，学习，玩；上大学前对钱没概念，也没有零用钱，家里普通的百姓。</li>
+<li>2018年上大学后，有了自己的生活费，但自己对未来的规划还停留在勤劳致富。我比较节省，生活费上并没有太大压力；没有勤工俭学，也没有太多花钱的地方。花销比较多的是上网吧，大四整了不到千元手机玩，那时iPhone4横空出世，有条件的同学都买了，我也买不起。</li>
+<li>对钱的想法是找个好工作，读了重点大学，希望1月1w的工作，当时想来是很高了，回头来看，比较少了。</li>
+</ul>
+<h2 id="2012-2015，无投资阶段"><a href="#2012-2015，无投资阶段" class="headerlink" title="2012-2015，无投资阶段"></a>2012-2015，无投资阶段</h2><p><strong>毕业后，经历一段波折，最终还是步入社会</strong></p>
+<ul>
+<li>刚工作的时期，工资是很低的，同时想的是怎么快速成长，融入工作圈，结识新朋友。闲暇的时候还是喜欢游戏，运动，买东西追赶潮流。13年买房，15年买车，家里面帮了忙，但自己都把工作的积蓄清空了。</li>
+<li>这段时期无投资其实是比较遗憾的事情，当时看过一些理财的书籍，知道价值投资，股市，基金，复利，年化收益。</li>
+<li>毕竟那时的冰糖橙可能不到RMB千元。很早就知道冰糖橙了，记忆模糊中是一个朋友亦或新闻中提及的。我喜欢游戏，对IT技术有天然的好感，当时觉得区块链是很酷的技术。</li>
+<li>14年的时候冰糖橙火了一把，清楚记得当时还体验了一把挖矿，又在网上买了几十块钱的冰糖橙，但当时真的没放在心上，没有保存下来。</li>
+</ul>
+<h2 id="2015-2019，国内投资阶段"><a href="#2015-2019，国内投资阶段" class="headerlink" title="2015-2019，国内投资阶段"></a>2015-2019，国内投资阶段</h2><p><strong>时间来到了15年，A股最活跃的一年</strong></p>
+<ul>
+<li>谈闻A股已经听麻了，其中最吸引人的故事，一个同事几千炒到了几十万，他亲口说是真的；但是后面崩盘，他只保了本出来。牛市的时候周围都在炒股，但我没积蓄，一直到年底，那时线上券商还不普遍，还要线下开户，拿着几万块钱，冲进了股市。</li>
+<li>刚进股市，不知道买啥标底，周围同事普遍不肯推荐，只能网上自学。最喜欢那些财经节目，听股评师吹牛，听多了就有冲动，但常常买进去，要么是涨一点，马上就跌下来，要么没什么动静，卖了之后狂拉。</li>
+<li>15年底到19年底差不多炒了3年，小亏没赚到钱，最深刻的一次炒新能源，涨了两个板，赚了快小万，突然回调利润全无，后面大盘崩盘直接亏损。</li>
+<li>对A股没有感情，不管短拿长拿都不好赚钱，很多个股几年没有涨幅，能翻倍的股票就像中彩票，太难了。一入股市深似海，千金散尽不复来，追涨杀跌是常态，从此君郎是韭菜。</li>
+</ul>
 ]]></content>
       <categories>
         <category>Docs文檔</category>
