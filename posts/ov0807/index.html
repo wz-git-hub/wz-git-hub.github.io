@@ -1,0 +1,372 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>记录一次多策略协作层的搭建（2026-08-07） | Forever BLog</title><meta name="author" content="DEMOHAPI"><meta name="copyright" content="DEMOHAPI"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一次对多策略协作层的搭建与巡检">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记录一次多策略协作层的搭建（2026-08-07）">
+<meta property="og:url" content="https://blog.demo.fan/posts/ov0807/">
+<meta property="og:site_name" content="Forever BLog">
+<meta property="og:description" content="一次对多策略协作层的搭建与巡检">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi">
+<meta property="article:published_time" content="2026-08-07T14:20:00.000Z">
+<meta property="article:modified_time" content="2026-10-12T01:48:03.573Z">
+<meta property="article:author" content="DEMOHAPI">
+<meta property="article:tag" content="量化">
+<meta property="article:tag" content="自动化">
+<meta property="article:tag" content="进程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi"><link rel="shortcut icon" href="https://demohapi.4everland.link/ipfs/bafkreicb6jujwvhw4zfl6d2ki27n3zuofgf4t3wkoavkfqoxerlcycseyq"><link rel="canonical" href="https://blog.demo.fan/posts/ov0807/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googlefonts.cn/css?family=Kaushan+Script" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"简","msgToSimplifiedChinese":"繁"},
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"距离上次更新已经过了","messageNext":"天，文章所描述的內容可能已经发生变化，请留意。"},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":10,"languages":{"author":"作者: DEMOHAPI","link":"链接: ","source":"来源: Forever BLog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '记录一次多策略协作层的搭建（2026-08-07）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-10-12 09:48:03'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="alternate" href="/atom.xml" title="Forever BLog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://demohapi.4everland.link/ipfs/bafybeigczmfcg5rhbuvgajgjrihah4jpk63n5cjtey62dy5ul72puh37qq" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">51</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/books/"><i class="fa-fw fas fa-book-reader"></i><span> 书库</span></a></div><div class="menus_item"><a class="site-page" href="/news/"><i class="fa-fw fas fa-newspaper"></i><span> 资讯</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-book"></i><span> 高级</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://stats.uptimerobot.com/5pXZ1tgAl5"><span> 🚀 服务状态</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi')"><nav id="nav"><span id="blog-info"><a href="/" title="Forever BLog"><img class="site-icon" src="https://demohapi.4everland.link/ipfs/bafkreih6xrehehlw2eqm4k2trkiagblz6w6ueybwjbvnosmek2d4ppxoka"/></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/books/"><i class="fa-fw fas fa-book-reader"></i><span> 书库</span></a></div><div class="menus_item"><a class="site-page" href="/news/"><i class="fa-fw fas fa-newspaper"></i><span> 资讯</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-book"></i><span> 高级</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://stats.uptimerobot.com/5pXZ1tgAl5"><span> 🚀 服务状态</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">记录一次多策略协作层的搭建（2026-08-07）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-07T14:20:00.000Z" title="发表于 2026-08-07 22:20:00">2026-08-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-12T01:48:03.573Z" title="更新于 2026-10-12 09:48:03">2026-10-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Docs%E6%96%87%E6%AA%94/">Docs文檔</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="记录一次多策略协作层的搭建（2026-08-07）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/posts/ov0807/#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="记录一次多策略协作层的搭建（2026-08-07）"><a href="#记录一次多策略协作层的搭建（2026-08-07）" class="headerlink" title="记录一次多策略协作层的搭建（2026-08-07）"></a>记录一次多策略协作层的搭建（2026-08-07）</h1><p><strong>一条策略是独奏，好几条一起跑就是一支乐队——真正难的是谁也不拖累谁。</strong></p>
+<p>08-07 做了一次全栈巡检。不是看单条策略赚不赚，而是看这些进程、这些策略拼在一起，作为一个&quot;协作层&quot;能不能稳。结论是：核心很稳，但辅助层里藏着一个真问题。</p>
+<p>下面把那天理出来的东西记一遍。</p>
+<hr>
+<h2 id="六个逻辑进程"><a href="#六个逻辑进程" class="headerlink" title="六个逻辑进程"></a>六个逻辑进程</h2><p>先把家底摆出来。那天所有逻辑进程都在跑：</p>
+<table>
+<thead>
+<tr>
+<th>进程</th>
+<th>端口 &#x2F; 状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>trader</strong></td>
+<td>监听 <strong>66552</strong>，直连 HL，已连续运行 <strong>40 小时零 502 错误</strong></td>
+</tr>
+<tr>
+<td><strong>sim_loop</strong></td>
+<td>模拟循环，本轮已修复并重启</td>
+</tr>
+<tr>
+<td><strong>mc_paper</strong></td>
+<td>本轮已修复并重启</td>
+</tr>
+<tr>
+<td><strong>signal</strong></td>
+<td>信号生成，本轮已修复并重启</td>
+</tr>
+<tr>
+<td><strong>watchdog</strong></td>
+<td>守护</td>
+</tr>
+<tr>
+<td><strong>oos</strong></td>
+<td>样本外监控</td>
+</tr>
+</tbody></table>
+<p>六个全活。但&quot;全活&quot;只是最低标准——真正要查的，是它们各自的输入输出有没有被污染。</p>
+<h2 id="三个辅助进程在吃死代理"><a href="#三个辅助进程在吃死代理" class="headerlink" title="三个辅助进程在吃死代理"></a>三个辅助进程在吃死代理</h2><p>那天现场抓到一个 <strong>P1 级</strong> 的真问题。</p>
+<p><strong>sim_loop、mc_paper、signal 三个辅助进程，继承了一个已经死掉的系统代理 <code>127.0.0.1:7890</code><strong>（Clash 已经死了）。结果是：cryptopanic 的新闻、coingecko 的全局数据、gmgn bsc 的抓取，</strong>全部 ProxyError 失败</strong>。</p>
+<p>这件事最值得记的地方在于——**它此前在 08-05 被我误判成&quot;时间戳 &#x2F; 429 误报&quot;**。当时看到报错，第一反应是&quot;大概又限流了&quot;，没有往代理上想。这次实锤下来：不是限流，是真死代理。</p>
+<p>修的动作有三步：</p>
+<ol>
+<li>给这三个脚本注入<strong>与 trader 同款的代理自清逻辑</strong>——trader 一直有这段，辅助进程没有</li>
+<li>补全 <code>maincoin_paper</code> 脚本顶部**缺失的 <code>import os</code>**（缺它会在自清逻辑里直接 <code>NameError</code> 崩掉）</li>
+<li>用<strong>单实例重拉器</strong>清掉重复进程</li>
+</ol>
+<p>验证结果：三个进程<strong>单实例运行，末 200 行日志零代理错误</strong>。</p>
+<p>同类的进程，配置却不一致——这正是&quot;协作层&quot;最容易出问题的地方：<strong>trader 早就解决的问题，辅助进程还在踩。</strong></p>
+<h2 id="收益反转：被寄予厚望的那条翻了"><a href="#收益反转：被寄予厚望的那条翻了" class="headerlink" title="收益反转：被寄予厚望的那条翻了"></a>收益反转：被寄予厚望的那条翻了</h2><p>协作层稳住之后，那天最重的一个发现来自收益归因。</p>
+<ul>
+<li><strong>realized_pnl 从 08-05 修复时的 +$19.74，降到 +$14.02，减少 $5.72。</strong></li>
+<li>修复后 46 小时的样本里，<strong>market_flow 6 笔净亏 −$10.29</strong>（含那笔 ARB 的 −$517.64），而之前并不被看好的 <strong>factor_ic 同期 +$4.33</strong>。</li>
+</ul>
+<p>也就是说，<strong>之前被当成 star 的那条策略翻了车</strong>，而一直压在验证仓里的那条，反而在小幅盈利。</p>
+<p>更关键的是那条被推翻的旧结论：<strong>08-05 19:35 的 48 小时归因 cron，只积累了 5.5 小时样本，就断言 market_flow 是&quot;加仓候选&quot;<strong>。这次用 46 小时以上的完整样本，</strong>把它推翻了</strong>。</p>
+<p>所以那天最重要的一条经验不是&quot;哪条赚钱&quot;，而是：<strong>归因窗口不够长的时候，别信那个结论，哪怕它来自自动化。</strong></p>
+<h2 id="策略名册：谁留，谁退役"><a href="#策略名册：谁留，谁退役" class="headerlink" title="策略名册：谁留，谁退役"></a>策略名册：谁留，谁退役</h2><p>归因清楚之后，那天给每条策略定了一次去留。策略多了，最怕的就是&quot;每条都留着看看&quot;——那不叫组合，那叫没决策。</p>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>处置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>factor_ic</strong></td>
+<td>样本 ≥10、双向正，<strong>维持并观察加仓</strong></td>
+</tr>
+<tr>
+<td><strong>market_flow</strong></td>
+<td>修复后转负，<strong>建议降级 &#x2F; 退役评估</strong></td>
+</tr>
+<tr>
+<td><strong>sentiment</strong></td>
+<td>截至当日仅完成 <strong>2 笔</strong>，<strong>维持观察</strong></td>
+</tr>
+<tr>
+<td><strong>cvd_momentum</strong></td>
+<td><strong>维持退役</strong></td>
+</tr>
+<tr>
+<td><strong>smart_money</strong></td>
+<td><strong>维持退役</strong></td>
+</tr>
+</tbody></table>
+<p>现金对账差额 <strong>−$0.89</strong>（等于手续费），账目自洽。</p>
+<p>这份名册的意义在于：<strong>协作层不该什么都留。</strong> 一条已经证明无效的腿留在场上，不只占用预算，还会污染整个组合的归因——你分不清亏的是&quot;组合&quot;还是&quot;那条腿&quot;。</p>
+<h2 id="两个小的待跟进项"><a href="#两个小的待跟进项" class="headerlink" title="两个小的待跟进项"></a>两个小的待跟进项</h2><p>那天还顺手记了两个低风险、没动核心进程的问题：</p>
+<ul>
+<li>🟠 <strong>AAVE 平仓确认存在竞态</strong>：持仓 6 秒后仍然存在时，会跳过记账、产生一笔冗余二单。本次 PnL 已正确计入 <strong>+$1.73</strong>，但存在翻转隐患。建议下个 trader 维护窗口，把确认等待从 <strong>6s 调到 15s</strong>，并实现幂等平仓。</li>
+<li>🟡 <strong>signal 进程的 gmgn.ai 出现 429 限流</strong>，削弱信号质量。<strong>不是代理导致的</strong>，需要退避或更换 key。</li>
+</ul>
+<p>这两个都没动核心进程——因为<strong>低风险的隐患，最合适的处理方式是记下来、排进维护窗口，而不是当下就改。</strong> 协作层最怕的就是&quot;顺手改一下&quot;，改了却没验证。</p>
+<h2 id="两份报告，还有一份-soul-md"><a href="#两份报告，还有一份-soul-md" class="headerlink" title="两份报告，还有一份 soul.md"></a>两份报告，还有一份 soul.md</h2><p>那天的排查落成两份文件：</p>
+<ul>
+<li><strong><code>DIAGNOSIS_2026-08-07.md</code></strong> —— 进程健康状态与修复情况</li>
+<li><strong><code>DIAGNOSIS_attrition_2026-08-07.md</code></strong> —— 策略级归因</li>
+</ul>
+<p>记忆也同步更新了。写完报告，那天还把这层&quot;协作&quot;重新想了一遍——不只是进程之间的协作，也包括我和助手之间的协作。手边那份 <code>soul.md</code> 里写的东西其实很克制：<strong>Be helpful, not performative</strong>（要真有用，别做表演）、<strong>Have opinions</strong>（要有判断）、<strong>Be resourceful before asking</strong>（先自己找答案再开口）。</p>
+<p>这些话放在一个多进程的交易系统里，一点不抽象。**&quot;别做表演&quot;对应的，就是不硬凑一条策略留在场上；&quot;要有判断&quot;对应的，就是名册该砍就砍；&quot;先自己找答案&quot;对应的，就是报错先查代理，别急着归因成限流。**</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>那天搭起来的&quot;协作层&quot;，收获得分三层。</p>
+<p><strong>最表面的是六个进程全活</strong>——一个可以正常运转的进程栈。</p>
+<p><strong>中间一层是那条修法</strong>：同类进程的配置必须一致，<strong>trader 早就解决的代理自清，辅助进程也得有</strong>。协作层的故障，往往不在最忙的那个进程里，而在最边缘的那个。</p>
+<p><strong>最里面一层，是那句&quot;别急着归因&quot;。</strong> 08-05 我把死代理看成限流，08-05 19:35 的 cron 把 5.5 小时当成 48 小时——<strong>两次都是同一个毛病：拿到一个看起来说得通的解释，就停下了。</strong> 而一个多策略协作层最不能有的，就是这种&quot;差不多就信了&quot;。</p>
+<p>所以那天的最后一句话是：<strong>在把结论写进报告之前，先确认它是不是被死掉的代理、或者太短的窗口骗了。</strong></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.demo.fan">DEMOHAPI</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.demo.fan/posts/ov0807/">https://blog.demo.fan/posts/ov0807/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">此文章版权归DEMOHAPI所有，如有转载，请注明来自原作者！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%87%8F%E5%8C%96/">量化</a><a class="post-meta__tags" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a><a class="post-meta__tags" href="/tags/%E8%BF%9B%E7%A8%8B/">进程</a></div><div class="post_share"><div class="social-share" data-image="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/ov0813/" title="记录一次给策略立规矩（2026-08-13）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">记录一次给策略立规矩（2026-08-13）</div></div></a></div><div class="next-post pull-right"><a href="/posts/ov0805/" title="记录一次策略的体检（2026-08-05）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">记录一次策略的体检（2026-08-05）</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/ov0606/" title="记录一次「0 BUY」的归因（2026-06-06）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-06</div><div class="title">记录一次「0 BUY」的归因（2026-06-06）</div></div></a></div><div><a href="/posts/ov0607/" title="记录一次 GMGN 接口的摸底（2026-06-07）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-07</div><div class="title">记录一次 GMGN 接口的摸底（2026-06-07）</div></div></a></div><div><a href="/posts/ov0707/" title="记录一次主流币系统的落地（2026-07-07）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-07</div><div class="title">记录一次主流币系统的落地（2026-07-07）</div></div></a></div><div><a href="/posts/ov0814/" title="记录一次五个候选因子的验证（2026-08-14）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-14</div><div class="title">记录一次五个候选因子的验证（2026-08-14）</div></div></a></div><div><a href="/posts/ov0622/" title="记录一次例行巡检（2026-06-22）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-22</div><div class="title">记录一次例行巡检（2026-06-22）</div></div></a></div><div><a href="/posts/ov0618/" title="记录一次全量验证（2026-06-18）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-18</div><div class="title">记录一次全量验证（2026-06-18）</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Twikoo</span><span id="switch-btn"></span><span class="second-comment">Giscus</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://demohapi.4everland.link/ipfs/bafybeigczmfcg5rhbuvgajgjrihah4jpk63n5cjtey62dy5ul72puh37qq" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">DEMOHAPI</div><div class="author-info__description">Enjoy your life forever!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">51</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/wz-git-hub"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://twitter.com/wwwdemohapi" rel="external nofollow noreferrer" target="_blank" title="twitter"><i class="fab fa-twitter" style="color: #2DAAE2;"></i></a><a class="social-icon" href="mailto:demohapi@foxmail.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><p style="text\-align:center;">如果你还能看到这个Blog！</p> <p style="text\-align:center;">就是我永恒小世界的胜利！</p> <img src="https://demohapi.4everland.link/ipfs/bafkreiebp4yzbtc6futxkm74r452kctuky2ip4nzif2tjwam25mrjecks4" title="我的钱包"></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E5%A4%9A%E7%AD%96%E7%95%A5%E5%8D%8F%E4%BD%9C%E5%B1%82%E7%9A%84%E6%90%AD%E5%BB%BA%EF%BC%882026-08-07%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">记录一次多策略协作层的搭建（2026-08-07）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E4%B8%AA%E9%80%BB%E8%BE%91%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">六个逻辑进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E4%B8%AA%E8%BE%85%E5%8A%A9%E8%BF%9B%E7%A8%8B%E5%9C%A8%E5%90%83%E6%AD%BB%E4%BB%A3%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">三个辅助进程在吃死代理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B6%E7%9B%8A%E5%8F%8D%E8%BD%AC%EF%BC%9A%E8%A2%AB%E5%AF%84%E4%BA%88%E5%8E%9A%E6%9C%9B%E7%9A%84%E9%82%A3%E6%9D%A1%E7%BF%BB%E4%BA%86"><span class="toc-number">1.3.</span> <span class="toc-text">收益反转：被寄予厚望的那条翻了</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%96%E7%95%A5%E5%90%8D%E5%86%8C%EF%BC%9A%E8%B0%81%E7%95%99%EF%BC%8C%E8%B0%81%E9%80%80%E5%BD%B9"><span class="toc-number">1.4.</span> <span class="toc-text">策略名册：谁留，谁退役</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%A4%E4%B8%AA%E5%B0%8F%E7%9A%84%E5%BE%85%E8%B7%9F%E8%BF%9B%E9%A1%B9"><span class="toc-number">1.5.</span> <span class="toc-text">两个小的待跟进项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%A4%E4%BB%BD%E6%8A%A5%E5%91%8A%EF%BC%8C%E8%BF%98%E6%9C%89%E4%B8%80%E4%BB%BD-soul-md"><span class="toc-number">1.6.</span> <span class="toc-text">两份报告，还有一份 soul.md</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-number">1.7.</span> <span class="toc-text">最后</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0911/" title="记录一次电子书入库（2026-09-11）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次电子书入库（2026-09-11）"/></a><div class="content"><a class="title" href="/posts/ov0911/" title="记录一次电子书入库（2026-09-11）">记录一次电子书入库（2026-09-11）</a><time datetime="2026-09-11T14:10:00.000Z" title="发表于 2026-09-11 22:10:00">2026-09-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0910/" title="记录一次心跳的修复（2026-09-10）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次心跳的修复（2026-09-10）"/></a><div class="content"><a class="title" href="/posts/ov0910/" title="记录一次心跳的修复（2026-09-10）">记录一次心跳的修复（2026-09-10）</a><time datetime="2026-09-10T14:30:00.000Z" title="发表于 2026-09-10 22:30:00">2026-09-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0909/" title="记录一次重连风暴的排查（2026-09-09）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次重连风暴的排查（2026-09-09）"/></a><div class="content"><a class="title" href="/posts/ov0909/" title="记录一次重连风暴的排查（2026-09-09）">记录一次重连风暴的排查（2026-09-09）</a><time datetime="2026-09-09T14:30:00.000Z" title="发表于 2026-09-09 22:30:00">2026-09-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0908/" title="记录一次并发数的自检（2026-09-08）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次并发数的自检（2026-09-08）"/></a><div class="content"><a class="title" href="/posts/ov0908/" title="记录一次并发数的自检（2026-09-08）">记录一次并发数的自检（2026-09-08）</a><time datetime="2026-09-08T14:10:00.000Z" title="发表于 2026-09-08 22:10:00">2026-09-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0907/" title="记录一次依赖的坑（2026-09-07）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次依赖的坑（2026-09-07）"/></a><div class="content"><a class="title" href="/posts/ov0907/" title="记录一次依赖的坑（2026-09-07）">记录一次依赖的坑（2026-09-07）</a><time datetime="2026-09-07T13:15:00.000Z" title="发表于 2026-09-07 21:15:00">2026-09-07</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By DEMOHAPI</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><div class="js-pjax"><script>(() => {
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-api-pied-three.vercel.app',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') setTimeout(init,0)
+    else getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(init)
+  }
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-api-pied-three.vercel.app',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else {
+      loadTwikoo()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script><script>(()=>{
+  const getGiscusTheme = theme => {
+    return theme === 'dark' ? 'dark' : 'light'
+  }
+
+  const loadGiscus = () => {
+    const config = Object.assign({
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'wz-git-hub/wz-git-hub.github.io',
+      'data-repo-id': 'R_kgDOKu6rHA',
+      'data-category-id': 'DIC_kwDOKu6rHM4CbGGw',
+      'data-mapping': 'pathname',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true
+    },null)
+
+    const ele = document.createElement('script')
+    for (let key in config) {
+      ele.setAttribute(key, config[key])
+    }
+    document.getElementById('giscus-wrap').appendChild(ele)
+  }
+
+  const changeGiscusTheme = theme => {
+    const sendMessage = message => {
+      const iframe = document.querySelector('iframe.giscus-frame')
+      if (!iframe) return
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+    }
+
+    sendMessage({
+      setConfig: {
+        theme: getGiscusTheme(theme)
+      }
+    });
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if ('Twikoo' === 'Giscus' || !false) {
+    if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment= loadGiscus
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

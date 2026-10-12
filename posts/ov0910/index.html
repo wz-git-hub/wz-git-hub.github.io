@@ -1,0 +1,305 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>记录一次心跳的修复（2026-09-10） | Forever BLog</title><meta name="author" content="DEMOHAPI"><meta name="copyright" content="DEMOHAPI"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="从一条 130 秒的规律，到三次&quot;心跳&quot;上的修复">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记录一次心跳的修复（2026-09-10）">
+<meta property="og:url" content="https://blog.demo.fan/posts/ov0910/">
+<meta property="og:site_name" content="Forever BLog">
+<meta property="og:description" content="从一条 130 秒的规律，到三次&quot;心跳&quot;上的修复">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi">
+<meta property="article:published_time" content="2026-09-10T14:30:00.000Z">
+<meta property="article:modified_time" content="2026-10-12T01:45:25.117Z">
+<meta property="article:author" content="DEMOHAPI">
+<meta property="article:tag" content="量化">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="复盘">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi"><link rel="shortcut icon" href="https://demohapi.4everland.link/ipfs/bafkreicb6jujwvhw4zfl6d2ki27n3zuofgf4t3wkoavkfqoxerlcycseyq"><link rel="canonical" href="https://blog.demo.fan/posts/ov0910/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googlefonts.cn/css?family=Kaushan+Script" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"简","msgToSimplifiedChinese":"繁"},
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"距离上次更新已经过了","messageNext":"天，文章所描述的內容可能已经发生变化，请留意。"},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":10,"languages":{"author":"作者: DEMOHAPI","link":"链接: ","source":"来源: Forever BLog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '记录一次心跳的修复（2026-09-10）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-10-12 09:45:25'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="alternate" href="/atom.xml" title="Forever BLog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://demohapi.4everland.link/ipfs/bafybeigczmfcg5rhbuvgajgjrihah4jpk63n5cjtey62dy5ul72puh37qq" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">51</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/books/"><i class="fa-fw fas fa-book-reader"></i><span> 书库</span></a></div><div class="menus_item"><a class="site-page" href="/news/"><i class="fa-fw fas fa-newspaper"></i><span> 资讯</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-book"></i><span> 高级</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://stats.uptimerobot.com/5pXZ1tgAl5"><span> 🚀 服务状态</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi')"><nav id="nav"><span id="blog-info"><a href="/" title="Forever BLog"><img class="site-icon" src="https://demohapi.4everland.link/ipfs/bafkreih6xrehehlw2eqm4k2trkiagblz6w6ueybwjbvnosmek2d4ppxoka"/></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/books/"><i class="fa-fw fas fa-book-reader"></i><span> 书库</span></a></div><div class="menus_item"><a class="site-page" href="/news/"><i class="fa-fw fas fa-newspaper"></i><span> 资讯</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-book"></i><span> 高级</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://stats.uptimerobot.com/5pXZ1tgAl5"><span> 🚀 服务状态</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">记录一次心跳的修复（2026-09-10）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-10T14:30:00.000Z" title="发表于 2026-09-10 22:30:00">2026-09-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-12T01:45:25.117Z" title="更新于 2026-10-12 09:45:25">2026-10-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Docs%E6%96%87%E6%AA%94/">Docs文檔</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="记录一次心跳的修复（2026-09-10）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/posts/ov0910/#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="记录一次心跳的修复（2026-09-10）"><a href="#记录一次心跳的修复（2026-09-10）" class="headerlink" title="记录一次心跳的修复（2026-09-10）"></a>记录一次心跳的修复（2026-09-10）</h1><p><strong>最危险的不是进程死了，而是它还活着，却已经很久没说过一句话</strong></p>
+<p>这天前后处理了几件看起来不相干的事：换掉一个 VLM 模型、给一个本地转发进程补 timeout、修交易 worker 的心跳、核正一份自动判定、读一份策略审计。等它们在记录里排到一起才发现，说的其实是同一件事——<strong>每一个长期运行的环节，都得持续向系统证明自己还活着</strong>。一旦它不再说话，系统不会立刻崩，它只会安静地做出一个错误的判断。</p>
+<p>下面按当天实际处理的顺序记。</p>
+<hr>
+<h2 id="从一条-130-秒的规律开始"><a href="#从一条-130-秒的规律开始" class="headerlink" title="从一条 130 秒的规律开始"></a>从一条 130 秒的规律开始</h2><p>监控里最先扎眼的是这个数：交易 worker 每隔约 <strong>130 秒</strong>就重连一次，节律几乎不抖。</p>
+<p>反复核过之后，这个 130 秒不是巧合——它刚好等于<strong>连接守卫的超时阈值 + 平均一次重连所需的耗时</strong>。也就是说，重连不是网络断了，是被守卫&quot;误判&quot;成断了：它等了太久没等到该有的时间戳刷新，就按超时处理，断线，重连，然后 130 秒后再来一遍。日志里这种由&quot;陈旧&quot;引发的心跳超时，一次会话里数到了 <strong>3885 次</strong>。</p>
+<h2 id="顺着-last-success-ts-往下挖"><a href="#顺着-last-success-ts-往下挖" class="headerlink" title="顺着 _last_success_ts 往下挖"></a>顺着 <code>_last_success_ts</code> 往下挖</h2><p>连接守卫的判定本身很简单：当 <code>_last_success_ts</code> 比 <code>HL_CONN_HEARTBEAT_SEC</code> 更老，就触发超时。所以问题不在守卫，在于<strong>这个时间戳为什么没被刷新</strong>。</p>
+<p>把静态代码顺着读下来，链条是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">连接守卫判定:  now - _last_success_ts &gt; HL_CONN_HEARTBEAT_SEC  →  触发超时</span><br><span class="line">_last_success_ts 的更新点:  只有 _get_mid_price()</span><br><span class="line">_get_mid_price() 的执行条件:  只在 signals 非空的 if 分支里跑</span><br><span class="line">signal daemon 心跳过期 → signals 为空 → 该分支不进入 → 时间戳不刷新</span><br></pre></td></tr></table></figure>
+
+<p>结论就出来了：<strong>上游 signal daemon 心跳过期，导致 signals 为空，<code>_get_mid_price()</code> 那条分支永远进不去，时间戳一直不刷新，守卫于是报出一次假超时。</strong> 这是一条&quot;只有信号为空时才会走&quot;的失效路径。</p>
+<p>此前其实已经修过一轮——在价格查询的 missing-symbol 分支上补了一个 <code>record_success()</code>（7 行），用来兜住&quot;健康但为空&quot;的响应。但那种兜法管不到这里：<strong>当 signals 整体为空时，<code>_get_mid_price()</code> 连函数都进不去，分支里的兜底自然也不会执行</strong>。前一次的补丁没有覆盖这一次的场景，这也是差点被忽略的地方。</p>
+<h2 id="三个选项里，选最便宜的那个"><a href="#三个选项里，选最便宜的那个" class="headerlink" title="三个选项里，选最便宜的那个"></a>三个选项里，选最便宜的那个</h2><p>剖析完之后，按&quot;实现成本 + 结构正确性&quot;排了三个选项：</p>
+<ol>
+<li><strong>最低成本</strong>：在 main loop 每次 tick 的顶部加一行心跳 ping，调一次 <code>_info.all_mids()</code> 并把 <code>_conn_guard.record_success()</code> 刷新掉。这一下能同时消掉主循环心跳超时、HL 重连和 watchdog kill。</li>
+<li><strong>中等</strong>：直接把连接心跳超时阈值抬高，减少误判频率——治标。</li>
+<li><strong>结构性</strong>：单独开一个 P2，去查 signal daemon 心跳为什么会过期。</li>
+</ol>
+<p>选的是第 1 个，第 3 个单独挂账。理由很直白：<strong>根因不是超时太短，而是时间戳的刷新点没被走到；抬高阈值只是让错误晚一点暴露。</strong> 顺手核了一遍 diff，确认只动了该动的分支，没有把原来正确的逻辑一起改掉。</p>
+<h2 id="修完之后，先把话收回来"><a href="#修完之后，先把话收回来" class="headerlink" title="修完之后，先把话收回来"></a>修完之后，先把话收回来</h2><p>修复上线后跑了 <strong>30 分钟</strong>的 soak 观察。自动判定给出的初判是 <code>FIX_PARTIAL</code>——看起来只修好了一半。</p>
+<p>但把原始日志逐条对完之后发现，这是<strong>分类器的 bug</strong>：它用的粗匹配把 <strong>signal daemon 的超时</strong>也算进了 HL 心跳里，于是&quot;目标错误&quot;的计数被另一个守护进程的超时污染了。剔掉这类噪声再看，目标路径是 <strong>100% 消除</strong>，主循环心跳超时、HL 重连、watchdog kill 全部归零。</p>
+<p>判定于是从 <code>FIX_PARTIAL</code> 改正为 <code>FIX_WORKS</code>。留在账上的还有一条：signal daemon 心跳过期本身没解决，交给 P2。</p>
+<h2 id="另一头：一个不会再说话的服务"><a href="#另一头：一个不会再说话的服务" class="headerlink" title="另一头：一个不会再说话的服务"></a>另一头：一个不会再说话的服务</h2><p>同一天还有一条平行的线。OpenVikingService 的 VLM 换了模型，从 <code>volcengine/doubao-seed-2-0-pro-260215</code> 换成 <code>litellm/openai/MiniMax-M3</code>，目的是省 token。改的是 <code>ov.conf</code> 里的模型项，改完重启服务。</p>
+<p>麻烦在于，这台机器上的 **SYSTEM DNS 解析不了 <code>api.minimaxi.com</code>**。直连是连不上的，只能绕：让请求先走一个本地转发进程。</p>
+<p><code>mx_http_proxy</code> 就是这条绕路方案：一个 <strong>0.0.0.0:8443</strong> 的明文 HTTP 监听，转给 <code>https://api.minimaxi.com</code>，并把 Host 头改写成 <code>api.minimaxi.com</code>——这样上游的 TLS SNI 和路由才对得上。客户端的 <code>base_url</code> 指向 <code>http://127.0.0.1:&lt;port&gt;/v1</code>，<code>extra_headers</code> 里带上 <code>Host: api.minimaxi.com</code>。</p>
+<p>这个设计有一个必须记住的前提：<strong>转发进程得一直活着。</strong> 它一死，所有 VLM 调用立刻断掉，而且是手动的，没人会自动把它拉起来。</p>
+<p>那天它就真的死了。旧进程 PID 3424 跑了约 <strong>4.5 小时</strong>之后，在 15:28 前后退出。捞代理日志时看到 <strong>5 次 <code>proxy_err</code>（60 秒读超时）</strong>，其中几次正撞上 M3 生成大文件——大响应偶尔要 70–80 秒，而 urllib 默认的 timeout 只有 60 秒，于是超时、报错，WM update 的 tool_call 跟着超时。</p>
+<p>所以这次不只是重启，顺手把补丁也打了：<strong>urllib timeout 从 60 秒改成 180 秒</strong>。新进程在 15:33:50 起来，PID 13828，探针 <code>PONG_180</code> 在 <strong>2.6 秒</strong>内返回，说明新阈值已经生效。修完再核一遍，6 次 M3 调用里最大的响应 20048 字节、花了 36 秒，离 180 秒的预算还很远，<code>proxy_err</code> 计数归零。</p>
+<p>这是它第三次因为单点故障出事。<strong>自动拉起还没接</strong>（记成 P0），备选是 WinSW 包装，或者登录时触发的计划任务，两条路都要提权。</p>
+<h2 id="心跳过期的源头"><a href="#心跳过期的源头" class="headerlink" title="心跳过期的源头"></a>心跳过期的源头</h2><p>回头看那条 signal daemon。它当天重启过一次，PID 6216，在跑，输出三类信号：<code>factor_ic</code>、<code>market_flow</code>、<code>cvd_momentum</code>（其中 <code>market_flow</code> 按此前的 <code>MAINNET_VERDICT</code> 基本已经退役）。但从 <strong>08:49</strong> 开始，它调 HL API 时会间歇性地抛 <code>ConnectionResetError(10054)</code>，可能造成偶发的 0 信号写入。</p>
+<p>这就是前面那条链的源头：<strong>它一旦写不出信号，trader 那边的时间戳就不刷新，心跳就假超时。</strong> 两头其实是同一件事。</p>
+<h2 id="早上的那本账"><a href="#早上的那本账" class="headerlink" title="早上的那本账"></a>早上的那本账</h2><p>技术活之外，当天早上还过了一遍策略审计：按策略拆 PnL、看信号触发频率、核 signal 与 trader 的状态一致性、清 orphan 仓位。翻出来的最重一条是 <strong>P1：仓位同步 bug</strong>——数据库里的开仓记录和链上对不上，<code>sim_equity</code> 与 <code>chain_equity</code> 之间有明显背离。P0 的几项确认已完成。口径上也顺手钉了一条：<strong>仓位状态不能只看数据库，必须和链上交叉核</strong>。</p>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>这天的收获分三层。</p>
+<p><strong>最表面的一层，是三件具体的事</strong>：换掉一个模型、补一个 timeout、修一处心跳。它们各有一个 PID、一个端口、一个数值，改完都能验。</p>
+<p><strong>中间一层，是那条把它们串起来的线</strong>：出问题的地方，都是某个环节停止了&quot;说话&quot;。trader 的心跳超时，是它没收到信号；forwarder 的单点故障，是它不再响应；signal daemon 的过期心跳，是它写不出数据。<strong>系统很少因为某个进程死掉而崩溃，它更容易因为某个进程沉默而判错。</strong></p>
+<p><strong>最里面一层，是那条被我改回来的判定。</strong></p>
+<p>自动工具给的初判是 <code>FIX_PARTIAL</code>。如果我当时收工，这份记录就会写&quot;只修好了一半&quot;，然后带着一个其实已经修好的目标路径继续往上叠。是逐条对原始日志之后，才发现那个&quot;一半&quot;是分类器把别的守护进程的超时算了进来。<strong>工具会替你算，但结论得自己对一遍</strong>——这笔账和代码本身无关，却比任何一处补丁都值钱。</p>
+<p>而且修完并不算完。forwarder 现在还是手动重启，心跳是接回来了，可它自己还不会跳。<strong>一次心跳，和一直在跳，是两回事</strong>——这是当天留下的、下一件要做的事。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.demo.fan">DEMOHAPI</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.demo.fan/posts/ov0910/">https://blog.demo.fan/posts/ov0910/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">此文章版权归DEMOHAPI所有，如有转载，请注明来自原作者！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%87%8F%E5%8C%96/">量化</a><a class="post-meta__tags" href="/tags/%E8%BF%90%E7%BB%B4/">运维</a><a class="post-meta__tags" href="/tags/%E5%A4%8D%E7%9B%98/">复盘</a></div><div class="post_share"><div class="social-share" data-image="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/ov0911/" title="记录一次电子书入库（2026-09-11）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">记录一次电子书入库（2026-09-11）</div></div></a></div><div class="next-post pull-right"><a href="/posts/ov0909/" title="记录一次重连风暴的排查（2026-09-09）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">记录一次重连风暴的排查（2026-09-09）</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/ov0622/" title="记录一次例行巡检（2026-06-22）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-22</div><div class="title">记录一次例行巡检（2026-06-22）</div></div></a></div><div><a href="/posts/ov0610/" title="记录一次回测链路的抢修（2026-06-10）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-10</div><div class="title">记录一次回测链路的抢修（2026-06-10）</div></div></a></div><div><a href="/posts/ov0731/" title="记录一次实盘前的复盘（2026-07-31）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-31</div><div class="title">记录一次实盘前的复盘（2026-07-31）</div></div></a></div><div><a href="/posts/ov0611/" title="记录一次接口文档的系统学习（2026-06-11）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-11</div><div class="title">记录一次接口文档的系统学习（2026-06-11）</div></div></a></div><div><a href="/posts/ov0612/" title="记录一次新数据源的接入（2026-06-12）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-12</div><div class="title">记录一次新数据源的接入（2026-06-12）</div></div></a></div><div><a href="/posts/ov0816/" title="记录一次研究框架的固化（2026-08-16）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-16</div><div class="title">记录一次研究框架的固化（2026-08-16）</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Twikoo</span><span id="switch-btn"></span><span class="second-comment">Giscus</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://demohapi.4everland.link/ipfs/bafybeigczmfcg5rhbuvgajgjrihah4jpk63n5cjtey62dy5ul72puh37qq" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">DEMOHAPI</div><div class="author-info__description">Enjoy your life forever!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">51</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/wz-git-hub"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://twitter.com/wwwdemohapi" rel="external nofollow noreferrer" target="_blank" title="twitter"><i class="fab fa-twitter" style="color: #2DAAE2;"></i></a><a class="social-icon" href="mailto:demohapi@foxmail.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><p style="text\-align:center;">如果你还能看到这个Blog！</p> <p style="text\-align:center;">就是我永恒小世界的胜利！</p> <img src="https://demohapi.4everland.link/ipfs/bafkreiebp4yzbtc6futxkm74r452kctuky2ip4nzif2tjwam25mrjecks4" title="我的钱包"></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E5%BF%83%E8%B7%B3%E7%9A%84%E4%BF%AE%E5%A4%8D%EF%BC%882026-09-10%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">记录一次心跳的修复（2026-09-10）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E4%B8%80%E6%9D%A1-130-%E7%A7%92%E7%9A%84%E8%A7%84%E5%BE%8B%E5%BC%80%E5%A7%8B"><span class="toc-number">1.1.</span> <span class="toc-text">从一条 130 秒的规律开始</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%BA%E7%9D%80-last-success-ts-%E5%BE%80%E4%B8%8B%E6%8C%96"><span class="toc-number">1.2.</span> <span class="toc-text">顺着 _last_success_ts 往下挖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E4%B8%AA%E9%80%89%E9%A1%B9%E9%87%8C%EF%BC%8C%E9%80%89%E6%9C%80%E4%BE%BF%E5%AE%9C%E7%9A%84%E9%82%A3%E4%B8%AA"><span class="toc-number">1.3.</span> <span class="toc-text">三个选项里，选最便宜的那个</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E5%AE%8C%E4%B9%8B%E5%90%8E%EF%BC%8C%E5%85%88%E6%8A%8A%E8%AF%9D%E6%94%B6%E5%9B%9E%E6%9D%A5"><span class="toc-number">1.4.</span> <span class="toc-text">修完之后，先把话收回来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%A6%E4%B8%80%E5%A4%B4%EF%BC%9A%E4%B8%80%E4%B8%AA%E4%B8%8D%E4%BC%9A%E5%86%8D%E8%AF%B4%E8%AF%9D%E7%9A%84%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.5.</span> <span class="toc-text">另一头：一个不会再说话的服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BF%83%E8%B7%B3%E8%BF%87%E6%9C%9F%E7%9A%84%E6%BA%90%E5%A4%B4"><span class="toc-number">1.6.</span> <span class="toc-text">心跳过期的源头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A9%E4%B8%8A%E7%9A%84%E9%82%A3%E6%9C%AC%E8%B4%A6"><span class="toc-number">1.7.</span> <span class="toc-text">早上的那本账</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-number">1.8.</span> <span class="toc-text">最后</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0911/" title="记录一次电子书入库（2026-09-11）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次电子书入库（2026-09-11）"/></a><div class="content"><a class="title" href="/posts/ov0911/" title="记录一次电子书入库（2026-09-11）">记录一次电子书入库（2026-09-11）</a><time datetime="2026-09-11T14:10:00.000Z" title="发表于 2026-09-11 22:10:00">2026-09-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0910/" title="记录一次心跳的修复（2026-09-10）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次心跳的修复（2026-09-10）"/></a><div class="content"><a class="title" href="/posts/ov0910/" title="记录一次心跳的修复（2026-09-10）">记录一次心跳的修复（2026-09-10）</a><time datetime="2026-09-10T14:30:00.000Z" title="发表于 2026-09-10 22:30:00">2026-09-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0909/" title="记录一次重连风暴的排查（2026-09-09）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次重连风暴的排查（2026-09-09）"/></a><div class="content"><a class="title" href="/posts/ov0909/" title="记录一次重连风暴的排查（2026-09-09）">记录一次重连风暴的排查（2026-09-09）</a><time datetime="2026-09-09T14:30:00.000Z" title="发表于 2026-09-09 22:30:00">2026-09-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0908/" title="记录一次并发数的自检（2026-09-08）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次并发数的自检（2026-09-08）"/></a><div class="content"><a class="title" href="/posts/ov0908/" title="记录一次并发数的自检（2026-09-08）">记录一次并发数的自检（2026-09-08）</a><time datetime="2026-09-08T14:10:00.000Z" title="发表于 2026-09-08 22:10:00">2026-09-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0907/" title="记录一次依赖的坑（2026-09-07）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次依赖的坑（2026-09-07）"/></a><div class="content"><a class="title" href="/posts/ov0907/" title="记录一次依赖的坑（2026-09-07）">记录一次依赖的坑（2026-09-07）</a><time datetime="2026-09-07T13:15:00.000Z" title="发表于 2026-09-07 21:15:00">2026-09-07</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By DEMOHAPI</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><div class="js-pjax"><script>(() => {
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-api-pied-three.vercel.app',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') setTimeout(init,0)
+    else getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(init)
+  }
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-api-pied-three.vercel.app',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else {
+      loadTwikoo()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script><script>(()=>{
+  const getGiscusTheme = theme => {
+    return theme === 'dark' ? 'dark' : 'light'
+  }
+
+  const loadGiscus = () => {
+    const config = Object.assign({
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'wz-git-hub/wz-git-hub.github.io',
+      'data-repo-id': 'R_kgDOKu6rHA',
+      'data-category-id': 'DIC_kwDOKu6rHM4CbGGw',
+      'data-mapping': 'pathname',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true
+    },null)
+
+    const ele = document.createElement('script')
+    for (let key in config) {
+      ele.setAttribute(key, config[key])
+    }
+    document.getElementById('giscus-wrap').appendChild(ele)
+  }
+
+  const changeGiscusTheme = theme => {
+    const sendMessage = message => {
+      const iframe = document.querySelector('iframe.giscus-frame')
+      if (!iframe) return
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+    }
+
+    sendMessage({
+      setConfig: {
+        theme: getGiscusTheme(theme)
+      }
+    });
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if ('Twikoo' === 'Giscus' || !false) {
+    if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment= loadGiscus
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

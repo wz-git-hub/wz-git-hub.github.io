@@ -1,0 +1,472 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>记录一次主流币系统的落地（2026-07-07） | Forever BLog</title><meta name="author" content="DEMOHAPI"><meta name="copyright" content="DEMOHAPI"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="14 个策略引擎和第一批仓位">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记录一次主流币系统的落地（2026-07-07）">
+<meta property="og:url" content="https://blog.demo.fan/posts/ov0707/">
+<meta property="og:site_name" content="Forever BLog">
+<meta property="og:description" content="14 个策略引擎和第一批仓位">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi">
+<meta property="article:published_time" content="2026-07-07T14:20:00.000Z">
+<meta property="article:modified_time" content="2026-10-12T01:47:05.271Z">
+<meta property="article:author" content="DEMOHAPI">
+<meta property="article:tag" content="量化">
+<meta property="article:tag" content="策略">
+<meta property="article:tag" content="主流币">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi"><link rel="shortcut icon" href="https://demohapi.4everland.link/ipfs/bafkreicb6jujwvhw4zfl6d2ki27n3zuofgf4t3wkoavkfqoxerlcycseyq"><link rel="canonical" href="https://blog.demo.fan/posts/ov0707/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googlefonts.cn/css?family=Kaushan+Script" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"简","msgToSimplifiedChinese":"繁"},
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"距离上次更新已经过了","messageNext":"天，文章所描述的內容可能已经发生变化，请留意。"},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":10,"languages":{"author":"作者: DEMOHAPI","link":"链接: ","source":"来源: Forever BLog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '记录一次主流币系统的落地（2026-07-07）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-10-12 09:47:05'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="alternate" href="/atom.xml" title="Forever BLog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://demohapi.4everland.link/ipfs/bafybeigczmfcg5rhbuvgajgjrihah4jpk63n5cjtey62dy5ul72puh37qq" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">51</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/books/"><i class="fa-fw fas fa-book-reader"></i><span> 书库</span></a></div><div class="menus_item"><a class="site-page" href="/news/"><i class="fa-fw fas fa-newspaper"></i><span> 资讯</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-book"></i><span> 高级</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://stats.uptimerobot.com/5pXZ1tgAl5"><span> 🚀 服务状态</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi')"><nav id="nav"><span id="blog-info"><a href="/" title="Forever BLog"><img class="site-icon" src="https://demohapi.4everland.link/ipfs/bafkreih6xrehehlw2eqm4k2trkiagblz6w6ueybwjbvnosmek2d4ppxoka"/></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/books/"><i class="fa-fw fas fa-book-reader"></i><span> 书库</span></a></div><div class="menus_item"><a class="site-page" href="/news/"><i class="fa-fw fas fa-newspaper"></i><span> 资讯</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-book"></i><span> 高级</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://stats.uptimerobot.com/5pXZ1tgAl5"><span> 🚀 服务状态</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">记录一次主流币系统的落地（2026-07-07）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-07T14:20:00.000Z" title="发表于 2026-07-07 22:20:00">2026-07-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-12T01:47:05.271Z" title="更新于 2026-10-12 09:47:05">2026-10-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Docs%E6%96%87%E6%AA%94/">Docs文檔</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="记录一次主流币系统的落地（2026-07-07）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/posts/ov0707/#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="记录一次主流币系统的落地（2026-07-07）"><a href="#记录一次主流币系统的落地（2026-07-07）" class="headerlink" title="记录一次主流币系统的落地（2026-07-07）"></a>记录一次主流币系统的落地（2026-07-07）</h1><p><strong>把&quot;想做&quot;变成&quot;在做&quot;，中间隔的是一个能自己跑起来的系统</strong></p>
+<p>前一天定了方向：做链上合约可用的 14 个高级策略，全部做进去。</p>
+<p>这天就是落地——数据采集层、14 个策略引擎、回测引擎、预计算脚本、展示页，以及第一批真实仓位。</p>
+<hr>
+<h2 id="14-个策略，分五类"><a href="#14-个策略，分五类" class="headerlink" title="14 个策略，分五类"></a>14 个策略，分五类</h2><p>策略清单这么落：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>A. 资金费率类</strong></td>
+<td>1. 费率反转 · 2. 费率趋势共振 · 3. 费率套利</td>
+</tr>
+<tr>
+<td><strong>B. 持仓量类</strong></td>
+<td>4. OI 背离 · 5. 多空比反转 · 6. 清算磁吸</td>
+</tr>
+<tr>
+<td><strong>C. 量价类</strong></td>
+<td>7. 盘口不平衡 · 8. 鲸鱼追踪 · 9. 放量突破</td>
+</tr>
+<tr>
+<td><strong>D. 技术指标类</strong></td>
+<td>10. ADX 多周期 · 11. SuperTrend · 12. RSI 背离+量</td>
+</tr>
+<tr>
+<td><strong>E. 宏观情绪类</strong></td>
+<td>13. BTC 主导率 · 14. 恐贪逆向</td>
+</tr>
+</tbody></table>
+<p>有几条是链上独有的：<strong>资金费率、未平仓量、多空比、链上订单簿</strong>——数据透明、CEX 拿不到。这也是&quot;链上合约&quot;这个选择真正的价值所在。</p>
+<h2 id="从数据到页面，一共六个模块"><a href="#从数据到页面，一共六个模块" class="headerlink" title="从数据到页面，一共六个模块"></a>从数据到页面，一共六个模块</h2><p>落地的文件是这些：</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>maincoin_data.py</code></td>
+<td><strong>数据采集层</strong>（费率 &#x2F; OI &#x2F; 多空比 &#x2F; 订单簿 &#x2F; 大单 &#x2F; 全球情绪 &#x2F; 高级指标）</td>
+</tr>
+<tr>
+<td><code>maincoin_strategy.py</code></td>
+<td><strong>14 个策略引擎</strong> + 兼容旧策略</td>
+</tr>
+<tr>
+<td><code>maincoin_backtest.py</code></td>
+<td>回测引擎（兼容新旧策略）</td>
+</tr>
+<tr>
+<td><code>mc_precompute.py</code></td>
+<td>预计算脚本（采集 + 策略 + 回测）</td>
+</tr>
+<tr>
+<td><code>pages/16_maincoin_strategy.py</code></td>
+<td>策略中心展示页（4 个 Tab）</td>
+</tr>
+<tr>
+<td><code>pages/17_maincoin_paper.py</code></td>
+<td>独立模拟交易页</td>
+</tr>
+</tbody></table>
+<p>写的过程中撞了几个必须记的坑：</p>
+<ul>
+<li><strong><code>signal</code> 是 MySQL 保留字</strong>——建表时报 <code>1064</code> 语法错误，加反引号解决；后来替换成新策略引擎时，又批量修了一轮</li>
+<li><strong>表缺 <code>adx</code> 列</strong>——14 个策略里新增的技术指标字段</li>
+<li><strong>回测 <code>PARAMS</code> 缺旧 key</strong>——新策略引擎替换了旧函数名，回测报参数缺失，加回兼容函数才跑通</li>
+<li><strong>SuperTrend 的 Series 比较问题</strong>——DataFrame 操作下比较 Series 出问题，最后把这条策略简化成 MA 交叉的实现</li>
+</ul>
+<p>改的时候守了一条：<strong>只动新建的表，不碰原有页面的任何代码。</strong> 一个新模块不该以打坏旧页面为代价。</p>
+<h2 id="库里多出来的那几张表"><a href="#库里多出来的那几张表" class="headerlink" title="库里多出来的那几张表"></a>库里多出来的那几张表</h2><p>预计算跑完，多了这么几张表：</p>
+<table>
+<thead>
+<tr>
+<th>表名</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mc_top_coins</code></td>
+<td>成交量前 10 币种列表</td>
+</tr>
+<tr>
+<td><code>mc_perp_data</code></td>
+<td>链上合约实时数据（费率、OI、多空比等）</td>
+</tr>
+<tr>
+<td><code>mc_bt_results</code></td>
+<td>回测结果 + 净值曲线 + 交易记录</td>
+</tr>
+<tr>
+<td><code>mc_signals_latest</code></td>
+<td>14 个策略最新信号</td>
+</tr>
+<tr>
+<td><code>mc_sim_account</code></td>
+<td>模拟账户</td>
+</tr>
+<tr>
+<td><code>mc_sim_positions</code></td>
+<td>实时持仓</td>
+</tr>
+<tr>
+<td><code>mc_sim_trades</code></td>
+<td>已平仓交易记录</td>
+</tr>
+</tbody></table>
+<p>信号跑完一共 <strong>140 条</strong>，分布是 <strong>35 LONG &#x2F; 5 SHORT &#x2F; 100 HOLD</strong>。当前最强的几条：</p>
+<table>
+<thead>
+<tr>
+<th>信号</th>
+<th>置信度</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BTC funding_trend LONG</td>
+<td>90%</td>
+<td>趋势多头 + 费率正 + ADX&#x3D;32</td>
+</tr>
+<tr>
+<td>ETH funding_trend LONG</td>
+<td>90%</td>
+<td>趋势多头 + 费率正 + ADX&#x3D;45</td>
+</tr>
+<tr>
+<td>ZEC whale_tracking LONG</td>
+<td>90%</td>
+<td>鲸鱼买入 买卖比&#x3D;15.5</td>
+</tr>
+<tr>
+<td>BTC orderbook_imbalance SHORT</td>
+<td>85%</td>
+<td>卖盘强势 imbalance&#x3D;−0.77</td>
+</tr>
+</tbody></table>
+<h2 id="从-点按钮-到-打开就有"><a href="#从-点按钮-到-打开就有" class="headerlink" title="从&quot;点按钮&quot;到&quot;打开就有&quot;"></a>从&quot;点按钮&quot;到&quot;打开就有&quot;</h2><p>展示层的要求一路在变，最后定型成一句话：<strong>页面只读库，零计算。</strong></p>
+<p>策略概览、实时信号、回测三个 Tab 全部改成打开即显示，不再有任何 <code>st.button()</code>。数据由 <code>python mc_precompute.py</code> 提前算好写库。</p>
+<p>这样做的好处很直接：打开页面是<strong>秒级</strong>，而且每次看到的是同一份&quot;快照&quot;，不用怀疑两个人刷出来的数不一样。</p>
+<h2 id="5-个初始仓位"><a href="#5-个初始仓位" class="headerlink" title="5 个初始仓位"></a>5 个初始仓位</h2><p>系统跑起来了，但模拟交易里一笔交易都没有。查下来是个典型的&quot;没接线&quot;问题：</p>
+<p><strong>模拟交易读的是旧表 <code>mc_sim_signals</code>（0 条），而 14 个策略的结果在 <code>mc_signals_latest</code>（40 条活跃信号）。两个系统根本没打通。</strong></p>
+<p>修 <code>maincoin_paper.py</code> 改成读 <code>mc_signals_latest</code>，同时让它<strong>跳过没有合约的币种</strong>（TLM 就会卡住），然后跑了一轮，开出 <strong>5 个多头仓位</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>交易对</th>
+<th>方向</th>
+<th>入场价</th>
+<th>仓位</th>
+<th>策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BTC&#x2F;USDT</td>
+<td>LONG</td>
+<td>$61,634</td>
+<td>$1,500（15%）</td>
+<td>费率趋势共振</td>
+</tr>
+<tr>
+<td>ETH&#x2F;USDT</td>
+<td>LONG</td>
+<td>$1,734</td>
+<td>$1,500（15%）</td>
+<td>费率趋势共振</td>
+</tr>
+<tr>
+<td>BNB&#x2F;USDT</td>
+<td>LONG</td>
+<td>$571</td>
+<td>$1,500（15%）</td>
+<td>费率趋势共振</td>
+</tr>
+<tr>
+<td>XRP&#x2F;USDT</td>
+<td>LONG</td>
+<td>$1.11</td>
+<td>$1,500（15%）</td>
+<td>费率趋势共振</td>
+</tr>
+<tr>
+<td>TRX&#x2F;USDT</td>
+<td>LONG</td>
+<td>$0.33</td>
+<td>$1,500（15%）</td>
+<td>鲸鱼追踪</td>
+</tr>
+</tbody></table>
+<p>账户：<strong>现金 $2,500 + 持仓 $7,500 &#x3D; 总资产 $10,000</strong>。策略来源是 <code>funding_trend</code>（4 个）加 <code>whale_tracking</code>（1 个）。</p>
+<p>顺带算了个粗账：按当前仓位和信号频率，每年大概 50-100 笔交易，预期年化 15-30%——<strong>但这个数字只是估算，先记着，别当真。</strong></p>
+<h2 id="一个-account-id-的错"><a href="#一个-account-id-的错" class="headerlink" title="一个 account_id 的错"></a>一个 account_id 的错</h2><p>仓位开好了，页面却显示&quot;无持仓&quot;。</p>
+<p>数据库里明明有 5 条 OPEN 记录。查到最后：<strong>是手动开仓时参数传错了</strong>——<code>account_id</code> 填成了 <code>10000</code>（余额值），应该是 <code>1</code>（账户 ID）。数据修正到 <code>account_id=1</code> 之后，页面上就正常了。</p>
+<p>页面这边也顺手做了调整：<strong>16 号页去掉重复的「模拟交易」Tab</strong>（和 17 号页功能完全重复，而且原来还缺 <code>load_kline_df</code> 导入会报错），现在只留策略概览 &#x2F; 实时信号 &#x2F; 回测；<strong>17 号页把交易记录从 <code>st.write()</code> 文本行改成 <code>st.dataframe()</code> 结构化表格</strong>，列包括币种、方向、入场价、出场价、盈亏、盈亏%、策略、原因、平仓时间。</p>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>三层。</p>
+<p><strong>表面是 14 个策略、7 张表、5 个仓位</strong>——一夜之间，系统从&quot;两个技术指标&quot;长成了一个有点像样的策略中心。</p>
+<p><strong>中间是一条工程规律</strong>：一个新系统能不能自己跑起来，不取决于策略写得多漂亮，而取决于<strong>那些接缝有没有接上</strong>。模拟交易读错表、<code>account_id</code> 传错、<code>signal</code> 撞保留字——每一个都是小得不能再小的错，但每一个都足以让整个系统看起来&quot;是坏的&quot;。</p>
+<p><strong>最里面一层，是那 5 个 $1,500 的仓位。</strong></p>
+<p>它们全部来自实证出来的信号，而不是我拍的脑袋。可即便如此，它们也只是<strong>模拟</strong>——是这套系统第一次真的把钱当成有重量的东西去用。从这天起，14 个策略不再是一份清单，而是要在真实价格上接受检验的十几个赌注。</p>
+<p><strong>一个策略系统真正的起点，不是它跑通的那一刻，而是它第一次需要为自己的仓位负责的那一刻。</strong></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.demo.fan">DEMOHAPI</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.demo.fan/posts/ov0707/">https://blog.demo.fan/posts/ov0707/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">此文章版权归DEMOHAPI所有，如有转载，请注明来自原作者！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%87%8F%E5%8C%96/">量化</a><a class="post-meta__tags" href="/tags/%E7%AD%96%E7%95%A5/">策略</a><a class="post-meta__tags" href="/tags/%E4%B8%BB%E6%B5%81%E5%B8%81/">主流币</a></div><div class="post_share"><div class="social-share" data-image="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/ov0710/" title="记录一次模拟盘的排障（2026-07-10）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">记录一次模拟盘的排障（2026-07-10）</div></div></a></div><div class="next-post pull-right"><a href="/posts/ov0706/" title="记录一次换赛道（2026-07-06）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">记录一次换赛道（2026-07-06）</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/ov0706/" title="记录一次换赛道（2026-07-06）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-06</div><div class="title">记录一次换赛道（2026-07-06）</div></div></a></div><div><a href="/posts/ov0805/" title="记录一次策略的体检（2026-08-05）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-05</div><div class="title">记录一次策略的体检（2026-08-05）</div></div></a></div><div><a href="/posts/ov0606/" title="记录一次「0 BUY」的归因（2026-06-06）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-06</div><div class="title">记录一次「0 BUY」的归因（2026-06-06）</div></div></a></div><div><a href="/posts/ov0607/" title="记录一次 GMGN 接口的摸底（2026-06-07）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-07</div><div class="title">记录一次 GMGN 接口的摸底（2026-06-07）</div></div></a></div><div><a href="/posts/ov0814/" title="记录一次五个候选因子的验证（2026-08-14）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-14</div><div class="title">记录一次五个候选因子的验证（2026-08-14）</div></div></a></div><div><a href="/posts/ov0622/" title="记录一次例行巡检（2026-06-22）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-22</div><div class="title">记录一次例行巡检（2026-06-22）</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Twikoo</span><span id="switch-btn"></span><span class="second-comment">Giscus</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://demohapi.4everland.link/ipfs/bafybeigczmfcg5rhbuvgajgjrihah4jpk63n5cjtey62dy5ul72puh37qq" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">DEMOHAPI</div><div class="author-info__description">Enjoy your life forever!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">51</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/wz-git-hub"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://twitter.com/wwwdemohapi" rel="external nofollow noreferrer" target="_blank" title="twitter"><i class="fab fa-twitter" style="color: #2DAAE2;"></i></a><a class="social-icon" href="mailto:demohapi@foxmail.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><p style="text\-align:center;">如果你还能看到这个Blog！</p> <p style="text\-align:center;">就是我永恒小世界的胜利！</p> <img src="https://demohapi.4everland.link/ipfs/bafkreiebp4yzbtc6futxkm74r452kctuky2ip4nzif2tjwam25mrjecks4" title="我的钱包"></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%B8%BB%E6%B5%81%E5%B8%81%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%90%BD%E5%9C%B0%EF%BC%882026-07-07%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">记录一次主流币系统的落地（2026-07-07）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#14-%E4%B8%AA%E7%AD%96%E7%95%A5%EF%BC%8C%E5%88%86%E4%BA%94%E7%B1%BB"><span class="toc-number">1.1.</span> <span class="toc-text">14 个策略，分五类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E6%95%B0%E6%8D%AE%E5%88%B0%E9%A1%B5%E9%9D%A2%EF%BC%8C%E4%B8%80%E5%85%B1%E5%85%AD%E4%B8%AA%E6%A8%A1%E5%9D%97"><span class="toc-number">1.2.</span> <span class="toc-text">从数据到页面，一共六个模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%93%E9%87%8C%E5%A4%9A%E5%87%BA%E6%9D%A5%E7%9A%84%E9%82%A3%E5%87%A0%E5%BC%A0%E8%A1%A8"><span class="toc-number">1.3.</span> <span class="toc-text">库里多出来的那几张表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E-%E7%82%B9%E6%8C%89%E9%92%AE-%E5%88%B0-%E6%89%93%E5%BC%80%E5%B0%B1%E6%9C%89"><span class="toc-number">1.4.</span> <span class="toc-text">从&quot;点按钮&quot;到&quot;打开就有&quot;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E4%B8%AA%E5%88%9D%E5%A7%8B%E4%BB%93%E4%BD%8D"><span class="toc-number">1.5.</span> <span class="toc-text">5 个初始仓位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA-account-id-%E7%9A%84%E9%94%99"><span class="toc-number">1.6.</span> <span class="toc-text">一个 account_id 的错</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-number">1.7.</span> <span class="toc-text">最后</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0911/" title="记录一次电子书入库（2026-09-11）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次电子书入库（2026-09-11）"/></a><div class="content"><a class="title" href="/posts/ov0911/" title="记录一次电子书入库（2026-09-11）">记录一次电子书入库（2026-09-11）</a><time datetime="2026-09-11T14:10:00.000Z" title="发表于 2026-09-11 22:10:00">2026-09-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0910/" title="记录一次心跳的修复（2026-09-10）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次心跳的修复（2026-09-10）"/></a><div class="content"><a class="title" href="/posts/ov0910/" title="记录一次心跳的修复（2026-09-10）">记录一次心跳的修复（2026-09-10）</a><time datetime="2026-09-10T14:30:00.000Z" title="发表于 2026-09-10 22:30:00">2026-09-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0909/" title="记录一次重连风暴的排查（2026-09-09）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次重连风暴的排查（2026-09-09）"/></a><div class="content"><a class="title" href="/posts/ov0909/" title="记录一次重连风暴的排查（2026-09-09）">记录一次重连风暴的排查（2026-09-09）</a><time datetime="2026-09-09T14:30:00.000Z" title="发表于 2026-09-09 22:30:00">2026-09-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0908/" title="记录一次并发数的自检（2026-09-08）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次并发数的自检（2026-09-08）"/></a><div class="content"><a class="title" href="/posts/ov0908/" title="记录一次并发数的自检（2026-09-08）">记录一次并发数的自检（2026-09-08）</a><time datetime="2026-09-08T14:10:00.000Z" title="发表于 2026-09-08 22:10:00">2026-09-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0907/" title="记录一次依赖的坑（2026-09-07）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次依赖的坑（2026-09-07）"/></a><div class="content"><a class="title" href="/posts/ov0907/" title="记录一次依赖的坑（2026-09-07）">记录一次依赖的坑（2026-09-07）</a><time datetime="2026-09-07T13:15:00.000Z" title="发表于 2026-09-07 21:15:00">2026-09-07</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By DEMOHAPI</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><div class="js-pjax"><script>(() => {
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-api-pied-three.vercel.app',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') setTimeout(init,0)
+    else getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(init)
+  }
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-api-pied-three.vercel.app',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else {
+      loadTwikoo()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script><script>(()=>{
+  const getGiscusTheme = theme => {
+    return theme === 'dark' ? 'dark' : 'light'
+  }
+
+  const loadGiscus = () => {
+    const config = Object.assign({
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'wz-git-hub/wz-git-hub.github.io',
+      'data-repo-id': 'R_kgDOKu6rHA',
+      'data-category-id': 'DIC_kwDOKu6rHM4CbGGw',
+      'data-mapping': 'pathname',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true
+    },null)
+
+    const ele = document.createElement('script')
+    for (let key in config) {
+      ele.setAttribute(key, config[key])
+    }
+    document.getElementById('giscus-wrap').appendChild(ele)
+  }
+
+  const changeGiscusTheme = theme => {
+    const sendMessage = message => {
+      const iframe = document.querySelector('iframe.giscus-frame')
+      if (!iframe) return
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+    }
+
+    sendMessage({
+      setConfig: {
+        theme: getGiscusTheme(theme)
+      }
+    });
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if ('Twikoo' === 'Giscus' || !false) {
+    if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment= loadGiscus
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

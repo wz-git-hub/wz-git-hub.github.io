@@ -1,0 +1,333 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>记录一次回测版本的公平化（2026-06-16） | Forever BLog</title><meta name="author" content="DEMOHAPI"><meta name="copyright" content="DEMOHAPI"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="让每个版本站到同一条起跑线上">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记录一次回测版本的公平化（2026-06-16）">
+<meta property="og:url" content="https://blog.demo.fan/posts/ov0616/">
+<meta property="og:site_name" content="Forever BLog">
+<meta property="og:description" content="让每个版本站到同一条起跑线上">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi">
+<meta property="article:published_time" content="2026-06-16T14:10:00.000Z">
+<meta property="article:modified_time" content="2026-10-12T01:46:04.374Z">
+<meta property="article:author" content="DEMOHAPI">
+<meta property="article:tag" content="量化">
+<meta property="article:tag" content="回测">
+<meta property="article:tag" content="文档">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi"><link rel="shortcut icon" href="https://demohapi.4everland.link/ipfs/bafkreicb6jujwvhw4zfl6d2ki27n3zuofgf4t3wkoavkfqoxerlcycseyq"><link rel="canonical" href="https://blog.demo.fan/posts/ov0616/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googlefonts.cn/css?family=Kaushan+Script" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"简","msgToSimplifiedChinese":"繁"},
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"距离上次更新已经过了","messageNext":"天，文章所描述的內容可能已经发生变化，请留意。"},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":10,"languages":{"author":"作者: DEMOHAPI","link":"链接: ","source":"来源: Forever BLog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '记录一次回测版本的公平化（2026-06-16）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-10-12 09:46:04'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="alternate" href="/atom.xml" title="Forever BLog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://demohapi.4everland.link/ipfs/bafybeigczmfcg5rhbuvgajgjrihah4jpk63n5cjtey62dy5ul72puh37qq" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">51</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/books/"><i class="fa-fw fas fa-book-reader"></i><span> 书库</span></a></div><div class="menus_item"><a class="site-page" href="/news/"><i class="fa-fw fas fa-newspaper"></i><span> 资讯</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-book"></i><span> 高级</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://stats.uptimerobot.com/5pXZ1tgAl5"><span> 🚀 服务状态</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi')"><nav id="nav"><span id="blog-info"><a href="/" title="Forever BLog"><img class="site-icon" src="https://demohapi.4everland.link/ipfs/bafkreih6xrehehlw2eqm4k2trkiagblz6w6ueybwjbvnosmek2d4ppxoka"/></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/books/"><i class="fa-fw fas fa-book-reader"></i><span> 书库</span></a></div><div class="menus_item"><a class="site-page" href="/news/"><i class="fa-fw fas fa-newspaper"></i><span> 资讯</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-book"></i><span> 高级</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://stats.uptimerobot.com/5pXZ1tgAl5"><span> 🚀 服务状态</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">记录一次回测版本的公平化（2026-06-16）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-06-16T14:10:00.000Z" title="发表于 2026-06-16 22:10:00">2026-06-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-12T01:46:04.374Z" title="更新于 2026-10-12 09:46:04">2026-10-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Docs%E6%96%87%E6%AA%94/">Docs文檔</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="记录一次回测版本的公平化（2026-06-16）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/posts/ov0616/#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="记录一次回测版本的公平化（2026-06-16）"><a href="#记录一次回测版本的公平化（2026-06-16）" class="headerlink" title="记录一次回测版本的公平化（2026-06-16）"></a>记录一次回测版本的公平化（2026-06-16）</h1><p><strong>一个版本跑得好，可能只是因为它被允许晚一点开始</strong></p>
+<p>前几天看榜单的时候，总觉得有些版本&quot;数据特别漂亮&quot;。但心里清楚：回测里每多一条规则，都可能是在给某一个版本开后门。</p>
+<p>所以这天不干别的，<strong>把回测器里那些不公平的地方一件件拆掉，让所有版本回到同一条起跑线上</strong>。</p>
+<hr>
+<h2 id="拆掉三处-起跑线偏差"><a href="#拆掉三处-起跑线偏差" class="headerlink" title="拆掉三处&quot;起跑线偏差&quot;"></a>拆掉三处&quot;起跑线偏差&quot;</h2><p><code>backtest_v12.py</code> 里有几处逻辑在执行&quot;区分对待&quot;，全部改掉：</p>
+<ol>
+<li><strong>去掉 v1.19 的 deploy_ts BUY 过滤</strong>（<code>backtest_v12.py</code> line 733-735）。原来每个 version 的候选被 <code>deploy_ts</code> 截断过一次，现在改成对 prefetch 的全量 hot token 独立评分，不再按时间窗口截。</li>
+<li><strong>去掉 v1.18 的 BacktestAccount 组合约束</strong>：<code>cash=inf, positions=[], recent_sells=[]</code>。也就是资金无限、不设已有仓位、不记已卖记录——只保留 <code>eng.check_buy_risk</code> 这一道单笔硬约束（holder &#x2F; liquidity &#x2F; sniper &#x2F; rug）。<code>BacktestAccount</code> 类保留、不删除，只是不再拿它当外挂的约束墙。</li>
+<li><strong><code>_simulate_sell</code> 的 sell_ts 截止改用 NOW_TS</strong>：<code>sell_ts = min(last[&quot;ts&quot;], NOW_TS)</code>。这句话的意思是——6&#x2F;16 之前的所有 token，都按&quot;持仓到今天&quot;来结算，而不是停在历史某一刻。</li>
+<li><strong>去掉 v18 返回字段</strong>，只留 <code>n_sell_before_buy</code> 和 <code>total_realized_pnl</code>。</li>
+</ol>
+<p>改完之后，v1.0 的 BUY 笔数从 <strong>7 笔涨到 221 笔</strong>，buy_ts 范围从 2026-06-13 一直延伸到 <strong>2026-06-16 23:51</strong>；限定在 808 候选池内的 <code>v1.0#baseline</code> 也有 <strong>215 笔</strong>。</p>
+<p>笔数涨了三十倍，不是因为策略变好了，而是因为<strong>它终于被允许看到全部候选</strong>。</p>
+<h2 id="数字变大不等于结论变好"><a href="#数字变大不等于结论变好" class="headerlink" title="数字变大不等于结论变好"></a>数字变大不等于结论变好</h2><p>这里要小心一件事：拆掉约束之后，所有版本的数字都会&quot;变好看&quot;，只是幅度不同。</p>
+<p>所以比较的重点不是绝对收益，而是<strong>同池、同时段下的相对表现</strong>。文档里那条线被单独标了出来——<code>v1.0</code> 自由池 +8782U、<code>baseline</code> +250U、<code>v1.22 maker</code> 信誉加权净 <strong>+76.02U</strong>。这些数字放在一起才有意义：同一个池子里的口径统一了，横向对比才站得住。</p>
+<p>反过来讲，公平化也意味着<strong>不能再拿老口径的数字给自己撑腰</strong>。之前那份&quot;v1.0 很能打&quot;的印象，有相当一部分是候选池给的，不是策略挣的。</p>
+<h2 id="一份文档，两种读法"><a href="#一份文档，两种读法" class="headerlink" title="一份文档，两种读法"></a>一份文档，两种读法</h2><p>同一天还有两件配套的活，都在给这套结论&quot;上索引&quot;。</p>
+<p>第一件是把 <code>references/v121-baseline-pool-fair-compare.md</code> 补全：头部新增一段&quot;配套总览&quot;，再加一张 9 行的关联文档索引表，覆盖 baseline 池方法、<code>restrict_to_baseline</code>、v1.0 的失真数字、v1.22 maker、CRONK lookahead 这些内容。同时在 <code>memory</code> 的 §15 末尾用 <code>viking_remember</code> 追加了关联。</p>
+<p>第二件是反向的：在 <code>mem_abba55eda6a6.md</code> 里追加 §16 关联文档索引，新增 7 个搜索关键词（<code>run_for_version</code>、<code>restrict_to_baseline</code>、v1.0 自由池 +8782U、baseline +250U、v1.22 maker 信誉加权净 +76.02U 等），再在 reference 顶部插一段&quot;配套总览&quot;指向 memory。</p>
+<p>一边是文档指向记忆，一边是记忆指向文档。<strong>目的是让下次搜索时，两个方向都能被召回。</strong></p>
+<p>验证做了 4 步：</p>
+<table>
+<thead>
+<tr>
+<th>搜索问题</th>
+<th>hit 数</th>
+<th>命中文档</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>baseline 池公平对比 &#x2F; 候选池选择偏差</td>
+<td>3</td>
+<td>mem_db6402c4f337、v121 reference、mem_abba55eda6a6</td>
+</tr>
+<tr>
+<td>11 号页 vs 12 号页 PnL 口径</td>
+<td>3</td>
+<td>v121 reference、12_page_buy_overcount、mem_abba55eda6a6</td>
+</tr>
+<tr>
+<td>v1.22 maker 信誉加权 实战</td>
+<td>3</td>
+<td>v122 reference、mem_0a599e69c41e、mem_4a0021d70fe8</td>
+</tr>
+<tr>
+<td>lookahead 假暴利 CRONK</td>
+<td>3</td>
+<td>t_xxxxxxx_cr_fix、mem_ab5c6d321804、反事实回测虚假收益修复</td>
+</tr>
+</tbody></table>
+<p>四步全部通过。</p>
+<p>还有一个细节值得记：<code>defi_dashboard</code> 目录<strong>不是 git 仓库</strong>（git history 为空、未初始化），拿不到 commit SHA。所以&quot;代码签名&quot;这条改成了用 <code>restrict_to_baseline</code> 这样的关键词替代，代码改动历史改通过 OpenViking 的 <code>session_search</code> 追溯。</p>
+<h2 id="页面也要说真话"><a href="#页面也要说真话" class="headerlink" title="页面也要说真话"></a>页面也要说真话</h2><p>同一天还修了一个不起眼、但更容易骗到人的问题：<strong>12 号反事实回测页面的数据时效</strong>。</p>
+<p><code>_load_summary()</code> 里新增了 <code>data_end_ts</code> 列，取值是 <code>bt_cf_trades</code> 的 <code>MAX(GREATEST(buy_ts, sell_ts))</code>。核下来 v1.16.4 的数据截止是 <strong>2026-06-14 23:57:51</strong>——不是之前说的 6&#x2F;12，而是最后一条 SELL 的时间。排名表格也加了一列「数据截止」，每一行都标清楚自己是哪天的数。</p>
+<p>时效警告直接重写成一句大白话：</p>
+<blockquote>
+<p>⚠️ <strong>数据已过时 — 这不是实时数据</strong></p>
+</blockquote>
+<p>并且说清楚三件事：这里展示的是 <code>backtest_runner.py</code> 预计算的<strong>快照回测结果</strong>，不是 <code>sim_decisions</code> 的实时数据；想看实时 BUY 去 11 号页 v1.23；想刷新 v1.16.4 得重跑 <code>backtest_runner.py</code>。警告阈值也从 3 天收紧到 <strong>1 天</strong>。</p>
+<p>改完之后，页面上&quot;我是不是在看一份过期报表&quot;这件事，一眼就能看出来。</p>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>这一天的收获也分三层。</p>
+<p><strong>最表面的是那 221 笔 BUY</strong>——数字涨了三十倍，看着像策略突然开窍了。但它其实什么都没变，只是约束被拿掉了。</p>
+<p><strong>中间一层是那条口径纪律</strong>：比较策略之前，先把候选池、时间段、约束条件对齐。对齐之前的一切绝对值，都是噪音。</p>
+<p><strong>最里面一层，是那句&quot;页面也要说真话&quot;。</strong></p>
+<p>公平对比不只是回测器里的事。<strong>一个显示着过期数据的漂亮页面，和一份被候选池喂出来的假收益，是同一种病</strong>——它们都在让人看到一个自己愿意相信的结论。拆掉 <code>deploy_ts</code> 的过滤容易，难的是<strong>主动把&quot;这数据其实已经三天没更新了&quot;这行字，也摆到最显眼的地方</strong>。</p>
+<p>那天之后我给自己加了一条：<strong>下结论之前，先问一句&quot;这个结果是它挣的，还是我给的&quot;。</strong></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.demo.fan">DEMOHAPI</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.demo.fan/posts/ov0616/">https://blog.demo.fan/posts/ov0616/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">此文章版权归DEMOHAPI所有，如有转载，请注明来自原作者！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%87%8F%E5%8C%96/">量化</a><a class="post-meta__tags" href="/tags/%E5%9B%9E%E6%B5%8B/">回测</a><a class="post-meta__tags" href="/tags/%E6%96%87%E6%A1%A3/">文档</a></div><div class="post_share"><div class="social-share" data-image="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/ov0617/" title="记录一次版本的收尾（2026-06-17）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">记录一次版本的收尾（2026-06-17）</div></div></a></div><div class="next-post pull-right"><a href="/posts/ov0615/" title="记录一次看板数据丢失的修复（2026-06-15）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">记录一次看板数据丢失的修复（2026-06-15）</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/ov0814/" title="记录一次五个候选因子的验证（2026-08-14）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-14</div><div class="title">记录一次五个候选因子的验证（2026-08-14）</div></div></a></div><div><a href="/posts/ov0731/" title="记录一次实盘前的复盘（2026-07-31）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-31</div><div class="title">记录一次实盘前的复盘（2026-07-31）</div></div></a></div><div><a href="/posts/ov0801/" title="记录一次横截面回测框架（2026-08-01）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-01</div><div class="title">记录一次横截面回测框架（2026-08-01）</div></div></a></div><div><a href="/posts/ov0813/" title="记录一次给策略立规矩（2026-08-13）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-13</div><div class="title">记录一次给策略立规矩（2026-08-13）</div></div></a></div><div><a href="/posts/ov0606/" title="记录一次「0 BUY」的归因（2026-06-06）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-06</div><div class="title">记录一次「0 BUY」的归因（2026-06-06）</div></div></a></div><div><a href="/posts/ov0607/" title="记录一次 GMGN 接口的摸底（2026-06-07）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-07</div><div class="title">记录一次 GMGN 接口的摸底（2026-06-07）</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="comment-switch"><span class="first-comment">Twikoo</span><span id="switch-btn"></span><span class="second-comment">Giscus</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://demohapi.4everland.link/ipfs/bafybeigczmfcg5rhbuvgajgjrihah4jpk63n5cjtey62dy5ul72puh37qq" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">DEMOHAPI</div><div class="author-info__description">Enjoy your life forever!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">51</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/wz-git-hub"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://twitter.com/wwwdemohapi" rel="external nofollow noreferrer" target="_blank" title="twitter"><i class="fab fa-twitter" style="color: #2DAAE2;"></i></a><a class="social-icon" href="mailto:demohapi@foxmail.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><p style="text\-align:center;">如果你还能看到这个Blog！</p> <p style="text\-align:center;">就是我永恒小世界的胜利！</p> <img src="https://demohapi.4everland.link/ipfs/bafkreiebp4yzbtc6futxkm74r452kctuky2ip4nzif2tjwam25mrjecks4" title="我的钱包"></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E5%9B%9E%E6%B5%8B%E7%89%88%E6%9C%AC%E7%9A%84%E5%85%AC%E5%B9%B3%E5%8C%96%EF%BC%882026-06-16%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">记录一次回测版本的公平化（2026-06-16）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%86%E6%8E%89%E4%B8%89%E5%A4%84-%E8%B5%B7%E8%B7%91%E7%BA%BF%E5%81%8F%E5%B7%AE"><span class="toc-number">1.1.</span> <span class="toc-text">拆掉三处&quot;起跑线偏差&quot;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E5%AD%97%E5%8F%98%E5%A4%A7%E4%B8%8D%E7%AD%89%E4%BA%8E%E7%BB%93%E8%AE%BA%E5%8F%98%E5%A5%BD"><span class="toc-number">1.2.</span> <span class="toc-text">数字变大不等于结论变好</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BB%BD%E6%96%87%E6%A1%A3%EF%BC%8C%E4%B8%A4%E7%A7%8D%E8%AF%BB%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">一份文档，两种读法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B5%E9%9D%A2%E4%B9%9F%E8%A6%81%E8%AF%B4%E7%9C%9F%E8%AF%9D"><span class="toc-number">1.4.</span> <span class="toc-text">页面也要说真话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-number">1.5.</span> <span class="toc-text">最后</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0911/" title="记录一次电子书入库（2026-09-11）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次电子书入库（2026-09-11）"/></a><div class="content"><a class="title" href="/posts/ov0911/" title="记录一次电子书入库（2026-09-11）">记录一次电子书入库（2026-09-11）</a><time datetime="2026-09-11T14:10:00.000Z" title="发表于 2026-09-11 22:10:00">2026-09-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0910/" title="记录一次心跳的修复（2026-09-10）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次心跳的修复（2026-09-10）"/></a><div class="content"><a class="title" href="/posts/ov0910/" title="记录一次心跳的修复（2026-09-10）">记录一次心跳的修复（2026-09-10）</a><time datetime="2026-09-10T14:30:00.000Z" title="发表于 2026-09-10 22:30:00">2026-09-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0909/" title="记录一次重连风暴的排查（2026-09-09）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次重连风暴的排查（2026-09-09）"/></a><div class="content"><a class="title" href="/posts/ov0909/" title="记录一次重连风暴的排查（2026-09-09）">记录一次重连风暴的排查（2026-09-09）</a><time datetime="2026-09-09T14:30:00.000Z" title="发表于 2026-09-09 22:30:00">2026-09-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0908/" title="记录一次并发数的自检（2026-09-08）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次并发数的自检（2026-09-08）"/></a><div class="content"><a class="title" href="/posts/ov0908/" title="记录一次并发数的自检（2026-09-08）">记录一次并发数的自检（2026-09-08）</a><time datetime="2026-09-08T14:10:00.000Z" title="发表于 2026-09-08 22:10:00">2026-09-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0907/" title="记录一次依赖的坑（2026-09-07）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次依赖的坑（2026-09-07）"/></a><div class="content"><a class="title" href="/posts/ov0907/" title="记录一次依赖的坑（2026-09-07）">记录一次依赖的坑（2026-09-07）</a><time datetime="2026-09-07T13:15:00.000Z" title="发表于 2026-09-07 21:15:00">2026-09-07</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By DEMOHAPI</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><div class="js-pjax"><script>(() => {
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-api-pied-three.vercel.app',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') setTimeout(init,0)
+    else getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(init)
+  }
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-api-pied-three.vercel.app',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else {
+      loadTwikoo()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script><script>(()=>{
+  const getGiscusTheme = theme => {
+    return theme === 'dark' ? 'dark' : 'light'
+  }
+
+  const loadGiscus = () => {
+    const config = Object.assign({
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'wz-git-hub/wz-git-hub.github.io',
+      'data-repo-id': 'R_kgDOKu6rHA',
+      'data-category-id': 'DIC_kwDOKu6rHM4CbGGw',
+      'data-mapping': 'pathname',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true
+    },null)
+
+    const ele = document.createElement('script')
+    for (let key in config) {
+      ele.setAttribute(key, config[key])
+    }
+    document.getElementById('giscus-wrap').appendChild(ele)
+  }
+
+  const changeGiscusTheme = theme => {
+    const sendMessage = message => {
+      const iframe = document.querySelector('iframe.giscus-frame')
+      if (!iframe) return
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+    }
+
+    sendMessage({
+      setConfig: {
+        theme: getGiscusTheme(theme)
+      }
+    });
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if ('Twikoo' === 'Giscus' || !false) {
+    if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment= loadGiscus
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
