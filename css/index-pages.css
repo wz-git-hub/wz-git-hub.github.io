@@ -1,0 +1,400 @@
+/* ============================================================
+   站点索引页统一样式（归档 / 分类 / 标签）
+   适用主题：butterfly 4.10.0（theme_color 未启用，主色取主题默认 #49B1F5）
+   ------------------------------------------------------------
+   目的：这三个页面原先是主题默认的朴素列表 ——
+     · /archives/  只有一条时间轴，同一年内不再分月，顶部无任何统计
+     · /categories/ 只有 list_categories() 输出的两行文字（本博客仅 2 个分类）
+     · /tags/      只有随机排序的标签云，不显示每个标签的文章数
+   本文件配合 layout/includes/mixins/index-nav.pug，把三页做成
+   信息量一致、互相可达的「站点索引」：
+     · .ix-stats  全局统计条（篇数 / 月份跨度 / 分类数 / 标签数）
+     · .ix-nav    三页互链胶囊
+     · .cat-*     分类卡片（名称 / 篇数 / 占比条 / 时间跨度 / 最近文章）
+     · .top-tags  热门标签排行（计数条）
+   全部类名以 ix- / cat- / tt- 前缀命名，不与主题既有样式冲突。
+   深浅色通过 html[data-theme="dark"] 切换，不用主题内部 Stylus 变量。
+   ============================================================ */
+
+:root {
+  --ix-accent: #49b1f5;
+  --ix-line: rgba(125, 125, 125, .22);
+  --ix-sub: #858585;
+  --ix-chip: rgba(125, 125, 125, .10);
+  --ix-card: rgba(125, 125, 125, .05);
+}
+
+html[data-theme="dark"] {
+  --ix-line: rgba(255, 255, 255, .15);
+  --ix-sub: #a3a3a3;
+  --ix-chip: rgba(255, 255, 255, .09);
+  --ix-card: rgba(255, 255, 255, .04);
+}
+
+/* ---------- 1. 全局统计条 ---------- */
+.ix-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+  gap: 10px;
+  margin: 0 0 16px;
+}
+
+.ix-stat {
+  padding: 12px 6px;
+  text-align: center;
+  border: 1px solid var(--ix-line);
+  border-radius: 10px;
+  background: var(--ix-card);
+}
+
+.ix-stat b {
+  display: block;
+  font-size: 1.45rem;
+  line-height: 1.25;
+  font-weight: 700;
+  color: var(--ix-accent);
+}
+
+.ix-stat span {
+  display: block;
+  margin-top: 2px;
+  font-size: .76rem;
+  color: var(--ix-sub);
+}
+
+/* ---------- 2. 三页互链 ---------- */
+.ix-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 18px;
+}
+
+.ix-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border: 1px solid var(--ix-line);
+  border-radius: 10px;
+  background: var(--ix-card);
+  color: inherit;
+  font-size: .93rem;
+  text-decoration: none;
+  transition: all .25s ease;
+}
+
+.ix-nav-item:hover {
+  border-color: var(--ix-accent);
+  color: var(--ix-accent);
+  transform: translateY(-2px);
+}
+
+.ix-nav-item.is-on {
+  border-color: var(--ix-accent);
+  background: var(--ix-accent);
+  color: #fff;
+  cursor: default;
+}
+
+.ix-nav-item.is-on:hover {
+  transform: none;
+}
+
+.ix-nav-num {
+  padding: 1px 8px;
+  border-radius: 20px;
+  background: var(--ix-chip);
+  font-size: .82em;
+  font-weight: 700;
+}
+
+.ix-nav-item.is-on .ix-nav-num {
+  background: rgba(255, 255, 255, .3);
+}
+
+/* ---------- 3. 区块标题 ---------- */
+.ix-hd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 24px 0 12px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.ix-hd::before {
+  content: "";
+  width: 4px;
+  height: 15px;
+  border-radius: 2px;
+  background: var(--ix-accent);
+}
+
+.ix-hd .ix-hd-sub {
+  font-size: .78rem;
+  font-weight: 400;
+  color: var(--ix-sub);
+}
+
+/* ---------- 4. 分类卡片 ---------- */
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(276px, 1fr));
+  gap: 16px;
+}
+
+.cat-card {
+  display: flex;
+  flex-direction: column;
+  /* 🔴 grid item 默认 min-width:auto —— 会被 .cat-list a 的 nowrap 长标题撑开，
+     导致列宽跑到 447px、整页横向溢出（移动端实测 bodyScrollW 466 > 375）。 */
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--ix-line);
+  border-radius: 12px;
+  background: var(--ix-card);
+  transition: border-color .25s ease, transform .25s ease;
+}
+
+.cat-card:hover {
+  border-color: var(--ix-accent);
+  transform: translateY(-2px);
+}
+
+.cat-card-hd {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.cat-name {
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.cat-name:hover {
+  color: var(--ix-accent);
+}
+
+.cat-count {
+  flex: none;
+  font-size: .8rem;
+  color: var(--ix-sub);
+}
+
+.cat-bar {
+  height: 4px;
+  margin-bottom: 8px;
+  border-radius: 3px;
+  background: var(--ix-chip);
+  overflow: hidden;
+}
+
+.cat-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--ix-accent);
+}
+
+.cat-span {
+  margin-bottom: 10px;
+  font-size: .75rem;
+  color: var(--ix-sub);
+}
+
+.cat-list {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cat-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+  padding: 5px 0;
+  border-bottom: 1px dashed var(--ix-line);
+}
+
+.cat-list li:last-child {
+  border-bottom: none;
+}
+
+.cat-list a {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  font-size: .88rem;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cat-list a:hover {
+  color: var(--ix-accent);
+}
+
+.cat-list time {
+  flex: none;
+  font-size: .74rem;
+  color: var(--ix-sub);
+}
+
+.cat-more {
+  margin-top: 10px;
+  font-size: .8rem;
+  color: var(--ix-accent);
+  text-decoration: none;
+}
+
+/* ---------- 5. 标签页：云 + 排行 ---------- */
+.ix-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 22px;
+}
+
+@media screen and (min-width: 768px) {
+  .ix-cols {
+    grid-template-columns: minmax(0, 1fr) 290px;
+    align-items: start;
+  }
+}
+
+.ix-side-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: .95rem;
+  font-weight: 700;
+}
+
+.ix-side-title::before {
+  content: "";
+  width: 4px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--ix-accent);
+}
+
+.top-tags {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.top-tags li + li {
+  margin-top: 10px;
+}
+
+.top-tags a {
+  display: grid;
+  grid-template-columns: auto minmax(40px, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.top-tags a:hover .tt-name {
+  color: var(--ix-accent);
+}
+
+.tt-name {
+  font-size: .88rem;
+  white-space: nowrap;
+}
+
+.tt-bar {
+  height: 6px;
+  border-radius: 4px;
+  background: var(--ix-chip);
+  overflow: hidden;
+}
+
+.tt-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--ix-accent);
+}
+
+.tt-n {
+  min-width: 20px;
+  font-size: .76rem;
+  color: var(--ix-sub);
+  text-align: right;
+}
+
+/* ---------- 6. 归档页：年份快速跳转 ---------- */
+.ix-years {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 6px;
+}
+
+.ix-year {
+  padding: 4px 14px;
+  border: 1px solid var(--ix-line);
+  border-radius: 20px;
+  background: var(--ix-card);
+  color: inherit;
+  font-size: .84rem;
+  text-decoration: none;
+  transition: all .25s ease;
+}
+
+.ix-year:hover {
+  border-color: var(--ix-accent);
+  background: var(--ix-accent);
+  color: #fff;
+}
+
+.ix-year b {
+  margin-left: 5px;
+  font-size: .8em;
+  opacity: .72;
+}
+
+/* 年份锚点被固定头部遮挡的补偿 */
+.article-sort-item.year {
+  scroll-margin-top: 90px;
+}
+
+/* ---------- 7. 移动端 ---------- */
+@media screen and (max-width: 768px) {
+  .ix-nav-item {
+    flex: 1 1 auto;
+    justify-content: center;
+    padding: 7px 12px;
+    font-size: .85rem;
+  }
+
+  .ix-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ix-stat b {
+    font-size: 1.22rem;
+  }
+
+  .cat-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ix-cols {
+    gap: 18px;
+  }
+}
