@@ -1,0 +1,657 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>行情 | Forever BLog</title><meta name="author" content="DEMOHAPI"><meta name="copyright" content="DEMOHAPI"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="晴雨表    行情载入中…24 小时走势 归一化涨跌幅市值榜 ✕加载更多24h 涨幅榜24h 跌幅榜公链 TVL 排行 锁仓量稳定币市值分布DeFi 协议 TVL 排行 已剔除中心化交易所📈 行情取自 CoinGecko（大盘 &#x2F; 市值榜）、DefiLlama（TVL &#x2F; 稳定币）与 Alternative.me（恐惧贪婪指数），全部为公开数据，每日自动刷新快照，页面不发起实时请求、不拖慢加载">
+<meta property="og:type" content="website">
+<meta property="og:title" content="行情">
+<meta property="og:url" content="https://blog.demo.fan/market/">
+<meta property="og:site_name" content="Forever BLog">
+<meta property="og:description" content="晴雨表    行情载入中…24 小时走势 归一化涨跌幅市值榜 ✕加载更多24h 涨幅榜24h 跌幅榜公链 TVL 排行 锁仓量稳定币市值分布DeFi 协议 TVL 排行 已剔除中心化交易所📈 行情取自 CoinGecko（大盘 &#x2F; 市值榜）、DefiLlama（TVL &#x2F; 稳定币）与 Alternative.me（恐惧贪婪指数），全部为公开数据，每日自动刷新快照，页面不发起实时请求、不拖慢加载">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://demohapi.4everland.link/ipfs/bafybeig36qwmf3k4gxhj4wpoh35p3u66bkbcwwhxfjnk2jnjw4dk42wx7y">
+<meta property="article:published_time" content="2026-10-13T02:20:00.000Z">
+<meta property="article:modified_time" content="2026-10-13T02:13:51.569Z">
+<meta property="article:author" content="DEMOHAPI">
+<meta property="article:tag" content="blog,demo,enjoy,forever">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://demohapi.4everland.link/ipfs/bafybeig36qwmf3k4gxhj4wpoh35p3u66bkbcwwhxfjnk2jnjw4dk42wx7y"><link rel="shortcut icon" href="https://demohapi.4everland.link/ipfs/bafkreicb6jujwvhw4zfl6d2ki27n3zuofgf4t3wkoavkfqoxerlcycseyq"><link rel="canonical" href="https://blog.demo.fan/market/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googlefonts.cn/css?family=Kaushan+Script" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"简","msgToSimplifiedChinese":"繁"},
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"距离上次更新已经过了","messageNext":"天，文章所描述的內容可能已经发生变化，请留意。"},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":10,"languages":{"author":"作者: DEMOHAPI","link":"链接: ","source":"来源: Forever BLog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '行情',
+  isPost: false,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2026-10-13 10:13:51'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/mobile-fix.css?v=1"><link rel="alternate" href="/atom.xml" title="Forever BLog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://demohapi.4everland.link/ipfs/bafybeigczmfcg5rhbuvgajgjrihah4jpk63n5cjtey62dy5ul72puh37qq" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">57</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">54</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/books/"><i class="fa-fw fas fa-book-reader"></i><span> 书库</span></a></div><div class="menus_item"><a class="site-page" href="/news/"><i class="fa-fw fas fa-newspaper"></i><span> 资讯</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/douyin/"><i class="fa-fw fab fa-tiktok"></i><span> 抖音</span></a></li><li><a class="site-page child" href="/market/"><i class="fa-fw fas fa-chart-line"></i><span> 行情</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-book"></i><span> 高级</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://stats.uptimerobot.com/5pXZ1tgAl5"><span> 🚀 服务状态</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-home-page fixed" id="page-header" style="background-image: url('/market/top.svg')"><nav id="nav"><span id="blog-info"><a href="/" title="Forever BLog"><img class="site-icon" src="https://demohapi.4everland.link/ipfs/bafkreih6xrehehlw2eqm4k2trkiagblz6w6ueybwjbvnosmek2d4ppxoka"/></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/books/"><i class="fa-fw fas fa-book-reader"></i><span> 书库</span></a></div><div class="menus_item"><a class="site-page" href="/news/"><i class="fa-fw fas fa-newspaper"></i><span> 资讯</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/douyin/"><i class="fa-fw fab fa-tiktok"></i><span> 抖音</span></a></li><li><a class="site-page child" href="/market/"><i class="fa-fw fas fa-chart-line"></i><span> 行情</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-book"></i><span> 高级</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://stats.uptimerobot.com/5pXZ1tgAl5"><span> 🚀 服务状态</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="page-site-info"><h1 id="site-title">行情</h1></div></header><main class="layout" id="content-inner"><div id="page"><div id="article-container"><p style="font-size:1.72em;font-weight:bold;text-align: center">
+晴雨表<br> </p>
+
+<hr>
+<div class="mk" id="mk"><div class="mk-stat" id="mkStat">行情载入中…</div><div class="mk-cards" id="mkCards"></div><div class="mk-panel"><div class="mk-phead"><div class="mk-ptitle">24 小时走势 <span class="mk-dim">归一化涨跌幅</span></div><div class="mk-legend" id="mkLegend"></div></div><div class="mk-chart" id="mkTrend"></div></div><div class="mk-panel"><div class="mk-phead"><div class="mk-ptitle">市值榜 <span class="mk-dim" id="mkTableNote"></span></div><div class="mk-search" id="mkSW"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="mkQ" type="search" placeholder="搜索币种 / 代码…（按 / 聚焦）" autocomplete="off" aria-label="搜索币种"><button class="mk-clr" id="mkClr" type="button" aria-label="清空">✕</button></div></div><div class="mk-chips" id="mkSort"></div><div class="mk-table" id="mkTable"></div><div class="mk-more" id="mkMore" style="display:none">加载更多</div></div><div class="mk-two"><div class="mk-panel"><div class="mk-ptitle">24h 涨幅榜</div><div class="mk-list" id="mkGain"></div></div><div class="mk-panel"><div class="mk-ptitle">24h 跌幅榜</div><div class="mk-list" id="mkLose"></div></div></div><div class="mk-two"><div class="mk-panel"><div class="mk-ptitle">公链 TVL 排行 <span class="mk-dim">锁仓量</span></div><div class="mk-list" id="mkChains"></div></div><div class="mk-panel"><div class="mk-ptitle">稳定币市值分布</div><div class="mk-list" id="mkStable"></div></div></div><div class="mk-panel"><div class="mk-ptitle">DeFi 协议 TVL 排行 <span class="mk-dim">已剔除中心化交易所</span></div><div class="mk-list" id="mkDefi"></div></div><div class="mk-note" id="mkNote">📈 行情取自 <b>CoinGecko</b>（大盘 / 市值榜）、<b>DefiLlama</b>（TVL / 稳定币）与 <b>Alternative.me</b>（恐惧贪婪指数），全部为公开数据，<b>每日自动刷新快照</b>，页面不发起实时请求、不拖慢加载。<br><span class="mk-dim">涨跌配色按中文习惯：<b style="color:var(--mk-up)">红涨</b> / <b style="color:var(--mk-down)">绿跌</b>。数据为抓取时的快照，仅供参考，不构成任何投资建议。</span></div></div>
+
+<style>
+.mk{
+  --ml-surface:#f7f8fa;--ml-border:rgba(0,0,0,.08);--ml-sub:#8a94a0;
+  --ml-chip:rgba(0,0,0,.04);--ml-shadow:0 6px 18px rgba(0,0,0,.08);--ml-accent:#49b1f5;
+  --mk-up:#e5484d;--mk-down:#12a150;
+  margin:22px 0 6px;position:relative;z-index:3;
+}
+[data-theme='dark'] .mk{
+  --ml-surface:#1b1d21;--ml-border:rgba(255,255,255,.10);--ml-sub:rgba(255,255,255,.45);
+  --ml-chip:rgba(255,255,255,.06);--ml-shadow:0 6px 18px rgba(0,0,0,.45);--ml-accent:#49b1f5;
+  --mk-up:#ff5c5c;--mk-down:#2ec27e;
+}
+.mk *{box-sizing:border-box}
+.mk-dim{color:var(--ml-sub)}
+.mk-stat{font-size:12.5px;color:var(--ml-sub);margin:0 0 14px;min-height:18px}
+.mk-stat b{color:var(--ml-accent);font-weight:700}
+.mk-panel{
+  background:var(--ml-surface);border:1px solid var(--ml-border);border-radius:12px;
+  padding:14px 16px;margin-bottom:14px;
+}
+.mk-phead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.mk-ptitle{font-size:14.5px;font-weight:600;color:var(--font-color)}
+.mk-ptitle .mk-dim{font-size:11.5px;font-weight:400;margin-left:6px}
+.mk-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mk-two .mk-panel{margin-bottom:14px}
+@media screen and (max-width:768px){.mk-two{grid-template-columns:1fr;gap:0}}
+
+/* ---------- 大盘卡片 ---------- */
+.mk-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:12px;margin-bottom:14px}
+.mk-card{
+  background:var(--ml-surface);border:1px solid var(--ml-border);border-radius:12px;
+  padding:12px 14px;position:relative;overflow:hidden;
+}
+.mk-card .k{font-size:11.5px;color:var(--ml-sub);white-space:nowrap}
+.mk-card .v{font-size:19px;font-weight:700;color:var(--font-color);margin-top:5px;line-height:1.25;word-break:break-all}
+.mk-card .s{font-size:11.5px;margin-top:3px;color:var(--ml-sub)}
+.mk-card.fng .v{font-size:17px}
+.mk-gauge{height:5px;border-radius:99px;margin-top:8px;background:linear-gradient(90deg,#12a150,#e8c33a,#e5484d)}
+.mk-gauge i{display:block;height:100%;width:6px;border-radius:99px;background:#fff;box-shadow:0 0 0 1.5px rgba(0,0,0,.35);transform:translateX(-3px)}
+
+/* ---------- 走势图 ---------- */
+.mk-chart{width:100%;overflow:hidden}
+.mk-chart svg{display:block;width:100%;height:auto}
+.mk-axis{font-size:11px;fill:var(--ml-sub)}
+.mk-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ml-sub)}
+.mk-legend span{display:inline-flex;align-items:center;gap:5px}
+.mk-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+
+/* ---------- 搜索 / 排序 ---------- */
+.mk-search{position:relative;flex:1 1 220px;min-width:170px;max-width:360px}
+.mk-search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:.5;pointer-events:none}
+.mk-search input{
+  width:100%;padding:7px 32px;border-radius:999px;border:1px solid var(--ml-border);
+  background:var(--ml-chip);outline:none;font-size:13px;color:var(--font-color);
+  font-family:inherit;transition:.15s;-webkit-appearance:none;
+}
+.mk-search input:focus{border-color:var(--ml-accent);background:transparent}
+.mk-search input::-webkit-search-cancel-button{display:none}
+.mk-clr{
+  position:absolute;right:6px;top:50%;transform:translateY(-50%);width:22px;height:22px;
+  border:0;border-radius:50%;background:transparent;cursor:pointer;color:var(--ml-sub);
+  display:none;line-height:1;font-size:12px;padding:0;
+}
+.mk-clr:hover{background:var(--ml-chip);color:var(--font-color)}
+.mk-search.hasval .mk-clr{display:block}
+.mk-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.mk-chip{
+  padding:4px 12px;border-radius:999px;border:1px solid var(--ml-border);
+  background:var(--ml-chip);cursor:pointer;font-size:12.5px;color:var(--font-color);
+  transition:.15s;white-space:nowrap;font-family:inherit;line-height:1.6;
+}
+.mk-chip:hover{border-color:var(--ml-accent)}
+.mk-chip.on{background:var(--ml-accent);border-color:var(--ml-accent);color:#fff;font-weight:600}
+
+/* ---------- 市值榜 ---------- */
+.mk-table{display:flex;flex-direction:column}
+.mk-th,.mk-tr{
+  display:grid;grid-template-columns:38px minmax(120px,1.5fr) 1fr 1fr 1fr 1.2fr 1.1fr;
+  gap:8px;align-items:center;padding:8px 6px;font-size:13px;
+}
+.mk-th{font-size:11.5px;color:var(--ml-sub);border-bottom:1px solid var(--ml-border);cursor:pointer;user-select:none}
+.mk-th:hover{color:var(--ml-accent)}
+.mk-th .srt{font-size:9px;margin-left:3px;opacity:.75}
+.mk-th b{font-weight:600;color:var(--font-color)}
+.mk-tr{border-bottom:1px solid var(--ml-border);transition:background .15s}
+.mk-tr:hover{background:var(--ml-chip)}
+.mk-tr:last-child{border-bottom:0}
+.mk-rk{color:var(--ml-sub);font-size:12px;text-align:center}
+.mk-coin{display:flex;align-items:center;gap:8px;min-width:0}
+.mk-coin .nm{min-width:0;overflow:hidden}
+.mk-coin .nm b{display:block;font-size:13px;font-weight:600;color:var(--font-color);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk-coin .nm span{display:block;font-size:11px;color:var(--ml-sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk-ico{
+  position:relative;width:26px;height:26px;flex:0 0 26px;border-radius:50%;
+  background:var(--ml-chip);display:inline-flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.mk-ico::after{content:attr(data-s);font-size:8.5px;font-weight:700;color:var(--ml-sub);position:absolute;letter-spacing:-.3px}
+.mk-ico img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain}
+.mk-tr .num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.mk-tr .pri{font-weight:600;color:var(--font-color)}
+.mk-chg{font-weight:600}
+.mk-chg.up{color:var(--mk-up)}
+.mk-chg.down{color:var(--mk-down)}
+.mk-chg.flat{color:var(--ml-sub)}
+.mk-tfoot{text-align:center;padding:12px 0 2px}
+.mk-more{
+  margin:12px auto 0;display:block;padding:7px 22px;border-radius:999px;border:1px solid var(--ml-border);
+  background:var(--ml-chip);color:var(--font-color);cursor:pointer;font-size:13px;font-family:inherit;
+}
+.mk-more:hover{border-color:var(--ml-accent);color:var(--ml-accent)}
+.mk-empty{padding:26px 0;text-align:center;color:var(--ml-sub);font-size:13px}
+
+/* ---------- 列表（异动 / TVL / 稳定币） ---------- */
+.mk-list{display:flex;flex-direction:column}
+.mk-row{
+  display:grid;gap:8px;align-items:center;padding:7px 2px;border-bottom:1px solid var(--ml-border);
+  font-size:13px;
+}
+.mk-row:last-child{border-bottom:0}
+.mk-row.mv{grid-template-columns:26px 62px 1fr 74px}          /* 异动：图标 代码 条 百分比 */
+.mk-row.tvl{grid-template-columns:22px minmax(0,1fr) 92px 72px} /* TVL：名次 名称 数值 变化 */
+.mk-row.stb{grid-template-columns:minmax(0,1fr) 78px 52px}     /* 稳定币：名称 市值 占比 */
+.mk-rk2{color:var(--ml-sub);font-size:11.5px;text-align:right}
+.mk-lname{min-width:0;font-weight:600;color:var(--font-color);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk-lname em{font-style:normal;font-weight:400;font-size:11px;color:var(--ml-sub);margin-left:5px}
+.mk-bar{position:relative;height:6px;border-radius:99px;background:var(--ml-chip);overflow:hidden}
+.mk-bar i{position:absolute;left:0;top:0;height:100%;border-radius:99px;background:var(--ml-accent);display:block}
+.mk-bar i.up{background:var(--mk-up)}
+.mk-bar i.down{background:var(--mk-down)}
+.mk-val{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--font-color);font-weight:600}
+.mk-sym{font-weight:600;color:var(--font-color);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk-rt{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* ---------- 底部说明 / toast ---------- */
+.mk-note{
+  margin-top:4px;padding:12px 14px;border-radius:10px;background:var(--ml-chip);
+  border:1px solid var(--ml-border);font-size:12.5px;line-height:1.85;color:var(--font-color);
+}
+#mkToast{
+  position:fixed;left:50%;bottom:76px;transform:translateX(-50%) translateY(14px);
+  background:rgba(0,0,0,.82);color:#fff;padding:9px 18px;border-radius:999px;font-size:13px;
+  z-index:9999;opacity:0;pointer-events:none;transition:.25s;max-width:80vw;text-align:center;
+}
+#mkToast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- 手机端 ---------- */
+@media screen and (max-width:768px){
+  .mk-panel{padding:12px 12px}
+  .mk-cards{grid-template-columns:repeat(2,1fr);gap:10px}
+  .mk-card .v{font-size:16px}
+  .mk-search{max-width:none;flex:1 1 100%}
+  #mk .mk-th,#mk .mk-tr{grid-template-columns:26px minmax(0,1fr) 88px 74px}
+  #mk .mk-th .c5,#mk .mk-tr .c5,#mk .mk-th .c6,#mk .mk-tr .c6,#mk .mk-th .c7,#mk .mk-tr .c7{display:none}
+  .mk-th,.mk-tr{font-size:12.5px;gap:6px}
+  .mk-row.mv{grid-template-columns:24px 54px 1fr 66px}
+  .mk-row.tvl{grid-template-columns:20px minmax(0,1fr) 78px 62px}
+  #mkToast{bottom:96px}
+}
+</style>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var DATA = null, VIEW = [], shown = 0, kw = '', sortKey = 'mcap', PAGE = 50;
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function n2(x) { var v = Number(x); return isFinite(v) ? v : null; }
+  function fmtUsd(n) {
+    n = n2(n); if (n === null) return '—';
+    var a = Math.abs(n), s = n < 0 ? '-' : '';
+    if (a >= 1e12) return s + '$' + (a / 1e12).toFixed(2) + 'T';
+    if (a >= 1e9) return s + '$' + (a / 1e9).toFixed(2) + 'B';
+    if (a >= 1e6) return s + '$' + (a / 1e6).toFixed(2) + 'M';
+    if (a >= 1e3) return s + '$' + (a / 1e3).toFixed(2) + 'K';
+    return s + '$' + a.toFixed(2);
+  }
+  function fmtPrice(n) {
+    n = n2(n); if (n === null) return '—';
+    if (n >= 1000) return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    if (n >= 1) return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (n >= 0.01) return '$' + n.toFixed(4);
+    if (n >= 0.0001) return '$' + n.toFixed(6);
+    return '$' + n.toPrecision(4);
+  }
+  function clsOf(v) { return v > 0 ? 'up' : (v < 0 ? 'down' : 'flat'); }
+  function chgHTML(v) {
+    v = n2(v);
+    if (v === null) return '<span class="mk-chg flat">—</span>';
+    return '<span class="mk-chg ' + clsOf(v) + '">' + (v > 0 ? '+' : '') + v.toFixed(2) + '%</span>';
+  }
+  function ico(sym, img) {
+    return '<span class="mk-ico" data-s="' + esc(String(sym || '').slice(0, 4)) + '">' +
+      (img ? '<img loading="lazy" decoding="async" src="' + esc(img) + '" alt="" onerror="this.style.display=\'none\'">' : '') +
+      '</span>';
+  }
+  function toast(msg) {
+    var t = $('mkToast');
+    if (!t) { t = document.createElement('div'); t.id = 'mkToast'; document.body.appendChild(t); }
+    t.textContent = msg; t.classList.add('on');
+    clearTimeout(toast._t); toast._t = setTimeout(function () { t.classList.remove('on'); }, 2400);
+  }
+
+  /* ---------------- 大盘卡片 ---------------- */
+  function renderCards() {
+    var o = DATA.overview || {}, f = DATA.fng || {}, st = DATA.stats || {};
+    var html = '';
+    html += card('总市值', fmtUsd(o.total_mcap), o.mcap_chg24h != null ? '24h ' + (o.mcap_chg24h > 0 ? '+' : '') + Number(o.mcap_chg24h).toFixed(2) + '%' : '', o.mcap_chg24h);
+    html += card('24h 成交额', fmtUsd(o.total_vol24h), '全市场', null);
+    html += card('BTC 主导', o.btc_dom != null ? Number(o.btc_dom).toFixed(2) + '%' : '—', 'ETH ' + (o.eth_dom != null ? Number(o.eth_dom).toFixed(2) + '%' : '—'), null);
+    html += card('市值变化 (24h)', o.mcap_chg24h != null ? (o.mcap_chg24h > 0 ? '+' : '') + Number(o.mcap_chg24h).toFixed(2) + '%' : '—', '较前一日', o.mcap_chg24h);
+    html += card('活跃币种', o.active_cryptos != null ? Number(o.active_cryptos).toLocaleString('en-US') : '—', 'CoinGecko 收录', null);
+    if (f && f.value != null) {
+      var v = Math.max(0, Math.min(100, Number(f.value)));
+      html += '<div class="mk-card fng"><div class="k">恐惧贪婪指数</div><div class="v">' + v + ' · ' + esc(f.label_cn || f.label || '') +
+        '</div><div class="mk-gauge"><i style="margin-left:' + v + '%"></i></div>' +
+        '<div class="s">0 极度恐惧 · 100 极度贪婪</div></div>';
+    }
+    $('mkCards').innerHTML = html;
+
+    function card(k, v, s, chg) {
+      var scol = '';
+      if (chg != null && isFinite(Number(chg)) && Number(chg) !== 0) {
+        scol = ' style="color:' + (chg > 0 ? 'var(--mk-up)' : 'var(--mk-down)') + '"';
+      }
+      return '<div class="mk-card"><div class="k">' + esc(k) + '</div><div class="v">' + v +
+        '</div><div class="s"' + scol + '>' + esc(s) + '</div></div>';
+    }
+  }
+
+  /* ---------------- 24h 走势（SVG 折线，无第三方依赖） ---------------- */
+  function drawTrend(t) {
+    var box = $('mkTrend');
+    if (!t || !t.idx || !t.idx.length || t.idx.length < 2) {
+      box.innerHTML = '<div class="mk-empty">暂无走势数据</div>'; $('mkLegend').innerHTML = ''; return;
+    }
+    var n = t.idx.length;
+    var W = 1000, H = 300, padL = 6, padR = 6, padT = 20, padB = 26;
+    var S = [{ v: t.idx, c: '#49b1f5', nm: 'Top10 指数', w: 2.2, fill: 1 }];
+    if (t.btc && t.btc.length >= n) S.push({ v: t.btc, c: '#f7931a', nm: 'BTC', w: 1.6 });
+    if (t.eth && t.eth.length >= n) S.push({ v: t.eth, c: '#8a6cf0', nm: 'ETH', w: 1.6 });
+    var mn = Infinity, mx = -Infinity, i, j, s;
+    for (i = 0; i < S.length; i++) for (j = 0; j < n; j++) { var vv = S[i].v[j]; if (vv < mn) mn = vv; if (vv > mx) mx = vv; }
+    if (!isFinite(mn) || !isFinite(mx)) { box.innerHTML = '<div class="mk-empty">暂无走势数据</div>'; return; }
+    if (mx - mn < 0.3) { mx += 0.15; mn -= 0.15; }
+    var pd = (mx - mn) * 0.14; mn -= pd; mx += pd;
+    function X(k) { return padL + k * (W - padL - padR) / (n - 1); }
+    function Y(v) { return padT + (mx - v) * (H - padT - padB) / (mx - mn); }
+    var g = '';
+    var y0 = Y(0), zeroVis = (mn < 0 && mx > 0);
+    for (i = 1; i <= 3; i++) {
+      var yy = padT + i * (H - padT - padB) / 4;
+      g += '<line x1="' + padL + '" y1="' + yy.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + yy.toFixed(1) + '" stroke="var(--ml-border)" stroke-width="1" opacity=".5"/>';
+    }
+    if (zeroVis) g += '<line x1="' + padL + '" y1="' + y0.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + y0.toFixed(1) + '" stroke="var(--ml-sub)" stroke-width="1" stroke-dasharray="5 5" opacity=".7"/>';
+    g += '<text class="mk-axis" x="' + (W - padR) + '" y="' + (padT + 12) + '" text-anchor="end">' + mx.toFixed(2) + '%</text>';
+    g += '<text class="mk-axis" x="' + (W - padR) + '" y="' + (H - padB - 6) + '" text-anchor="end">' + mn.toFixed(2) + '%</text>';
+    g += '<text class="mk-axis" x="' + padL + '" y="' + (H - 6) + '">-' + (n - 1) + 'h</text>';
+    g += '<text class="mk-axis" x="' + (X(n - 1)) + '" y="' + (H - 6) + '" text-anchor="end">现在</text>';
+    var defs = '<defs><linearGradient id="mkFill" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0%" stop-color="#49b1f5" stop-opacity=".28"/>' +
+      '<stop offset="100%" stop-color="#49b1f5" stop-opacity="0"/></linearGradient></defs>';
+    // 指数填充
+    var base = zeroVis ? y0 : (H - padB);
+    var d0 = '', area = '';
+    for (i = 0; i < n; i++) { d0 += (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(S[0].v[i]).toFixed(1) + ' '; }
+    area = d0 + 'L' + X(n - 1).toFixed(1) + ' ' + base.toFixed(1) + ' L' + X(0).toFixed(1) + ' ' + base.toFixed(1) + ' Z';
+    g += '<path d="' + area + '" fill="url(#mkFill)"/>';
+    // 各条线
+    for (i = 0; i < S.length; i++) {
+      s = S[i]; var d = '';
+      for (j = 0; j < n; j++) d += (j ? 'L' : 'M') + X(j).toFixed(1) + ' ' + Y(s.v[j]).toFixed(1) + ' ';
+      g += '<path d="' + d + '" fill="none" stroke="' + s.c + '" stroke-width="' + s.w + '" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>';
+      g += '<circle cx="' + X(n - 1).toFixed(1) + '" cy="' + Y(s.v[n - 1]).toFixed(1) + '" r="3.2" fill="' + s.c + '"/>';
+    }
+    box.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" role="img" aria-label="24 小时走势">' + defs + g + '</svg>';
+    var lg = '';
+    for (i = 0; i < S.length; i++) {
+      var last = S[i].v[n - 1];
+      lg += '<span><i style="background:' + S[i].c + '"></i>' + esc(S[i].nm) + ' ' +
+        '<b class="mk-chg ' + clsOf(last) + '">' + (last > 0 ? '+' : '') + last.toFixed(2) + '%</b></span>';
+    }
+    $('mkLegend').innerHTML = lg;
+  }
+
+  /* ---------------- 市值榜 ---------------- */
+  var SORTS = [
+    { k: 'mcap', t: '市值' }, { k: 'price', t: '价格' },
+    { k: 'chg24h', t: '24h 涨跌' }, { k: 'chg7d', t: '7d 涨跌' }, { k: 'vol24h', t: '成交额' }
+  ];
+  var sortDir = -1;   /* -1 降序 / 1 升序 */
+  function arrow(k) { return k === sortKey ? '<span class="srt">' + (sortDir < 0 ? '▼' : '▲') + '</span>' : ''; }
+  function renderSorts() {
+    var h = '';
+    for (var i = 0; i < SORTS.length; i++) {
+      h += '<button class="mk-chip' + (SORTS[i].k === sortKey ? ' on' : '') + '" data-k="' + SORTS[i].k + '" type="button">' + SORTS[i].t + arrow(SORTS[i].k) + '</button>';
+    }
+    $('mkSort').innerHTML = h;
+  }
+  function headHTML() {
+    return '<div class="mk-th">' +
+      '<div class="mk-rk">#</div>' +
+      '<div>币种</div>' +
+      '<div class="num" data-k="price">价格' + arrow('price') + '</div>' +
+      '<div class="num c4" data-k="chg24h">24h' + arrow('chg24h') + '</div>' +
+      '<div class="num c5" data-k="chg7d">7d' + arrow('chg7d') + '</div>' +
+      '<div class="num c6" data-k="mcap">市值' + arrow('mcap') + '</div>' +
+      '<div class="num c7" data-k="vol24h">24h额' + arrow('vol24h') + '</div>' +
+      '</div>';
+  }
+  function applyFilter() {
+    var q = kw.trim().toLowerCase();
+    var arr = (DATA.coins || []).slice();
+    if (q) arr = arr.filter(function (c) {
+      return (c.symbol + ' ' + c.name).toLowerCase().indexOf(q) >= 0;
+    });
+    var sk = sortKey, desc = sortDir < 0;
+    arr.sort(function (a, b) {
+      var x = n2(a[sk]), y = n2(b[sk]);
+      if (x === null) x = desc ? -Infinity : Infinity;
+      if (y === null) y = desc ? -Infinity : Infinity;
+      return desc ? (y - x) : (x - y);
+    });
+    VIEW = arr; shown = 0;
+    $('mkTable').innerHTML = headHTML();
+    renderMore();
+    $('mkTableNote').textContent = q ? '匹配 ' + VIEW.length + ' 个' : '共 ' + VIEW.length + ' 个 · 点表头可换排序';
+  }
+  function rowHTML(c) {
+    return '<div class="mk-tr">' +
+      '<div class="mk-rk">' + (c.rank || '') + '</div>' +
+      '<div class="mk-coin">' + ico(c.symbol, c.image) + '<span class="nm"><b>' + esc(c.symbol) + '</b><span>' + esc(c.name) + '</span></span></div>' +
+      '<div class="num pri">' + fmtPrice(c.price) + '</div>' +
+      '<div class="num c4">' + chgHTML(c.chg24h) + '</div>' +
+      '<div class="num c5">' + chgHTML(c.chg7d) + '</div>' +
+      '<div class="num c6">' + fmtUsd(c.mcap) + '</div>' +
+      '<div class="num c7">' + fmtUsd(c.vol24h) + '</div>' +
+      '</div>';
+  }
+  function renderMore() {
+    var buf = '', end = Math.min(shown + PAGE, VIEW.length);
+    for (var i = shown; i < end; i++) buf += rowHTML(VIEW[i]);
+    if (buf) $('mkTable').insertAdjacentHTML('beforeend', buf);
+    shown = end;
+    $('mkMore').style.display = shown < VIEW.length ? 'block' : 'none';
+    if (!VIEW.length) $('mkTable').insertAdjacentHTML('beforeend', '<div class="mk-empty">没有匹配的币种</div>');
+  }
+
+  /* ---------------- 列表渲染 ---------------- */
+  function moveRows(list) {
+    if (!list || !list.length) return '<div class="mk-empty">暂无数据</div>';
+    var mx = 0, i;
+    for (i = 0; i < list.length; i++) mx = Math.max(mx, Math.abs(Number(list[i].chg24h) || 0));
+    if (mx <= 0) mx = 1;
+    var h = '';
+    for (i = 0; i < list.length; i++) {
+      var c = list[i], v = Number(c.chg24h) || 0, w = Math.max(3, Math.abs(v) / mx * 100);
+      h += '<div class="mk-row mv">' + ico(c.symbol, c.image) +
+        '<span class="mk-sym">' + esc(c.symbol) + '</span>' +
+        '<span class="mk-bar"><i class="' + clsOf(v) + '" style="width:' + w.toFixed(1) + '%"></i></span>' +
+        chgHTML(v) + '</div>';
+    }
+    return h;
+  }
+  function tvlRows(list, kind) {
+    if (!list || !list.length) return '<div class="mk-empty">暂无数据</div>';
+    var mx = 0, i;
+    for (i = 0; i < list.length; i++) mx = Math.max(mx, Number(list[i].tvl) || 0);
+    if (mx <= 0) mx = 1;
+    var h = '';
+    for (i = 0; i < list.length; i++) {
+      var x = list[i], tvl = Number(x.tvl) || 0, w = Math.max(2, tvl / mx * 100);
+      var nm = kind === 'chain' ? (x.name_cn || x.name) : x.name;
+      var em = kind === 'chain' ? '' : (x.category ? '<em>' + esc(x.category) + '</em>' : '');
+      var chg = x.chg1d != null ? chgHTML(x.chg1d) : '<span class="mk-chg flat">—</span>';
+      h += '<div class="mk-row tvl">' +
+        '<span class="mk-rk2">' + (i + 1) + '</span>' +
+        '<span class="mk-lname"><span>' + esc(nm) + '</span>' + em +
+        '<span class="mk-bar" style="margin-top:5px"><i style="width:' + w.toFixed(1) + '%"></i></span></span>' +
+        '<span class="mk-val">' + fmtUsd(tvl) + '</span>' +
+        '<span class="mk-rt">' + chg + '</span></div>';
+    }
+    return h;
+  }
+  function stableRows(list) {
+    if (!list || !list.length) return '<div class="mk-empty">暂无数据</div>';
+    var h = '';
+    for (var i = 0; i < list.length; i++) {
+      var s = list[i], sh = Number(s.share) || 0;
+      h += '<div class="mk-row stb">' +
+        '<span class="mk-lname">' + esc(s.name) + '<em>' + esc(s.symbol) + '</em>' +
+        '<span class="mk-bar" style="margin-top:5px"><i style="width:' + Math.max(2, sh).toFixed(1) + '%"></i></span></span>' +
+        '<span class="mk-val">' + fmtUsd(s.circ) + '</span>' +
+        '<span class="mk-rt">' + sh.toFixed(1) + '%</span></div>';
+    }
+    return h;
+  }
+
+  /* ---------------- 启动 ---------------- */
+  function boot() {
+    renderCards();
+    drawTrend(DATA.trend);
+    renderSorts();
+    applyFilter();
+    $('mkGain').innerHTML = moveRows(DATA.gainers);
+    $('mkLose').innerHTML = moveRows(DATA.losers);
+    $('mkChains').innerHTML = tvlRows(DATA.chains, 'chain');
+    $('mkDefi').innerHTML = tvlRows(DATA.defi, 'defi');
+    $('mkStable').innerHTML = stableRows(DATA.stablecoins);
+    var st = DATA.stats || {};
+    $('mkStat').innerHTML = '数据快照 ' + esc(DATA.generated_at || '') + ' · 币种 <b>' + (st.coins || 0) +
+      '</b> · DeFi 协议 <b>' + (st.defi || 0) + '</b> · 公链 <b>' + (st.chains || 0) +
+      '</b> · 稳定币 <b>' + (st.stablecoins || 0) + '</b>';
+    window.addEventListener('resize', function () {
+      clearTimeout(boot._rz);
+      boot._rz = setTimeout(function () { drawTrend(DATA.trend); }, 200);
+    });
+  }
+
+  function closestBy(el, sel) {
+    while (el && el.nodeType === 1) { if (el.matches && el.matches(sel)) return el; el = el.parentNode; }
+    return null;
+  }
+  function pickSort(k) {
+    if (k === sortKey) { sortDir = -sortDir; } else { sortKey = k; sortDir = -1; }
+    renderSorts(); applyFilter();
+  }
+  document.addEventListener('click', function (e) {
+    var chip = closestBy(e.target, '.mk-chip') || closestBy(e.target, '.mk-th [data-k]');
+    if (chip && chip.getAttribute('data-k')) { pickSort(chip.getAttribute('data-k')); return; }
+    if (closestBy(e.target, '#mkMore')) { renderMore(); return; }
+    if (closestBy(e.target, '.mk-clr')) {
+      $('mkQ').value = ''; kw = ''; $('mkSW').classList.remove('hasval'); applyFilter(); return;
+    }
+  });
+  function bindSearch() {
+    var inp = $('mkQ');
+    if (!inp) return;
+    inp.addEventListener('input', function () {
+      kw = inp.value; $('mkSW').classList.toggle('hasval', !!kw.trim());
+      clearTimeout(bindSearch._t);
+      bindSearch._t = setTimeout(applyFilter, 160);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === '/' && document.activeElement !== inp && !/INPUT|TEXTAREA/.test((document.activeElement || {}).tagName || '')) {
+        e.preventDefault(); inp.focus();
+      }
+    });
+  }
+
+  function fail(msg) {
+    $('mkStat').innerHTML = '行情加载失败：' + esc(msg);
+    $('mkCards').innerHTML = '<div class="mk-panel"><div class="mk-empty">行情快照暂时不可用，请稍后刷新。若长期如此，可能是抓取任务未运行。</div></div>';
+  }
+
+  try {
+    fetch('market.json', { cache: 'no-cache' })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (d) { DATA = d; boot(); bindSearch(); })
+      .catch(function (e) { fail(e && e.message || e); });
+  } catch (e) { fail(e && e.message || e); }
+})();
+</script>
+</div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://demohapi.4everland.link/ipfs/bafybeigczmfcg5rhbuvgajgjrihah4jpk63n5cjtey62dy5ul72puh37qq" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">DEMOHAPI</div><div class="author-info__description">Enjoy your life forever!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">57</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">54</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/wz-git-hub"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://twitter.com/wwwdemohapi" rel="external nofollow noreferrer" target="_blank" title="twitter"><i class="fab fa-twitter" style="color: #2DAAE2;"></i></a><a class="social-icon" href="mailto:demohapi@foxmail.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><p style="text\-align:center;">如果你还能看到这个Blog！</p> <p style="text\-align:center;">就是我永恒小世界的胜利！</p> <img src="https://demohapi.4everland.link/ipfs/bafkreiebp4yzbtc6futxkm74r452kctuky2ip4nzif2tjwam25mrjecks4" title="我的钱包"></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/ov1008/" title="记录一次 PC 反复卡死诊断结项（2026-10-08）"><img src="https://demohapi.4everland.link/ipfs/bafybeida7wrii3n4sfbvmgohctijnrjowwhh4xx7zf5k6ecvmva6xopami" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次 PC 反复卡死诊断结项（2026-10-08）"/></a><div class="content"><a class="title" href="/posts/ov1008/" title="记录一次 PC 反复卡死诊断结项（2026-10-08）">记录一次 PC 反复卡死诊断结项（2026-10-08）</a><time datetime="2026-10-08T13:30:00.000Z" title="发表于 2026-10-08 21:30:00">2026-10-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0922/" title="记录一次从假 PnL 修到真根因的 11 天（2026-09-22）"><img src="https://demohapi.4everland.link/ipfs/bafybeig36qwmf3k4gxhj4wpoh35p3u66bkbcwwhxfjnk2jnjw4dk42wx7y" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次从假 PnL 修到真根因的 11 天（2026-09-22）"/></a><div class="content"><a class="title" href="/posts/ov0922/" title="记录一次从假 PnL 修到真根因的 11 天（2026-09-22）">记录一次从假 PnL 修到真根因的 11 天（2026-09-22）</a><time datetime="2026-09-22T13:30:00.000Z" title="发表于 2026-09-22 21:30:00">2026-09-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0920/" title="记录一次回测复盘：SL 放宽是负优化，已回退（2026-09-20）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次回测复盘：SL 放宽是负优化，已回退（2026-09-20）"/></a><div class="content"><a class="title" href="/posts/ov0920/" title="记录一次回测复盘：SL 放宽是负优化，已回退（2026-09-20）">记录一次回测复盘：SL 放宽是负优化，已回退（2026-09-20）</a><time datetime="2026-09-20T13:30:00.000Z" title="发表于 2026-09-20 21:30:00">2026-09-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0911/" title="记录一次电子书入库（2026-09-11）"><img src="https://demohapi.4everland.link/ipfs/bafybeig36qwmf3k4gxhj4wpoh35p3u66bkbcwwhxfjnk2jnjw4dk42wx7y" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次电子书入库（2026-09-11）"/></a><div class="content"><a class="title" href="/posts/ov0911/" title="记录一次电子书入库（2026-09-11）">记录一次电子书入库（2026-09-11）</a><time datetime="2026-09-11T14:10:00.000Z" title="发表于 2026-09-11 22:10:00">2026-09-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ov0910/" title="记录一次心跳的修复（2026-09-10）"><img src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记录一次心跳的修复（2026-09-10）"/></a><div class="content"><a class="title" href="/posts/ov0910/" title="记录一次心跳的修复（2026-09-10）">记录一次心跳的修复（2026-09-10）</a><time datetime="2026-09-10T14:30:00.000Z" title="发表于 2026-09-10 22:30:00">2026-09-10</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+            </div>
+            <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Docs%E6%96%87%E6%AA%94/"><span class="card-category-list-name">Docs文檔</span><span class="card-category-list-count">54</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%88%86%E4%BA%AB/"><span class="card-category-list-name">分享</span><span class="card-category-list-count">3</span></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E5%88%86%E4%BA%AB/" style="font-size: 1.22em; color: rgb(44, 179, 142)">分享</a><a href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" style="font-size: 1.15em; color: rgb(106, 76, 180)">区块链</a><a href="/tags/web3/" style="font-size: 1.15em; color: rgb(45, 26, 62)">web3</a><a href="/tags/ForeverBlog/" style="font-size: 1.15em; color: rgb(105, 197, 51)">ForeverBlog</a><a href="/tags/%E9%87%8F%E5%8C%96/" style="font-size: 1.45em; color: rgb(74, 88, 146)">量化</a><a href="/tags/%E6%8E%92%E9%9A%9C/" style="font-size: 1.38em; color: rgb(82, 0, 50)">排障</a><a href="/tags/%E6%8E%A5%E5%8F%A3/" style="font-size: 1.22em; color: rgb(38, 143, 175)">接口</a><a href="/tags/%E5%9B%A0%E5%AD%90/" style="font-size: 1.15em; color: rgb(61, 164, 40)">因子</a><a href="/tags/%E5%9B%9E%E6%B5%8B/" style="font-size: 1.34em; color: rgb(146, 152, 97)">回测</a><a href="/tags/%E4%BB%A3%E7%A0%81%E8%AF%84%E5%AE%A1/" style="font-size: 1.15em; color: rgb(100, 88, 186)">代码评审</a><a href="/tags/Streamlit/" style="font-size: 1.19em; color: rgb(110, 125, 14)">Streamlit</a><a href="/tags/%E7%AD%96%E7%95%A5/" style="font-size: 1.19em; color: rgb(135, 93, 58)">策略</a><a href="/tags/%E4%B8%BB%E6%B5%81%E5%B8%81/" style="font-size: 1.19em; color: rgb(86, 115, 13)">主流币</a><a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 1.15em; color: rgb(168, 88, 53)">优化</a><a href="/tags/%E8%AE%B0%E5%BF%86%E6%9C%8D%E5%8A%A1/" style="font-size: 1.22em; color: rgb(20, 197, 120)">记忆服务</a><a href="/tags/%E4%BA%A4%E6%98%93%E7%B3%BB%E7%BB%9F/" style="font-size: 1.26em; color: rgb(187, 187, 195)">交易系统</a><a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 1.26em; color: rgb(185, 190, 189)">记录</a><a href="/tags/%E5%B7%A5%E7%A8%8B/" style="font-size: 1.15em; color: rgb(35, 57, 72)">工程</a><a href="/tags/%E4%BE%9D%E8%B5%96/" style="font-size: 1.15em; color: rgb(122, 31, 29)">依赖</a><a href="/tags/%E5%B7%A1%E6%A3%80/" style="font-size: 1.15em; color: rgb(8, 200, 172)">巡检</a><a href="/tags/%E8%BF%90%E7%BB%B4/" style="font-size: 1.34em; color: rgb(170, 163, 160)">运维</a><a href="/tags/%E9%AA%8C%E8%AF%81/" style="font-size: 1.19em; color: rgb(165, 76, 164)">验证</a><a href="/tags/%E7%9C%8B%E6%9D%BF/" style="font-size: 1.22em; color: rgb(96, 120, 31)">看板</a><a href="/tags/%E6%96%87%E6%A1%A3/" style="font-size: 1.15em; color: rgb(170, 33, 120)">文档</a><a href="/tags/%E5%AF%B9%E8%B4%A6/" style="font-size: 1.15em; color: rgb(183, 168, 48)">对账</a><a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 1.15em; color: rgb(159, 3, 116)">数据库</a><a href="/tags/%E5%A4%8D%E7%9B%98/" style="font-size: 1.41em; color: rgb(58, 90, 126)">复盘</a><a href="/tags/%E5%BF%83%E8%B7%B3/" style="font-size: 1.15em; color: rgb(132, 133, 26)">心跳</a><a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 1.15em; color: rgb(82, 55, 18)">架构</a><a href="/tags/%E5%AE%9E%E6%97%B6%E4%BF%A1%E5%8F%B7/" style="font-size: 1.15em; color: rgb(142, 89, 159)">实时信号</a><a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" style="font-size: 1.3em; color: rgb(21, 99, 31)">自动化</a><a href="/tags/%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/" style="font-size: 1.15em; color: rgb(95, 14, 156)">并发控制</a><a href="/tags/%E5%B7%A5%E5%85%B7%E9%93%BE/" style="font-size: 1.19em; color: rgb(15, 122, 158)">工具链</a><a href="/tags/%E6%A8%A1%E5%9E%8B%E9%80%89%E5%9E%8B/" style="font-size: 1.15em; color: rgb(70, 103, 17)">模型选型</a><a href="/tags/%E6%8D%A2%E8%B5%9B%E9%81%93/" style="font-size: 1.15em; color: rgb(196, 26, 57)">换赛道</a><a href="/tags/%E6%95%B0%E6%8D%AE%E6%BA%90/" style="font-size: 1.15em; color: rgb(73, 20, 196)">数据源</a><a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 1.15em; color: rgb(174, 89, 82)">进程</a><a href="/tags/%E6%A8%A1%E6%8B%9F%E7%9B%98/" style="font-size: 1.19em; color: rgb(41, 39, 121)">模拟盘</a><a href="/tags/%E4%BA%A4%E6%98%93/" style="font-size: 1.19em; color: rgb(102, 37, 62)">交易</a><a href="/tags/%E7%AD%96%E7%95%A5%E5%8F%82%E6%95%B0/" style="font-size: 1.15em; color: rgb(200, 32, 37)">策略参数</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/10/"><span class="card-archive-list-date">十月 2026</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/09/"><span class="card-archive-list-date">九月 2026</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/08/"><span class="card-archive-list-date">八月 2026</span><span class="card-archive-list-count">10</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/07/"><span class="card-archive-list-date">七月 2026</span><span class="card-archive-list-count">6</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/06/"><span class="card-archive-list-date">六月 2026</span><span class="card-archive-list-count">18</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/05/"><span class="card-archive-list-date">五月 2026</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/04/"><span class="card-archive-list-date">四月 2026</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/01/"><span class="card-archive-list-date">一月 2024</span><span class="card-archive-list-count">2</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">57</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2023-11-10T16:00:00.000Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-10-13T02:15:28.819Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/market/top.svg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By DEMOHAPI</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

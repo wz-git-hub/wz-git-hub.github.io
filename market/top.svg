@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 2479 844" width="2479" height="844">
+  <defs>
+    <linearGradient id="mkBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d6ecfb"/>
+      <stop offset=".45" stop-color="#e3e3fa"/>
+      <stop offset="1" stop-color="#d5f4ea"/>
+    </linearGradient>
+    <linearGradient id="mkLine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#49b1f5"/>
+      <stop offset="1" stop-color="#12a150"/>
+    </linearGradient>
+    <linearGradient id="mkArea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#49b1f5" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#49b1f5" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="mkGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd977"/>
+      <stop offset="1" stop-color="#f0a52a"/>
+    </linearGradient>
+    <linearGradient id="mkSteel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a8bedb"/>
+      <stop offset="1" stop-color="#7c92b4"/>
+    </linearGradient>
+    <linearGradient id="mkCard" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".94"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity=".74"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="2479" height="844" fill="url(#mkBg)"/>
+  <circle cx="330" cy="180" r="230" fill="#ffffff" opacity=".38"/>
+  <circle cx="2180" cy="700" r="250" fill="#ffffff" opacity=".30"/>
+  <circle cx="2000" cy="140" r="150" fill="#49b1f5" opacity=".10"/>
+  <circle cx="480" cy="690" r="170" fill="#12a150" opacity=".10"/>
+
+  <!-- 左侧：柱状图 -->
+  <g fill="url(#mkSteel)" opacity=".92">
+    <rect x="347" y="632" width="24" height="56" rx="7"/>
+    <rect x="417" y="606" width="24" height="82" rx="7"/>
+    <rect x="487" y="578" width="24" height="110" rx="7"/>
+    <rect x="557" y="540" width="24" height="148" rx="7"/>
+    <rect x="627" y="566" width="24" height="122" rx="7"/>
+  </g>
+
+  <!-- 主面板 -->
+  <rect x="700" y="196" width="1120" height="452" rx="28" fill="url(#mkCard)" stroke="#ffffff" stroke-opacity=".85"/>
+  <rect x="700" y="196" width="1120" height="452" rx="28" fill="none" stroke="#b9cde3" stroke-opacity=".5"/>
+
+  <!-- 网格 -->
+  <g stroke="#c3d3e6" stroke-opacity=".55" stroke-width="1.6">
+    <line x1="756" y1="300" x2="1764" y2="300"/>
+    <line x1="756" y1="392" x2="1764" y2="392"/>
+    <line x1="756" y1="484" x2="1764" y2="484"/>
+    <line x1="756" y1="576" x2="1764" y2="576"/>
+  </g>
+
+  <!-- 面积 + 折线 -->
+  <path d="M756 566 L892 512 L1028 546 L1164 452 L1300 486 L1436 400 L1572 424 L1708 330 L1764 316 L1764 610 L756 610 Z"
+        fill="url(#mkArea)"/>
+  <path d="M756 566 L892 512 L1028 546 L1164 452 L1300 486 L1436 400 L1572 424 L1708 330 L1764 316"
+        fill="none" stroke="url(#mkLine)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- K 线 -->
+  <g>
+    <g stroke="#12a150" stroke-width="6" stroke-linecap="round">
+      <line x1="892" y1="470" x2="892" y2="556"/>
+      <line x1="1164" y1="410" x2="1164" y2="490"/>
+      <line x1="1436" y1="358" x2="1436" y2="440"/>
+      <line x1="1708" y1="288" x2="1708" y2="372"/>
+    </g>
+    <rect x="882" y="492" width="20" height="40" rx="5" fill="#12a150"/>
+    <rect x="1154" y="430" width="20" height="42" rx="5" fill="#12a150"/>
+    <rect x="1426" y="378" width="20" height="44" rx="5" fill="#12a150"/>
+    <rect x="1698" y="308" width="20" height="46" rx="5" fill="#12a150"/>
+    <g stroke="#e5484d" stroke-width="6" stroke-linecap="round">
+      <line x1="1028" y1="500" x2="1028" y2="584"/>
+      <line x1="1300" y1="440" x2="1300" y2="524"/>
+      <line x1="1572" y1="380" x2="1572" y2="462"/>
+    </g>
+    <rect x="1018" y="518" width="20" height="40" rx="5" fill="#e5484d"/>
+    <rect x="1290" y="458" width="20" height="42" rx="5" fill="#e5484d"/>
+    <rect x="1562" y="398" width="20" height="42" rx="5" fill="#e5484d"/>
+  </g>
+
+  <!-- 末点高亮 -->
+  <circle cx="1764" cy="316" r="20" fill="#49b1f5" opacity=".22"/>
+  <circle cx="1764" cy="316" r="11" fill="#49b1f5"/>
+
+  <!-- 上升箭头徽章 -->
+  <circle cx="1764" cy="262" r="52" fill="#12a150"/>
+  <path d="M1742 276 L1778 242 L1778 260 M1778 242 L1760 242" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- 右上迷你卡片 -->
+  <rect x="1888" y="248" width="330" height="150" rx="22" fill="url(#mkCard)" stroke="#ffffff" stroke-opacity=".85"/>
+  <rect x="1918" y="278" width="86" height="14" rx="7" fill="#c3d3e6"/>
+  <rect x="1918" y="308" width="150" height="22" rx="11" fill="#49b1f5" opacity=".85"/>
+  <rect x="1918" y="348" width="240" height="12" rx="6" fill="#c3d3e6" opacity=".8"/>
+  <path d="M2090 352 L2126 318 L2126 336 M2126 318 L2108 318" fill="none" stroke="#12a150" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- 右下迷你卡片 -->
+  <rect x="1888" y="428" width="330" height="150" rx="22" fill="url(#mkCard)" stroke="#ffffff" stroke-opacity=".85"/>
+  <circle cx="1978" cy="503" r="42" fill="none" stroke="#dbe6f2" stroke-width="16"/>
+  <circle cx="1978" cy="503" r="42" fill="none" stroke="#49b1f5" stroke-width="16"
+          stroke-dasharray="176 264" stroke-linecap="round" transform="rotate(-90 1978 503)"/>
+  <rect x="2046" y="480" width="150" height="14" rx="7" fill="#c3d3e6"/>
+  <rect x="2046" y="510" width="98" height="14" rx="7" fill="#12a150" opacity=".8"/>
+
+  <!-- 悬浮金币 -->
+  <g>
+    <circle cx="560" cy="300" r="34" fill="url(#mkGold)"/>
+    <circle cx="560" cy="300" r="26" fill="#fff" fill-opacity=".22"/>
+    <circle cx="2100" cy="150" r="24" fill="url(#mkGold)"/>
+    <circle cx="2100" cy="150" r="18" fill="#fff" fill-opacity=".22"/>
+    <circle cx="430" cy="470" r="20" fill="url(#mkGold)"/>
+    <circle cx="430" cy="470" r="15" fill="#fff" fill-opacity=".22"/>
+  </g>
+
+  <!-- 装饰点 -->
+  <g fill="#49b1f5" opacity=".5">
+    <circle cx="640" cy="210" r="7"/>
+    <circle cx="1830" cy="120" r="6"/>
+    <circle cx="620" cy="700" r="6"/>
+    <circle cx="2220" cy="380" r="7"/>
+  </g>
+</svg>
