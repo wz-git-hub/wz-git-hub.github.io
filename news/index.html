@@ -461,12 +461,28 @@ main{max-width:var(--maxw);margin:0 auto;padding:18px 20px 60px}
     $("dot").className = "dot" + (off ? " off" : "");
   }
 
-  /* ---------- 频道 chips ---------- */
+  /* ---------- 频道 chips ----------
+     注意：快照只保留几百条，而服务端 /api/channels 的 count 是**全量**统计
+     （如「热点 447」）。两者口径不一致，直接照搬会出现「房产 7」点进去 0 条
+     的困惑。这里按快照内实际条数重新统计，保证 chip 数字与点开后的条数一致。 */
+  function catLabel(cat){
+    var list = DATA.channels || [];
+    for (var i=0;i<list.length;i++){
+      if (list[i].cat === cat) return list[i].label || cat;
+    }
+    return cat;
+  }
   function renderChannels(){
     var list = (DATA.channels || []);
-    var html = '<button class="chip on" data-c="">全部</button>';
+    var feed = DATA.feed || [];
+    var cnt = {};
+    feed.forEach(function(x){
+      if (x.category) cnt[x.category] = (cnt[x.category] || 0) + 1;
+    });
+    var html = '<button class="chip on" data-c="">全部 ' + feed.length + '</button>';
     list.forEach(function(c){
-      html += '<button class="chip" data-c="' + esc(c.cat) + '">' + esc(c.label) + ' ' + c.count + '</button>';
+      html += '<button class="chip" data-c="' + esc(c.cat) + '">' +
+              esc(c.label) + ' ' + (cnt[c.cat] || 0) + '</button>';
     });
     var box = $("chips");
     box.innerHTML = html;
@@ -542,9 +558,17 @@ main{max-width:var(--maxw);margin:0 auto;padding:18px 20px 60px}
     if (!state.q && exhausted && state.shown){
       $("done").textContent = "— 已显示全部 " + state.shown + " 条 —";
     }
-    $("feedTitle").textContent = state.q
-      ? ("搜索「" + state.q + "」· " + state.shown + " 条")
-      : (state.date ? (state.date + " 收录 · " + state.total + " 条") : "最新资讯");
+    // 标题要能反映当前筛选：搜索 > (分类 + 归档) > 最新
+    var head = "最新资讯";
+    if (state.q){
+      head = "搜索「" + state.q + "」· " + state.shown + " 条";
+    } else {
+      var parts = [];
+      if (state.cat) parts.push(catLabel(state.cat));
+      if (state.date) parts.push(state.date + " 归档");
+      head = parts.length ? (parts.join(" · ") + " · " + state.total + " 条") : "最新资讯";
+    }
+    $("feedTitle").textContent = head;
   }
 
   function reload(){
