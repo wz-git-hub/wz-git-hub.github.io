@@ -4147,4 +4147,384 @@
         <tag>回忆录</tag>
       </tags>
   </entry>
+  <entry>
+    <title>记录一次 PC 反复卡死诊断结项（2026-10-08）</title>
+    <url>/posts/ov1008/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次-PC-反复卡死诊断结项（2026-10-08）"><a href="#记录一次-PC-反复卡死诊断结项（2026-10-08）" class="headerlink" title="记录一次 PC 反复卡死诊断结项（2026-10-08）"></a>记录一次 PC 反复卡死诊断结项（2026-10-08）</h1><p><strong>既然 HL_DRY_RUN&#x3D;1，蓝屏就不是故障，是等 Verifier 点名的预期行为。</strong></p>
+<p>今天把这台从 6 月到 10 月反复硬锁死的交易机收了个尾：硬件根因已经修掉，软件根因还在监控，剩下就是让 Driver Verifier 布防，等它自己指名。整个过程踩了不少 Windows 运维的坑，值得原样记下来。</p>
+<h2 id="一、主机与运行环境"><a href="#一、主机与运行环境" class="headerlink" title="一、主机与运行环境"></a>一、主机与运行环境</h2><p>这台机器 PC-20260408JPNQ 是 7x24 交易栈宿主，跟 craw_app1_wz 同机。核心配置：Intel Core i5-14600KF（Raptor Lake Refresh，Family6 Model183），Maxsun MS-Terminator B760M D5 主板，单条 16GB Asgard DDR5 内存，1TB NVMe 系统盘加 8TB SATA 数据盘，RTX 2080 Ti，Windows 11 26H2 build 26300.9457。上面跑着 defi_dashboard（Streamlit+MySQL+多个 python&#x2F;node）、YunpanHub、Hermes agent、ollama、Steam，还有 WSL2。</p>
+<p>交易栈已经确认 <code>HL_DRY_RUN=1</code>，日志里能看到 <code>[DRY_RUN] open ETH LONG ... (skip HL order, log only)</code>。主网链路可用但不下真单，这就决定了后面所有“可接受的停机&#x2F;蓝屏”决策——反正不涉及真实仓位，机器多蓝屏几次也能接受。</p>
+<h2 id="二、故障表现"><a href="#二、故障表现" class="headerlink" title="二、故障表现"></a>二、故障表现</h2><p>反复整机硬锁死，无蓝屏，从 2026-06 到 2026-10 一共 8 次。我用 EventLog 6008 还原了真实起点，不是看最后一次重启时间，而是逐条对强制重启记录：</p>
+<table>
+<thead>
+<tr>
+<th>锁死开始</th>
+<th>强制重启</th>
+<th>时长</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>10-03 04:55</td>
+<td>10-07 19:15</td>
+<td>4 天 14 小时</td>
+</tr>
+<tr>
+<td>09-11 19:14</td>
+<td>09-13 20:28</td>
+<td>约 2 天</td>
+</tr>
+<tr>
+<td>07-08 19:36</td>
+<td>07-09 20:21</td>
+<td>约 1 天</td>
+</tr>
+<tr>
+<td>09-06 09:32</td>
+<td>09-06 16:07</td>
+<td>约 6.5 小时</td>
+</tr>
+<tr>
+<td>06-12 04:26</td>
+<td>06-12 10:20</td>
+<td>约 6 小时</td>
+</tr>
+<tr>
+<td>06-12 10:20 &#x2F; 06-13 01:17 &#x2F; 09-14 00:12</td>
+<td>—</td>
+<td>24-36 分钟</td>
+</tr>
+</tbody></table>
+<p>其中 10-03 那次最长，锁死接近 4 天半才被强制重启。而且后来发现 EventLog 6008 报的“7:24:22”其实滞后约 32 分钟，不能拿它当死亡时刻，真正的最后磁盘写入在 07:56:10。</p>
+<h2 id="三、根因-1（已修复）：Intel-13-14-代-V-Shift-未打补丁"><a href="#三、根因-1（已修复）：Intel-13-14-代-V-Shift-未打补丁" class="headerlink" title="三、根因 1（已修复）：Intel 13&#x2F;14 代 V-Shift 未打补丁"></a>三、根因 1（已修复）：Intel 13&#x2F;14 代 V-Shift 未打补丁</h2><p>这部分是硬件层面，证据链很硬。</p>
+<p><strong>决定性证据</strong>有三个：WHEA-Logger EventID 3 的时间戳与每次锁死秒级吻合，解开 CPER 原始二进制后看到 Severity&#x3D;<code>0x00000003</code>&#x3D;Fatal，SectionType 是处理器通用错误节，Creator 为固件 GUID；Kernel-Processor-Power ID 37 固件限频，60 天 124 条，只出现在逻辑处理器 15&#x2F;19（E-core），报文里写着“自上次报告以来已处于该低性能状态 86399 秒”，就是连续 24 小时；微码还是 0x104，BIOS 版本 E1.5D（2024-08-13），早于 Intel 全部修复微码（0x129B 2024-08、0x12B 2024-09-24、0x12F 2025-06-24）。而且 14600KF 官方规格 DDR5-5600，实际内存跑 6400 XMP 超频。</p>
+<p><strong>修复动作</strong>：BIOS 升到 E2.6D（2026-03-11），微码从 0x104 升到 0x133。</p>
+<p><strong>结果</strong>：WHEA 归零，固件限频归零，CPU 频率从 3140 MHz 恢复到 3500 MHz 满额。唯一一次真蓝屏（06-13 <code>BugcheckCode=26</code> &#x2F; 0x1A MEMORY_MANAGEMENT）也消失了。这部分可以结案。</p>
+<h2 id="四、根因-2（性质不同，仍在监控）：软件-驱动层挂死"><a href="#四、根因-2（性质不同，仍在监控）：软件-驱动层挂死" class="headerlink" title="四、根因 2（性质不同，仍在监控）：软件&#x2F;驱动层挂死"></a>四、根因 2（性质不同，仍在监控）：软件&#x2F;驱动层挂死</h2><p>10-08 07:56 又锁死 7 小时，但这次<strong>全程零硬件签名</strong>：WHEA&#x3D;0、限频&#x3D;0、CPU 满频、无磁盘&#x2F;NTFS&#x2F;显卡 TDR 错误，所以判定为软件&#x2F;驱动级硬挂死，不是硬件。</p>
+<p>死前机器并不空闲：交易栈满负荷，4 个 python + 5 个 node + mysqld + Steam 下载同时在跑。<code>shadow_logs\sm_trader_mainnet.log</code> 最后一次写入是 07:53:35，<code>smart_money_oos.db</code> 是 07:54:26，<code>E:\yunpan_hub\server_stdout.log</code> 是 07:56:10，然后机器就没了。</p>
+<p><strong>已排除的伪线索</strong>，这几个坑要避免重复劳动：</p>
+<ul>
+<li><code>ConnectedStandbyInProgress=true</code> 不是唤醒路径证据。这个位是电源管理器残留状态位：<code>SystemSleepTransitionsToOn=0</code>，固件明确不支持 S0ix（<code>powercfg /a</code> 报“系统固件不支持此待机状态”），Hypervisor 又额外屏蔽待机。181 天日志内 Kernel-Power 506&#x2F;507&#x3D;0、42&#x3D;0、107&#x3D;0、<code>powercfg /lastwake</code>&#x3D;0。而且该位在 10-08 为 true，在 10-07 为 false，与是否真睡眠反相关——唯一真发生睡眠转换的 06-12 10:56，该位反而是 false。</li>
+<li>RAM 降频不是决定性因素：XMP 已关，跑 4800 MT&#x2F;s @1100mV，降频合理，但本次故障本来就没有硬件签名可修。</li>
+<li>GameViewer (UU远程) 的 Kernel-PnP 219 是无害噪声。<code>ROOT\DISPLAY\0000</code> 的 <code>ProblemCode=0</code>、<code>Status=Started</code>，219 事件数与开机次数严格 1:1（10-07 9&#x2F;9、09-13 5&#x2F;5），是 IDD 虚拟显示设备的 UMDF 生命周期产物，不要卸载。</li>
+</ul>
+<p><strong>驱动栈隐患</strong>还没处理，等 Verifier 定位完成后再动：</p>
+<ul>
+<li><code>360Sensor_DM64.sys</code> —— 360 安全卫士已经卸载干净（0 注册表项&#x2F;0 进程&#x2F;无程序目录），但驱动仍 Running + Auto 开机加载，版本 2022&#x2F;10&#x2F;11，签名证书 2023-02-04 已过期。</li>
+<li><code>xlwfp.sys</code> —— 迅雷目录 <code>C:\Program Files (x86)\Thunder Network</code> 已不存在，但 WFP 过滤驱动仍 Running+Auto；<code>XLServicePlatform</code> 服务 StartMode&#x3D;Auto 但每次开机 45 秒启动超时（7000&#x2F;7009），Thunder 自启项指向已删除路径。</li>
+<li>网络隧道&#x2F;过滤 6 层并存：Tailscale+wintun、Clash for Windows(7890)、XLWFP、vwififlt&#x2F;vwifimp、NeSigVerify(网易,System 启动)、cpolar(4040&#x2F;6060&#x2F;9200)、UU远程。</li>
+<li>非分页池 514 MB（健康值 100-250），6 次采样持平，属于非活跃泄漏，是驱动存量负担。</li>
+<li>运行中驱动 199 个（健康 150-180），含 boot-start 的 <code>ACE-BOOT.sys</code>（WeGame 反作弊）。</li>
+<li>MSI Afterburner 4.6.7 Beta + RTSS 7.3.7 已安装但未运行。NVIDIA 驱动 10-07 刚升到 610.88，RTSS Beta + 新驱动是经典不兼容组合，这算埋雷。</li>
+</ul>
+<h2 id="五、当前状态：Verifier-已布防，等它指名"><a href="#五、当前状态：Verifier-已布防，等它指名" class="headerlink" title="五、当前状态：Verifier 已布防，等它指名"></a>五、当前状态：Verifier 已布防，等它指名</h2><p>现在系统已经配好完整转储：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CrashDumpEnabled=1  AutoReboot=1  AlwaysKeepMemoryDump=1</span><br><span class="line">页面文件 C:\pagefile.sys 32768 MB 固定 (生效值已确认, 需求 16225MB, 余量 16543MB)</span><br><span class="line">本次开机 Event 49 = 0</span><br><span class="line">Verifier Flags=0x001209bb  Boot Mode=Persistent  已验证 6/6:</span><br><span class="line">  360Sensor_DM64.sys  xlwfp.sys  dokan2.sys  NeSigVerify.sys  wintun.sys  IndirectKmd.sys</span><br></pre></td></tr></table></figure>
+
+<p>选中这 6 个驱动后，系统自动追加了 <code>WDF verification</code> 和 <code>File system filter verification</code> 规则类。</p>
+<p><strong>蓝屏是预期行为不是故障。</strong> 蓝屏后第一时间要抢在完整转储被覆写之前拷出来：</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Copy-Item</span> C:\Windows\MEMORY.DMP E:\reroot\MEMORY.DMP <span class="literal">-Force</span></span><br><span class="line">&amp; <span class="string">&quot;E:\reroot\分析转储.ps1&quot;</span> <span class="literal">-Dump</span> <span class="string">&quot;E:\reroot\MEMORY.DMP&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>蓝屏码释义：<code>0xC4</code> 是 DRIVER_VERIFIER_DETECTED_VIOLATION，验证器直接点名，最理想；<code>0xD1</code>&#x2F;<code>0x7E</code> 的参数2 是出错驱动指令地址；<code>0x50</code> 参数3 是出错驱动地址。内核转储不含可直接读的模块列表，精确定位要用 WinDbg <code>!analyze -v</code>。</p>
+<p>工具脚本都在 <code>E:\reroot\</code> 下：<code>卡死诊断采集.ps1</code> 导出 WHEA&#x2F;6008&#x2F;41&#x2F;固件限频证据，<code>分析转储.ps1</code> 解析 minidump + 32&#x2F;64 位内核转储，<code>修复卡死-管理员运行.ps1</code> 是 A 方案（清残留&#x2F;页面文件），但<strong>定位完成前勿跑</strong>。Verifier 的布防脚本是 <code>~\.hermes\hermes-agent\apply_verifier.ps1</code>，回滚是 <code>verifier_off.cmd</code>，页面文件 32GB 是 <code>fix_pagefile.ps1</code>。</p>
+<p>回滚命令（管理员，安全模式或正常模式均可）：<br><code>&amp; &quot;C:\Users\Administrator\.hermes\hermes-agent\verifier_off.cmd&quot;</code></p>
+<p>如果连续 3 次开机即蓝屏，就进 WinRE -&gt; 启动设置 -&gt; 安全模式执行同命令。</p>
+<h2 id="六、复盘：工具-API-陷阱（复用价值高）"><a href="#六、复盘：工具-API-陷阱（复用价值高）" class="headerlink" title="六、复盘：工具&#x2F;API 陷阱（复用价值高）"></a>六、复盘：工具&#x2F;API 陷阱（复用价值高）</h2><p>这次在 Windows 运维上踩了 5 次坑，全部同一个模式：<strong>凭印象写操作代码，没先验证</strong>。</p>
+<ol>
+<li><strong><code>.cmd</code> 里 <code>chcp 65001</code> 会破坏 cmd.exe 解析</strong> —— 切代码页后文件指针与字符宽度失配，后续每行开头被吃掉（<code>&#39;et&#39;</code>←<code>reset</code>、<code>&#39;EM&#39;</code>←<code>REM</code>）。中文注释 + chcp 混用必炸。对策：批处理改用 <code>.ps1</code>；<code>.cmd</code> 只留纯 ASCII 启动器。</li>
+<li><strong><code>verifier /adddriver</code> 子命令不存在</strong> —— 持久化形式只有 <code>verifier /standard /driver &lt;镜像名&gt;</code>；<code>/adddriver</code> 仅存在于 <code>/volatile</code>。<code>/driver</code> 要传<strong>镜像名</strong>（<code>xlwfp.sys</code>）不是路径。判别法：<code>/volatile /adddriver</code> 报 &quot;Access is denied&quot; &#x3D; 语法对；报 &quot;unsupported parameter&quot; &#x3D; 语法错。</li>
+<li><strong><code>verifier</code> 返回码 2 &#x3D; 设置成功需重启</strong>，不是错误。返回 0 &#x3D; 无需重启。</li>
+<li><strong><code>Win32_PageFileSetting</code> 是设置意图，<code>Win32_PageFileUsage.AllocatedBaseSize</code> 才是生效值。</strong> <code>New-CimInstance -ClassName Win32_PageFileSetting -Property @&#123;InitialSize=...&#125;</code> 会报 <code>HRESULT 0x80041005</code>（类型不匹配），需 <code>-ClientOnly</code> + 显式 <code>[uint32]</code>，或直接写注册表 <code>PagingFiles</code>（<strong>MultiString</strong> 类型）。<strong>绝不可先 Remove 再 New</strong> —— 之前一个版本的脚本就是这么把页面文件配置清空的。</li>
+<li><strong><code>Test-Path</code> 查注册表【值】必然返回 False</strong>（Registry provider 下查的是子项）。正确查法：<code>(Get-Item $k).GetValueNames()</code> &#x2F; <code>GetValueKind()</code> &#x2F; <code>GetValue()</code>。另外，**验证 Event 是否为本次开机产生必须带 <code>StartTime=LastBootUpTime</code>**，<code>-MaxEvents 1</code> 会返回历史旧记录造成假阴性。</li>
+</ol>
+<h2 id="七、安全侧附带发现（与卡死无关，建议后续处理）"><a href="#七、安全侧附带发现（与卡死无关，建议后续处理）" class="headerlink" title="七、安全侧附带发现（与卡死无关，建议后续处理）"></a>七、安全侧附带发现（与卡死无关，建议后续处理）</h2><p>排查过程中顺手发现几个裸露面：<code>0.0.0.0:3306</code> 的 mysqld 绑所有接口，而 <code>start-defi-dashboard.bat</code> 里 root 密码为空（<code>password=&#39;&#39;</code>）；还有 <code>0.0.0.0:80</code> httpd(WampServer)、<code>0.0.0.0:3389</code> 远程桌面、cpolar 内网穿透 3 端口。等于数据库对内网裸奔。</p>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><p>等 Verifier 触发蓝屏，拿到 MEMORY.DMP 后跑 <code>分析转储.ps1</code>。如果定位到具体驱动，再决定是清残留还是更新签名；定位完成前不碰 <code>修复卡死-管理员运行.ps1</code>，也不动那批驱动栈隐患。安全侧那几个端口和空密码，等这轮蓝屏定位结束后再单独处理。</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>运维</tag>
+        <tag>调试</tag>
+        <tag>Windows</tag>
+        <tag>硬件</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录一次从假 PnL 修到真根因的 11 天（2026-09-22）</title>
+    <url>/posts/ov0922/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次从假-PnL-修到真根因的-11-天（2026-09-22）"><a href="#记录一次从假-PnL-修到真根因的-11-天（2026-09-22）" class="headerlink" title="记录一次从假 PnL 修到真根因的 11 天（2026-09-22）"></a>记录一次从假 PnL 修到真根因的 11 天（2026-09-22）</h1><p><strong>真正让 trader 停摆的不是某个策略赚不到钱，而是链上有一批它自己根本不知道的仓位，正死死占着保证金。</strong> 今天这份复盘，本质上是把 09-11 那笔 -$98.57 的 orphan_reconcile 假损失给翻了个底朝天——最后发现我们之前一直在跟自己的影子打架。</p>
+<h2 id="一、早上先查盘面：11-天没开新仓"><a href="#一、早上先查盘面：11-天没开新仓" class="headerlink" title="一、早上先查盘面：11 天没开新仓"></a>一、早上先查盘面：11 天没开新仓</h2><p>今天 09:58 我启动诊断的时候，第一反应是“别又是策略逻辑写挂了”。psutil 里能看到的一串进程全是 ALIVE：smart_money_trader 10s 主循环在 tick&#x3D;140，smart_money_signal 每 15s 左右写一次日志，watchdog 09:54:36 刚跑完一轮，streamlit_dashboard 端口 8501 返回 HTTP 200。看起来系统全活。</p>
+<p>再看 sm_account 表，09:47:40 的快照写着 current_usdc&#x3D;10045.98，realized_pnl&#x3D;+51.19，W&#x2F;L&#x3D;58&#x2F;57。单看这个账面，trader 就是“没在交易”，不是死了。</p>
+<p>但把 sm_positions 一翻就发现问题了：<strong>OPEN positions&#x3D;0，而且 sm_positions opened after 2026-09-11: 0</strong>。最后一条 close 记录是 id&#x3D;127 的 ETH orphan_reconcile，close_at&#x3D;2026-09-11T15:35:40，PnL&#x3D;-$2.91；再往前 id&#x3D;126 的 BTC orphan_reconcile 是 -$95.66。</p>
+<h2 id="二、顺藤摸瓜上了链：11-个孤儿仓"><a href="#二、顺藤摸瓜上了链：11-个孤儿仓" class="headerlink" title="二、顺藤摸瓜上了链：11 个孤儿仓"></a>二、顺藤摸瓜上了链：11 个孤儿仓</h2><p>真正把答案暴露出来的是 10:55 那次 HL 链上 user_state 查询。trader 每次 tick 都打 <code>[RISK_P0] chain av=$3390 used=$2526 free=$0</code>，风控一直阻塞，size_usd 永远被判 0。我就直接拉了 Hyperliquid testnet 的 user_state，结果当场愣住了：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">accountValue:                $3,300.99</span><br><span class="line">totalMarginUsed:             $2,518.50</span><br><span class="line">withdrawable:                $0.00</span><br><span class="line">totalRawUsd:                -$31,158.45</span><br></pre></td></tr></table></figure>
+
+<p>链上居然挂着 <strong>11 个 LONG 仓位，合计名义 $34,459</strong>，而 trader 的 sm_positions 表里 OPEN&#x3D;0。BTC 是 0.11374 个、20x 杠杆，ETH 是 3.686 个、20x，SOL 是 74.71 个 10x。全部浮盈为正，合计 +$3,636。这些仓位占掉的 margin 刚好是 $2,518，跟 trader 风控读到的 used&#x3D;$2526 对得上。</p>
+<p><strong>所以 withdrawable&#x3D;$0 不是熔断，不是日亏损，是链上真有东西在锁保证金。</strong></p>
+<h2 id="三、为什么-trader-永远不知道这些仓"><a href="#三、为什么-trader-永远不知道这些仓" class="headerlink" title="三、为什么 trader 永远不知道这些仓"></a>三、为什么 trader 永远不知道这些仓</h2><p>这个问题要怪到 09-21 我加的那个 <code>MAX_ORPHAN_SIZE_USD=80.0</code>。当时是为了解决 close 假 PnL——id&#x3D;126&#x2F;#127 那两笔 orphan_reconcile 在 DB 里记了开仓，但链上根本没单，24h 后被 timeout 平掉，白白记了 -$98.57。</p>
+<p>修法就是给 reconcile 加了个 cap：<strong>超过 80 美元的 orphan 一律 refuse_too_large，不 adopt 进 DB</strong>。逻辑上没错，它确实挡住了外部仓位污染 PnL。但今天链上这 11 个仓，最大的 ETH 名义 $10,079、最小的 DOGE 名义 $90.71，全都被 <code>refused_too_large</code> 跳过了。</p>
+<p>这么一来，reconcile_from_chain.py 虽然每 6h 跑一次，但每次都扫到这些仓、每次都拒收。trader 的 <code>_has_hl_position()</code> 查链上有仓，但 DB 里没有登记，收到 close signal 时只会打 <code>no_hl_position</code> 标记然后走人。</p>
+<p><strong>cap 解决了假 PnL，却制造了一个盲区：链上有 $34,459 ntl、$2,518 marginUsed 的真实仓位永远进不了 trader 的视野。</strong></p>
+<h2 id="四、清理与修复：拆掉-cap-的代价"><a href="#四、清理与修复：拆掉-cap-的代价" class="headerlink" title="四、清理与修复：拆掉 cap 的代价"></a>四、清理与修复：拆掉 cap 的代价</h2><p>到这一步，路已经很清楚。按照修复报告，我先把 11 个孤儿仓全部用 <code>market_close</code> 市价平掉，DB 标记 <code>strategy=orphan_reconcile_adopt</code>、<code>close_reason=[CHAIN_CLEANUP]</code>。</p>
+<p>平仓结果：DOGE +$10.72、SOL +$637.31、BTC +$754.88、BNB +$53.01、ARB +$774.10、SUI +$74.51、APT +$89.18、ETH +$638.49、AVAX -$1.01、AAVE +$50.60、TIA +$48.59。合计 <strong>+$3,130.36</strong> 的浮盈转为 realized PnL。链上最终状态是 accountValue&#x3D;$3176.53、totalMarginUsed&#x3D;$0、withdrawable&#x3D;$3176.53、open&#x3D;0。</p>
+<p>但光平仓还不够。修复报告里列了三个代码层的问题：</p>
+<p><strong>hl_executor.py SDK 兼容</strong>：新 SDK 的 <code>market_open</code> 不再接受 <code>coin=</code> 这个 kwarg，要改成 <code>name=</code>；而 <code>reduce_only</code> 参数在 SDK 设计里压根不支持，被静默丢弃。收盘逻辑必须改成直接调 <code>market_close(coin, sz)</code>，否则 trader 永远平不了仓、还不知道自己平不了。</p>
+<p><strong>open_position 的 UnboundLocalError</strong>：L1115 <code>_strategy_risk(strategy, ...)</code> 在 L1122 <code>strategy = sig.get(...)</code> 之前执行。因为 Python 在 try 块里不会提前看到 local var 声明，所以直接抛 UnboundLocalError。修法很简单，把 L1122 那行挪到 L1115 之前。</p>
+<p><strong>trader 重启</strong>：老 PID 11886 在 11:03:04 检测到 shutdown flag 退出，11:03:53 relaunch_trader.py 启动 PID 11616（但还加载着旧 hl_executor），11:11:30 第一次 RISK_P0 显示 chain_free&#x3D;$3178。然后 mock signal 触发下单，sol 4.29 szi 成交、链上返回 <code>&#123;status:ok, avgPx:116.5956, oid:60714893081&#125;</code>——但这笔单触发了 open_position 的 UnboundLocalError，DB 写失败。11:13:33 再次 shutdown flag + relaunch，PID 17276 加载的是修好的 open_position。</p>
+<h2 id="五、验证与遗留"><a href="#五、验证与遗留" class="headerlink" title="五、验证与遗留"></a>五、验证与遗留</h2><p>11:11:30 的日志已经说明解锁有效：<code>chain_free=$3178</code>。之后 mock BTC&#x2F;SOL signal 触发，链上确认下单成功。中间出了个插曲：mock 测试开了 2 笔 SOL，因为第一笔下单成功后 DB INSERT 失败，trader 下次 tick 没看到 DB OPEN，就又把同一个信号执行了一遍，合计 8.58 szi。后面把这 8.58 szi 全部市价平完，链上回到 $3176.53、margin&#x3D;$0、withdrawable&#x3D;$3176.53。模拟仓 DB 没有新记录，因为 INSERT 都失败了。</p>
+<p>剩下来的是两个待办。</p>
+<p><strong>sentiment 阈值</strong>：signal daemon 还在每 60s 跑，但 score 最近几轮是 0.363、0.298，SENTIMENT_THRESHOLD 是 0.50（smart_money_signal.py L165）。选项三个：等自然突破、临时降到 0.30 验证真实下单车、恢复 TOKEN 信号源（MAINNET_VERDICT 09-04 默认禁用）。</p>
+<p><strong>orphan cap 设计</strong>：<code>MAX_ORPHAN_SIZE_USD=80</code> 的 trade-off 现在被彻底摊开。三个改法：提 cap 到 $5000 加 stop_loss&#x3D;mid*0.95、对 $80~$5000 的仓 adopt 进 DB 并 truncated 到 $350、维持现状加一个每 6h 扫链上 &gt; $80 的告警脚本。我倾向最后一个，先把监控补上再动 cap。</p>
+<hr>
+<p><strong>遗留</strong>：sentiment 阈值还没决定，orphan cap 的结构性修法也没定稿。今天解锁了 trader，但 11 个孤儿仓怎么来的、9&#x2F;11 之前为什么链上没清掉，还需要找时间翻一轮当时的 order log。</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>量化</tag>
+        <tag>运维</tag>
+        <tag>调试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录一次 sim_loop 被境外网络掐死 17h56m（2026-06-20）</title>
+    <url>/posts/ov0620/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次-sim-loop-被境外网络掐死-17h56m（2026-06-20）"><a href="#记录一次-sim-loop-被境外网络掐死-17h56m（2026-06-20）" class="headerlink" title="记录一次 sim_loop 被境外网络掐死 17h56m（2026-06-20）"></a>记录一次 sim_loop 被境外网络掐死 17h56m（2026-06-20）</h1><p><strong>网络断了就别反复激活版本，激活不等于启动。</strong> 今天这一笔必须记下来，从 14:32 到 20:48，三轮 cron 报的是同一个 BLOCKER，时间越报越久，最后一看，sim_decisions 和 sim_trades 的最后一条 ts 停在 02:52:16，已经 17 小时 56 分钟没动过了。</p>
+<h2 id="一、20-48-那轮巡检，差距已经拉到了-17h56m"><a href="#一、20-48-那轮巡检，差距已经拉到了-17h56m" class="headerlink" title="一、20:48 那轮巡检，差距已经拉到了 17h56m"></a>一、20:48 那轮巡检，差距已经拉到了 17h56m</h2><p>20:48 是今天第四轮 cron。前两轮其实已经报警了：14:32 报 gap 11h40m，17:40 报 14.8h。我本来以为可能是哪次重启没拉起来，结果 20:48 再查，sim_decisions&#x2F;sim_trades 的 MAX(ts) 还是 2026-06-20 02:52:16，gap 直接干到 17h56m，压根没恢复，还越来越长。</p>
+<p>不止这一个：sim_dexscreener_signals 整表 last_ts 停在 6&#x2F;18 11:43，1h&#x2F;24h 计数全是 0，已经 stale 2 天 9 小时；bt_cf_summary.run_at 停在 6&#x2F;18 10:44，有 2 天 10 小时没更新；new_tokens 的 max_created 停在 2026-06-20 03:34:35，跟 sim_decisions 几乎同步死亡。基本可以断定，整个 enrichment 链路从凌晨 02:52 之后就再没写进任何新数据。</p>
+<h2 id="二、nssm-那边是个每秒级别的-restart-loop"><a href="#二、nssm-那边是个每秒级别的-restart-loop" class="headerlink" title="二、nssm 那边是个每秒级别的 restart-loop"></a>二、nssm 那边是个每秒级别的 restart-loop</h2><p>去看进程状态，nssm wrapper PID 63276 已经 6 个多小时没变过，但它的子进程 1424640 早就死了。sim_loop.log 的 mtime 是 20:45，看着还在写，实际上只有 alive heartbeat 和一堆 10053 ConnectionAborted。</p>
+<p>20:45:25 我实采了一次 nssm event log，画面很固定：每秒都在 kill -&gt; exit 1 -&gt; spawn -&gt; rotate 失败 -&gt; 再 kill。这就是个死循环。wrapper 自己活着，业务进程反复拉不起来，每次 spawn 完就撞上同样的网络错误，日志 rotate 也失败，handle 越堆越多。这个形态我不是第一次见，X23 那回的文件 handle 泄漏，今天换成了网络层死锁的变种。</p>
+<p><strong>这里有个很反直觉的点：服务显示 SERVICE_RUNNING，但 wmic python.exe 列表里根本找不到 sim_loop.py 进程。</strong> 只看 nssm 状态会以为还在跑，实际业务已经凉了快 18 个小时。</p>
+<h2 id="三、5-个境外-API-同步-timeout，国内-bing-0-23-秒"><a href="#三、5-个境外-API-同步-timeout，国内-bing-0-23-秒" class="headerlink" title="三、5 个境外 API 同步 timeout，国内 bing 0.23 秒"></a>三、5 个境外 API 同步 timeout，国内 bing 0.23 秒</h2><p>按 5 分钟诊断 SOP 走，先 curl 直连。GMGN、DexScreener、CoinGecko、GeckoTerminal、Binance，五个境外 API 全部 timeout 6 秒以上，没有例外。对照 curl 国内 bing.com，0.23 秒就回来了。</p>
+<p>这就不是本机断网了，是跨境 HTTPS 出口被掐。sim_loop 本身没病，病在网络。任务书里也明确写着不悄悄重启，所以我没去动 sim_loop，也没去 kill 那个 wrapper PID。前面三轮 cron 都报同一个根因，按照规则，这种跨轮同根因的 BLOCKER 不该继续在常规巡检里发酵，应该直接升级到主人 ad-hoc 通道处理。今天这个教训要写死。</p>
+<h2 id="四、v1-23-死前-9-小时的决策账本"><a href="#四、v1-23-死前-9-小时的决策账本" class="headerlink" title="四、v1.23 死前 9 小时的决策账本"></a>四、v1.23 死前 9 小时的决策账本</h2><p>回头翻 v1.23 最后 9 小时的决策记录，其实它在彻底死掉之前还挺活跃：BUY 24 次，CLOSE 24 次，RISK_BLOCK 102 次（其中 sniper 58、cooldown 24、maker 13、liquidity 4），SKIP 152 次。但这些都停在 02:52 之前，之后一条新决策都没有。</p>
+<p>看版本状态，active version 是 v1.23 combo，activated_at 是 20:43:29。今天主人在 3 小时内重激活了两次：17:39 一次，20:43 一次。但 sim_loop 正处在 restart-loop 里，每次 spawn 都会重新读 activated_at，所以激活动作会发生，但业务进程根本没起来。<strong>激活不等于启动，网络断的时候反复激活版本没有任何意义，反而会让人误以为已经处理过了。</strong></p>
+<p>另外 v1.24 和 v1.24.1 都是 inactive，params_json 跟 v1.23 完全相同，tuning_log 里第 88 条反模式又在提醒我别折腾参数。v1.23 的 threshold 7 天分布也查了：4.0 出现 13797 次，None（CLOSE）出现 177 次，没有 5.0 漂移。说明今天这锅跟策略参数无关。</p>
+<h2 id="五、下次防坑点"><a href="#五、下次防坑点" class="headerlink" title="五、下次防坑点"></a>五、下次防坑点</h2><ol>
+<li><strong>网络层死锁是真正根因</strong>。任务书明确不悄悄重启，跨 3 轮 cron 同根因报告必须升级主人 ad-hoc 通道处理，不能再让 BLOCKER 在常规巡检里拖 18 个小时。</li>
+<li><strong>nssm restart-loop + 文件 handle 泄漏是 X23 老坑变种</strong>。要重启得走 nssm 服务接口，也就是 <code>nssm restart sim_loop</code>，而不是 kill wrapper PID。wrapper 一杀，restart-loop 更乱。</li>
+<li><strong>反复激活版本没用</strong>。sim_loop 每次 spawn 都会重新读 activated_at，但激活不等于启动，网络断的时候激活了也拉不起来，等网络恢复后一次激活就够。</li>
+<li><strong>v1.25 paper_loop 拆分还没落地</strong>。今天四轮 cron（08:05 &#x2F; 14:32 &#x2F; 17:40 &#x2F; 20:48）都在报告这个事，enrichment 全耦合在 sim_loop 里，sim_loop 一卡全停。在 v1.25 SOP 六步全部走完之前，这个单点故障不会消失。</li>
+</ol>
+<h2 id="六、遗留"><a href="#六、遗留" class="headerlink" title="六、遗留"></a>六、遗留</h2><p>v1.25 paper_loop 的拆分到今天 20:48 还是未落地状态，下一轮巡检必须重点盯这个，不能再因为网络问题把整个 enrichment 链路的推进节奏打乱。另外跨境出口恢复后，需要走 <code>nssm stop sim_loop</code> 临时停一会儿，等网络稳了再 <code>nssm start sim_loop</code> 拉起来，别让 restart-loop 继续制造噪声。</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>量化</tag>
+        <tag>运维</tag>
+        <tag>调试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录一次回测复盘：SL 放宽是负优化，已回退（2026-09-20）</title>
+    <url>/posts/ov0920/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次回测复盘：SL-放宽是负优化，已回退（2026-09-20）"><a href="#记录一次回测复盘：SL-放宽是负优化，已回退（2026-09-20）" class="headerlink" title="记录一次回测复盘：SL 放宽是负优化，已回退（2026-09-20）"></a>记录一次回测复盘：SL 放宽是负优化，已回退（2026-09-20）</h1><p><strong>“67% 的 5% 止损触发不是假摔，是真崩盘。”</strong></p>
+<p>今天下午把 Hyperliquid testnet 上这几个月攒下的平仓记录拉出来做了一次完整回放回测，原本以为只是例行核对一下参数，结果直接推翻了自己上周对 factor_ic 止损的一个调整。先打开今天生成的那份 TLDR 文件，路径还挂在 default&#x2F;resources&#x2F;craw_app1_wz&#x2F;backtest-comprehensive-2026-09-20&#x2F;Comprehensive_Backtest_-_2026-09-20&#x2F;TLDR_10more_86032086_1.md 下面，光看摘要就意识到问题不小。</p>
+<h2 id="一、背景：127-笔平仓，5-个策略一起回放"><a href="#一、背景：127-笔平仓，5-个策略一起回放" class="headerlink" title="一、背景：127 笔平仓，5 个策略一起回放"></a>一、背景：127 笔平仓，5 个策略一起回放</h2><p>这次回测的样本是数据库 hl_smart_money.db 里 127 条已平仓记录，时间跨度从 2026-07-30 到 2026-09-10，全部是 HL testnet 的模拟单。覆盖 5 个策略：factor_ic、sentiment、token、market_flow、smart_money。回放工具用的是 HL testnet 的 candle API（<a href="https://api.hyperliquid-testnet.xyz/info%EF%BC%89%EF%BC%8C%E8%A7%84%E5%88%99%E6%98%AF">https://api.hyperliquid-testnet.xyz/info），规则是</a> 1 小时 K 线从入场点重放到入场后 48 小时，中间按模拟的 SL&#x2F;TP&#x2F;timeout 逻辑退出。脚本今天写了好几个：replay_backtest.py 专门跑 factor_ic 的 59 笔全量回放，replay_sentiment.py 跑 sentiment 的 27 笔乘 4 个持有期，replay_deepdive.py 逐笔比 SL 5% 和 10% 的差异，replay_final.py 出汇总，结果落在 replay_results.json，每个单子存了 5 个字段。</p>
+<h2 id="二、总览：active-组合有-18-04-的改进空间"><a href="#二、总览：active-组合有-18-04-的改进空间" class="headerlink" title="二、总览：active 组合有 +$18.04 的改进空间"></a>二、总览：active 组合有 +$18.04 的改进空间</h2><p>TL;DR 表先给了一版大账：</p>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Current</th>
+<th>Counterfactual</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>factor_ic (59 trades, B+C+D)</td>
+<td>$-16.50</td>
+<td>$+16.99</td>
+<td><strong>+$33.49</strong></td>
+</tr>
+<tr>
+<td>sentiment (27 trades, 72h)</td>
+<td>$+67.54</td>
+<td>$+52.09</td>
+<td>-$15.45 (cap risk)</td>
+</tr>
+<tr>
+<td>token</td>
+<td>$+139.23 (N&#x3D;6)</td>
+<td>n&#x2F;a</td>
+<td>n&#x2F;a (naturally stopped)</td>
+</tr>
+<tr>
+<td>market_flow</td>
+<td>-$36.50</td>
+<td>n&#x2F;a</td>
+<td>n&#x2F;a (already killed)</td>
+</tr>
+<tr>
+<td><strong>TOTAL active</strong></td>
+<td><strong>$+51.04</strong></td>
+<td><strong>$+69.08</strong></td>
+<td><strong>+$18.04</strong></td>
+</tr>
+</tbody></table>
+<p>其中有一条 critical correction 写得很醒目：<strong>optimization A（SL 5% -&gt; 10%）是负优化，已回退。</strong> 这条我今天花最多时间验证，后面单独说。先说整体：两个还在跑的 active 策略里，factor_ic 目前实际亏 16 块 5，但如果把上个月做的 B+C+D 过滤套上，反事实能赚 16 块 9 毛 9，加上 sentiment 的 72h 封顶虽然比无上限少赚 15 块 4 毛 5，但整体 active 从 +51.04 能优化到 +69.08，净改进 +18.04。token 那 6 笔已经自然停了，赚 139.23；market_flow 亏 36.50，已经 kill 掉不再看。</p>
+<h2 id="三、factor-ic-回放：完美-5-SL-能赚，实盘亏在延迟和超时"><a href="#三、factor-ic-回放：完美-5-SL-能赚，实盘亏在延迟和超时" class="headerlink" title="三、factor_ic 回放：完美 5% SL 能赚，实盘亏在延迟和超时"></a>三、factor_ic 回放：完美 5% SL 能赚，实盘亏在延迟和超时</h2><p>factor_ic 的 59 笔回放是最有信息量的。模拟和实盘的差异拉出来是这样：</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Sim PnL</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Actual (trader real)</td>
+<td>$-16.50</td>
+<td>real execution, slippage&#x2F;timeout failures</td>
+</tr>
+<tr>
+<td>Sim 5% SL (perfect)</td>
+<td>$+10.98</td>
+<td>trader didn&#39;t trigger every 5% SL</td>
+</tr>
+<tr>
+<td>Sim 10% SL (perfect)</td>
+<td>$-1.87</td>
+<td>SL widening let 4 real breakdowns worsen</td>
+</tr>
+</tbody></table>
+<p>一句话：如果每笔都严格按 5% 止损触发，这 59 笔能赚 10.98；如果当时把止损放宽到 10%，反而会亏 1.87。实盘为什么亏 16.50？中间差了 27.48，拆开看有三个原因：一部分 timeout 平仓其实是自然反弹的位置，原本应该触发 SL 的；5% SL 事件里有 4 次是真崩盘；还有 trader 经常挂在 HL API 上，导致平仓延迟。这三点都能解释为什么实盘比完美模拟差这么多。</p>
+<p>接着套用上个月定的 B+C+D 过滤条件（MIN_SCORE &gt;&#x3D; 0.9 且剔除 APT），剩下 14 笔：实际 +12.22，模拟 5% SL +16.99，模拟 10% SL +13.01。<strong>B+C+D 的净改进就是 +$33.49，从 -16.50 拉到 +16.99。</strong> 这部分验证通过，过滤条件没白加。</p>
+<h2 id="四、优化-A-的失败：5-SL-放宽到-10-是负优化"><a href="#四、优化-A-的失败：5-SL-放宽到-10-是负优化" class="headerlink" title="四、优化 A 的失败：5% SL 放宽到 10% 是负优化"></a>四、优化 A 的失败：5% SL 放宽到 10% 是负优化</h2><p>上周我一度觉得 factor_ic 的 5% 止损太紧，很多单子可能被假摔扫掉，所以想做一个 optimization A：把 STOP_LOSS_PCT 从 5% 放宽到 10%。今天把模拟中真正触发 5% SL 的 6 笔单子拉出来逐一对比：</p>
+<table>
+<thead>
+<tr>
+<th>Trade</th>
+<th>Sym</th>
+<th>Side</th>
+<th>Score</th>
+<th>5% SL</th>
+<th>10% SL</th>
+<th>Diff</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>#83</td>
+<td>AVAX</td>
+<td>SHORT</td>
+<td>0.77</td>
+<td>-$4.01</td>
+<td>-$0.78</td>
+<td>+$3.23</td>
+</tr>
+<tr>
+<td>#97</td>
+<td>ARB</td>
+<td>SHORT</td>
+<td>0.83</td>
+<td>-$4.02</td>
+<td>-$8.02</td>
+<td>-$4.00</td>
+</tr>
+<tr>
+<td>#98</td>
+<td>APT</td>
+<td>SHORT</td>
+<td>0.84</td>
+<td>-$4.02</td>
+<td>-$4.12</td>
+<td>-$0.11</td>
+</tr>
+<tr>
+<td>#102</td>
+<td>AAVE</td>
+<td>SHORT</td>
+<td>0.80</td>
+<td>-$4.00</td>
+<td>-$7.99</td>
+<td>-$3.99</td>
+</tr>
+<tr>
+<td>#106</td>
+<td>AAVE</td>
+<td>SHORT</td>
+<td>0.84</td>
+<td>-$4.03</td>
+<td>-$8.04</td>
+<td>-$4.01</td>
+</tr>
+<tr>
+<td>#112</td>
+<td>SOL</td>
+<td>SHORT</td>
+<td>0.91</td>
+<td>-$3.99</td>
+<td>-$7.97</td>
+<td>-$3.98</td>
+</tr>
+</tbody></table>
+<p>统计下来只有 2 笔（33%）是假摔，也就是 #83 AVAX 和 #98 APT，放宽到 10% 能少亏一点；剩下 4 笔（67%）全是真崩盘，5% 止损反而正确，放宽到 10% 直接让亏损翻倍。算净账：4 笔真崩盘按 10% SL 多亏 -$15.98，2 笔假摔按 10% SL 改善 +$3.13，合起来净损失 -$12.85。<strong>结论很硬：我之前“5% 太紧导致假摔”的假设是错的，67% 的触发是真崩盘。</strong> 所以今天直接执行回退：把 STRATEGY_RISK_OVERRIDES.factor_ic.STOP_LOSS_PCT 这个覆盖项删掉，回到 5% 默认值。这个负优化不会再上了。</p>
+<h2 id="五、sentiment-回放：持有越久越好，但-72h-是合理上限"><a href="#五、sentiment-回放：持有越久越好，但-72h-是合理上限" class="headerlink" title="五、sentiment 回放：持有越久越好，但 72h 是合理上限"></a>五、sentiment 回放：持有越久越好，但 72h 是合理上限</h2><p>sentiment 的 27 笔单子按不同 MAX_HOLD 跑了四档，再加上实盘无上限的对照：</p>
+<table>
+<thead>
+<tr>
+<th>MAX_HOLD</th>
+<th>Sim PnL</th>
+<th>TP</th>
+<th>SL</th>
+<th>Timeout</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>24h</td>
+<td>$+29.23</td>
+<td>5</td>
+<td>0</td>
+<td>22</td>
+<td>conservative</td>
+</tr>
+<tr>
+<td>48h</td>
+<td>$+42.25</td>
+<td>11</td>
+<td>0</td>
+<td>16</td>
+<td>balanced</td>
+</tr>
+<tr>
+<td>72h</td>
+<td>$+52.09</td>
+<td>12</td>
+<td>0</td>
+<td>15</td>
+<td><strong>current choice</strong></td>
+</tr>
+<tr>
+<td>96h</td>
+<td>$+57.17</td>
+<td>14</td>
+<td>0</td>
+<td>13</td>
+<td>aggressive</td>
+</tr>
+<tr>
+<td>Actual (no cap)</td>
+<td>$+67.54</td>
+<td>n&#x2F;a</td>
+<td>n&#x2F;a</td>
+<td>n&#x2F;a</td>
+<td>trader sometimes &gt;96h</td>
+</tr>
+</tbody></table>
+<p>几个发现很清楚：第一，sentiment 不管怎么限持有期都是正收益，哪怕 24h 也有 +29.23；第二，TP 次数（11-14）远大于 SL（0），说明这些单子大多是顺势持仓，没有被止损扫过；第三，持有期越长收益越高，从 24h 到 72h 多了 +$22.86，提升 78%，但从 72h 到 96h 只多 +$5.08，边际收益很薄；第四，实盘无上限的 +$67.54 反而比所有模拟都高，因为 trader 有时候拿超过 96h，吃到了大趋势。</p>
+<p>那 72h 封顶值不值得？它牺牲了比无上限少赚的 $15.45，换来的是把极端持仓时间压下来、降低 margin call 风险。而且</p>
+]]></content>
+      <categories>
+        <category>Docs文檔</category>
+      </categories>
+      <tags>
+        <tag>量化</tag>
+        <tag>回测</tag>
+        <tag>交易系统</tag>
+        <tag>调试</tag>
+      </tags>
+  </entry>
 </search>
