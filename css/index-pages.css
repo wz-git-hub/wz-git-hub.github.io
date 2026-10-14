@@ -7,9 +7,8 @@
      · /categories/ 只有 list_categories() 输出的两行文字（本博客仅 2 个分类）
      · /tags/      只有随机排序的标签云，不显示每个标签的文章数
    本文件配合 layout/includes/mixins/index-nav.pug，把三页做成
-   信息量一致、互相可达的「站点索引」：
+   信息量一致的「站点索引」：
      · .ix-stats  全局统计条（篇数 / 月份跨度 / 分类数 / 标签数）
-     · .ix-nav    三页互链胶囊
      · .cat-*     分类卡片（名称 / 篇数 / 占比条 / 时间跨度 / 最近文章）
      · .top-tags  热门标签排行（计数条）
    全部类名以 ix- / cat- / tt- 前缀命名，不与主题既有样式冲突。
@@ -62,56 +61,10 @@ html[data-theme="dark"] {
   color: var(--ix-sub);
 }
 
-/* ---------- 2. 三页互链 ---------- */
-.ix-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0 0 18px;
-}
-
-.ix-nav-item {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 8px 16px;
-  border: 1px solid var(--ix-line);
-  border-radius: 10px;
-  background: var(--ix-card);
-  color: inherit;
-  font-size: .93rem;
-  text-decoration: none;
-  transition: all .25s ease;
-}
-
-.ix-nav-item:hover {
-  border-color: var(--ix-accent);
-  color: var(--ix-accent);
-  transform: translateY(-2px);
-}
-
-.ix-nav-item.is-on {
-  border-color: var(--ix-accent);
-  background: var(--ix-accent);
-  color: #fff;
-  cursor: default;
-}
-
-.ix-nav-item.is-on:hover {
-  transform: none;
-}
-
-.ix-nav-num {
-  padding: 1px 8px;
-  border-radius: 20px;
-  background: var(--ix-chip);
-  font-size: .82em;
-  font-weight: 700;
-}
-
-.ix-nav-item.is-on .ix-nav-num {
-  background: rgba(255, 255, 255, .3);
-}
+/* ---------- 2. （已移除）三页互链胶囊 ---------- */
+/* 2026-10-14 删除 .ix-nav / .ix-nav-item / .ix-nav-num：
+   它渲染成「归档 57 / 分类 7 / 标签 54」，与上方 .ix-stats 的数字完全重复
+   （57=篇文章、7=分类数、54=标签数），而顶部导航栏本就有这三项入口。 */
 
 /* ---------- 3. 区块标题 ---------- */
 .ix-hd {
@@ -624,13 +577,6 @@ html[data-theme="dark"] {
 
 /* ---------- 11. 移动端 ---------- */
 @media screen and (max-width: 768px) {
-  .ix-nav-item {
-    flex: 1 1 auto;
-    justify-content: center;
-    padding: 7px 12px;
-    font-size: .85rem;
-  }
-
   .ix-stats {
     grid-template-columns: repeat(2, 1fr);
   }
