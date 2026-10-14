@@ -373,7 +373,256 @@ html[data-theme="dark"] {
   scroll-margin-top: 90px;
 }
 
-/* ---------- 7. 移动端 ---------- */
+/* ---------- 7. 标签速览：chips + 篇数 ---------- */
+.ix-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ix-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 5px 12px;
+  border: 1px solid var(--ix-line);
+  border-radius: 16px;
+  background: var(--ix-card);
+  color: inherit;
+  font-size: .84rem;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: all .22s ease;
+}
+
+.ix-chip:hover {
+  border-color: var(--ix-accent);
+  color: var(--ix-accent);
+  transform: translateY(-2px);
+}
+
+.ix-chip-n {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ix-chip-c {
+  flex: none;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--ix-chip);
+  font-size: .74em;
+  font-weight: 700;
+  opacity: .85;
+}
+
+/* ---------- 8. 分类速览（标签页用） ---------- */
+.cat-mini {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.cat-mini-item {
+  display: block;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--ix-line);
+  border-radius: 10px;
+  background: var(--ix-card);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color .25s ease, transform .25s ease;
+}
+
+.cat-mini-item:hover {
+  border-color: var(--ix-accent);
+  transform: translateY(-2px);
+}
+
+.cm-hd {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.cm-name {
+  overflow: hidden;
+  font-size: .98rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cat-mini-item:hover .cm-name {
+  color: var(--ix-accent);
+}
+
+.cm-n {
+  flex: none;
+  font-size: .78rem;
+  color: var(--ix-sub);
+}
+
+.cm-bar {
+  display: block;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--ix-chip);
+  overflow: hidden;
+}
+
+.cm-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--ix-accent);
+}
+
+/* ---------- 9. 月度发布分布 ---------- */
+.ix-months {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 4px 24px;
+}
+
+.ix-month {
+  display: grid;
+  grid-template-columns: 62px minmax(40px, 1fr) 30px;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.ix-month-k {
+  font-size: .8rem;
+  color: var(--ix-sub);
+  font-variant-numeric: tabular-nums;
+}
+
+.ix-month-b {
+  height: 7px;
+  border-radius: 4px;
+  background: var(--ix-chip);
+  overflow: hidden;
+}
+
+.ix-month-b i {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--ix-accent);
+  transition: opacity .2s ease;
+}
+
+.ix-month:hover .ix-month-b i {
+  opacity: .72;
+}
+
+.ix-month-n {
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--ix-sub);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 10. 全站文章索引（单列全宽表格） ---------- */
+/* 🔴 刻意用单列而不是多列网格：2026 一年 47 篇，多列网格会让它独占左列、
+   右半幅全空。单列全宽 = 宽度和高度都填满。 */
+.ix-index {
+  display: block;
+}
+
+.ix-idx-group {
+  min-width: 0;
+  margin-bottom: 14px;
+  padding: 12px 16px 6px;
+  border: 1px solid var(--ix-line);
+  border-radius: 12px;
+  background: var(--ix-card);
+}
+
+.ix-idx-group:last-child {
+  margin-bottom: 0;
+}
+
+.ix-idx-year {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ix-line);
+  color: inherit;
+  text-decoration: none;
+}
+
+.ix-idx-year b {
+  font-size: 1.06rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+.ix-idx-year span {
+  font-size: .76rem;
+  color: var(--ix-sub);
+}
+
+.ix-idx-year:hover b {
+  color: var(--ix-accent);
+}
+
+.ix-idx-item {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: baseline;
+  min-width: 0;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--ix-line);
+  color: inherit;
+  font-size: .87rem;
+  text-decoration: none;
+}
+
+.ix-idx-group .ix-idx-item:last-child {
+  border-bottom: none;
+}
+
+.ix-idx-item time {
+  font-size: .75rem;
+  color: var(--ix-sub);
+  font-variant-numeric: tabular-nums;
+}
+
+.ix-idx-t {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ix-idx-item:hover .ix-idx-t {
+  color: var(--ix-accent);
+}
+
+.ix-idx-c {
+  flex: none;
+  padding: 1px 9px;
+  border-radius: 10px;
+  background: var(--ix-chip);
+  color: var(--ix-sub);
+  font-size: .72rem;
+  white-space: nowrap;
+}
+
+/* ---------- 11. 移动端 ---------- */
 @media screen and (max-width: 768px) {
   .ix-nav-item {
     flex: 1 1 auto;
@@ -392,6 +641,32 @@ html[data-theme="dark"] {
 
   .cat-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cat-mini {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ix-idx-group {
+    padding: 10px 12px 4px;
+  }
+
+  .ix-idx-item {
+    grid-template-columns: 40px minmax(0, 1fr) auto;
+    gap: 8px;
+    font-size: .84rem;
+  }
+
+  .ix-idx-c {
+    display: none;
+  }
+
+  .ix-months {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ix-month {
+    grid-template-columns: 58px minmax(40px, 1fr) 26px;
   }
 
   .ix-cols {
