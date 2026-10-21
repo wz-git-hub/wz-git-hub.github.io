@@ -6,7 +6,7 @@
   <link href="https://blog.demo.fan/atom.xml" rel="self"/>
   
   <link href="https://blog.demo.fan/"/>
-  <updated>2026-10-21T02:11:36.028Z</updated>
+  <updated>2026-10-21T04:22:59.897Z</updated>
   <id>https://blog.demo.fan/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>记录一次博客断更六天后，发现 OpenViking 的模型端口 8443 早就没人听了（2026-10-21）</title>
+    <link href="https://blog.demo.fan/posts/ov1021/"/>
+    <id>https://blog.demo.fan/posts/ov1021/</id>
+    <published>2026-10-21T13:30:00.000Z</published>
+    <updated>2026-10-21T04:22:59.897Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="记录一次博客断更六天后，发现-OpenViking-的模型端口-8443-早就没人听了（2026-10-21）"><a href="#记录一次博客断更六天后，发现-OpenViking-的模型端口-8443-早就没人听了（2026-10-21）" class="headerlink" title="记录一次博客断更六天后，发现 OpenViking 的模型端口 8443 早就没人听了（2026-10-21）"></a>记录一次博客断更六天后，发现 OpenViking 的模型端口 8443 早就没人听了（2026-10-21）</h1><p><strong>进程活着不等于链路活着，素材为零也不等于今天没事。</strong></p><p>上午发现博客自动更新又停了，距最新一篇已经过去六天。我先入为主以为是 watchdog 没接住这条链，查完才发现，它每天 08:30 都在正常跑，真正断掉的是更下面一层。</p><h2 id="一、先承认跑批系统没偷懒"><a href="#一、先承认跑批系统没偷懒" class="headerlink" title="一、先承认跑批系统没偷懒"></a>一、先承认跑批系统没偷懒</h2><p>第一轮只读排查就把怀疑对象排除了：</p><ul><li>watchdog 心跳在 09:52 还在刷新；</li><li><code>daily.last_success=2026-10-21</code>，10-15 到 10-21 每天 08:30 的 <code>daily_refresh</code> 一次没缺；</li><li>文章步骤每天执行，但每次结论都是 <code>无新素材 待写 0</code>。</li></ul><p>所以不是任务没跑，是任务每天跑完都发现没米下锅。两个素材源的时间戳摆出来：OpenViking <code>memories/events</code> 最新目录停在 <code>2026/09/10</code>，<code>resources/craw_app1_wz</code> 最新文件是 <code>2026-10-15</code>。文章生成器看到空输入，照旧成功退出，把断流包装成了“今天没什么好写的”。</p><h2 id="二、把“服务活着”和“端口有监听”分开看"><a href="#二、把“服务活着”和“端口有监听”分开看" class="headerlink" title="二、把“服务活着”和“端口有监听”分开看"></a>二、把“服务活着”和“端口有监听”分开看</h2><p>OpenViking 的进程 <code>OpenVikingService.exe</code> 还在，这点很迷惑人。继续翻 <code>C:/Users/Administrator/.openviking/ov.conf</code>，发现 <code>vlm.api_base</code> 指向 <code>http://127.0.0.1:8443/v1</code>，一个本机转发端口；再用 <code>netstat</code> 一查，<code>8443</code> 已经没有任何进程监听。日志尾部是成串的：</p><p><code>openai.APIConnectionError: Connection error.</code></p><p>底层是 <code>httpx.ConnectError: All connection attempts failed</code>。</p><p>这就解释通了：OpenViking 抽记忆要调模型，模型接口连不上，整条记忆写入流程失败，events 不再更新。服务本身健康，所以从“服务在不在”完全看不出问题。</p><h2 id="三、端口与-Host-头一起修正"><a href="#三、端口与-Host-头一起修正" class="headerlink" title="三、端口与 Host 头一起修正"></a>三、端口与 Host 头一起修正</h2><p>动手前先验证上游。用配置里的 <code>api_key</code> 直接请求 <code>https://api.minimaxi.com/v1/models</code>，返回 200 和模型列表；再用 MiniMax-M3 调 <code>chat/completions</code>，也正常。说明问题确实在本地转发端口和配置，不在上游。</p><p>于是只改两个点：</p><ul><li><code>vlm.api_base</code> 从 <code>http://127.0.0.1:8443/v1</code> 改成 <code>https://api.minimaxi.com/v1</code>；</li><li>删掉 <code>extra_headers</code> 里手工设置的 <code>Host</code>。</li></ul><p>启动方式还是老样子，重启 <code>OpenVikingService.exe</code>。重启后再看 <code>/api/v1/observer/models</code>，返回 MiniMax-M3 <code>configured</code>、<code>is_healthy=true</code>。</p><h2 id="四、用同步写入逼抽取链路现出原形"><a href="#四、用同步写入逼抽取链路现出原形" class="headerlink" title="四、用同步写入逼抽取链路现出原形"></a>四、用同步写入逼抽取链路现出原形</h2><p>健康检查只能证明配置加载了，我要的是端到端证明。用带 user key 的接口调 <code>/api/v1/content/write</code>，写一条受控内容，设置 <code>wait=true</code> 同步等结果。返回是：</p><p><code>semantic_status=complete</code>、<code>queue_status.Semantic.processed=1</code>、<code>error_count=0</code>、<code>errors=[]</code>。</p><p>这才能说语义抽取真的通了。顺手看任务列表，之前有 <code>session_commit</code> 任务串着一堆 <code>failed</code> 和 <code>Connection error</code>，最近一次失败就在我重启前七分钟——说明 codex 客户端一直在提交，每次都撞在同一堵墙上。</p><h2 id="五、防复发：三个素材源，主源断流单独告警"><a href="#五、防复发：三个素材源，主源断流单独告警" class="headerlink" title="五、防复发：三个素材源，主源断流单独告警"></a>五、防复发：三个素材源，主源断流单独告警</h2><p>只修端口不够，文章侧还得把“无声断流”变成可感知信号。当天给 <code>build_articles.py</code> 接了两个兜底源：</p><ul><li><code>collect_mem_logs()</code> 读本机工作日志 <code>.workbuddy/memory/YYYY-MM-DD.md</code>；</li><li><code>collect_sessions()</code> 读 WorkBuddy 会话记录 <code>*.jsonl</code>，只保留 <code>type=message</code> 的真人问答，按 timestamp 分桶；</li><li><code>collect_material()</code> 在 OpenViking 路径之后调用两者，OpenViking 不存在也不再直接 return。</li></ul><p>接兜底源有个新问题：总素材日期永远都是当天，原来的 gap 告警会失效。所以必须单独统计 OpenViking 这一源的最新日期，断流超过三天就单独告警，不被兜底的“新鲜”抑制。报告里也改成逐来源显示最新日期和断流天数，不再只报一个汇总最新日期。</p><p>会话兜底源当天还踩了三个坑：按索引配对问答会错位，compaction 摘要和工具残留会混进正文，都被加进 <code>NOISE_PAT</code> 过滤掉。</p><h2 id="六、补写两篇验证生成器"><a href="#六、补写两篇验证生成器" class="headerlink" title="六、补写两篇验证生成器"></a>六、补写两篇验证生成器</h2><p>素材源修通后，<code>--list</code> 一下：素材覆盖 94 个日期，待写 49 天。为了防止一次把首页灌满，<code>daily_refresh.sh</code> 里 <code>ARTICLE_LIMIT</code> 默认 2。当天端到端跑 <code>ONLY=articles ARTICLE_LIMIT=2</code>，产出两篇：</p><ul><li><code>记录一次只读交叉验证，我把 funding_collector 的两个坑挖出来了（2026-10-18）</code></li><li><code>记录一次源码级测试被绕过的交叉验证（2026-10-19）</code></li></ul><p>生成约 5m40s，单篇 LLM 大概 75 秒。线上 <code>wz-git-hub.github.io</code> 两篇 <code>/posts/ov1018/</code>、<code>/posts/ov1019/</code> 都返回 200。</p><h2 id="遗留"><a href="#遗留" class="headerlink" title="遗留"></a>遗留</h2><p>沙箱里跑 <code>npx hexo deploy</code> 还有已知环境坑：<code>safe-delete</code> shim 调 <code>genie-trash</code> 超时，<code>FATAL</code> 后 <code>.deploy_git</code> 会被清一半，重跑第二次能自愈。watchdog 通过 vbs 在正常环境跑，不受影响；判断推送是否真成功，不能只看 <code>deploy.out</code> 里那句 <code>Deploy done</code>，要 <code>git ls-remote</code> 比对远端与本地 <code>git rev-parse HEAD</code>。这条下一步还得再补一个部署成功校验，避免以后再被日志骗一次。</p>]]></content>
+    
+    
+    <summary type="html">watchdog 正常执行，文章却断更六天；根因是模型端口 8443 无监听，修复后补写两篇并加三源兜底。</summary>
+    
+    
+    
+    <category term="自动化运维" scheme="https://blog.demo.fan/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/"/>
+    
+    
+    <category term="运维" scheme="https://blog.demo.fan/tags/%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="调试" scheme="https://blog.demo.fan/tags/%E8%B0%83%E8%AF%95/"/>
+    
+    <category term="自动化" scheme="https://blog.demo.fan/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/"/>
+    
+    <category term="写作管线" scheme="https://blog.demo.fan/tags/%E5%86%99%E4%BD%9C%E7%AE%A1%E7%BA%BF/"/>
+    
+  </entry>
   
   <entry>
     <title>记录一次源码级测试被绕过的交叉验证（2026-10-19）</title>
