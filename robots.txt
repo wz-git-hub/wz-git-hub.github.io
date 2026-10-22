@@ -1,0 +1,19 @@
+# robots.txt - Forever BLog
+# 显式允许所有主流搜索引擎与 AI 检索（4everland 平台默认模板不含任何指令，故本地覆盖）
+
+User-agent: *
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+Sitemap: https://blog.demo.fan/sitemap.xml
