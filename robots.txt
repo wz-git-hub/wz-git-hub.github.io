@@ -16,4 +16,4 @@ Allow: /
 User-agent: GPTBot
 Allow: /
 
-Sitemap: https://blog.demo.fan/sitemap.xml
+Sitemap: https://blog.demohappy.top/sitemap.xml
