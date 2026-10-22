@@ -328,7 +328,9 @@ main{max-width:var(--maxw);margin:0 auto;padding:20px}
   /* 在线书库后端（本机书库经 Cloudflare 隧道暴露，只读网关）
      新域名优先，失败自动回退旧域名（迁移期双活，旧域到期后自然只走新域） */
   var READER_PRIMARY = "https://books.demohappy.top";
-  var READER_FALLBACK = "https://books.demo.fan";
+  // 旧域 books.demo.fan 随 demo.fan 于 2026-10 底到期，fallback 不能再指向它，
+  // 否则 primary 抖动时会切到一个已失效的域名（比没有 fallback 更糟：白等一次超时）。
+  var READER_FALLBACK = "https://books.demohappy.top";
   var READER = READER_PRIMARY;
 
   function probeReader(){
