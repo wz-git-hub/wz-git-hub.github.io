@@ -2,6 +2,24 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.demohappy.top/posts/a1/</loc>
+    
+    <lastmod>2026-10-23</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.demohappy.top/posts/ov1023/</loc>
+    
+    <lastmod>2026-10-23</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.demohappy.top/posts/zt4/</loc>
     
     <lastmod>2026-10-23</lastmod>
@@ -974,15 +992,6 @@
   </url>
   
   <url>
-    <loc>https://blog.demohappy.top/posts/a1/</loc>
-    
-    <lastmod>2026-10-23</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.demohappy.top/posts/a6/</loc>
     
     <lastmod>2026-10-23</lastmod>
@@ -1230,6 +1239,34 @@
   
   <url>
     <loc>https://blog.demohappy.top/tags/%E5%9B%9E%E5%BF%86%E5%BD%95/</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.demohappy.top/tags/SEO/</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.demohappy.top/tags/%E8%BF%90%E7%BB%B4/</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.demohappy.top/tags/%E8%B0%83%E8%AF%95/</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.demohappy.top/tags/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>

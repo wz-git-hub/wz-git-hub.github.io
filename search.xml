@@ -63,11 +63,11 @@
 <li>更好的永久存储</li>
 <li>感想</li>
 </ul>
-<h1 id="xLog，Crossbell区块链"><a href="#xLog，Crossbell区块链" class="headerlink" title="xLog，Crossbell区块链"></a>xLog，Crossbell区块链</h1><p>最近偶然看到了一个很有意思的东西，叫<a href="https://xlog.app/">xLog</a>，大概试了试，这是在一条叫Crossbell的区块链上使用智能合约操作和存储元数据，并把实际数据存到IPFS上的项目。看了一眼还挺有意思，就在上面搭了一个自己的另一个<a href="https://demo.xlog.app/">博客</a>，另外他们还使用这套方案写了一个类似Twitter的社交系统，也叫Crossbell，非常的人性化，可以说是把Web3真正的带给了普通用户。至于怎么搭他们的项目成员写了篇教程，5分钟就能搭好在<a href="https://song.xlog.app/5m-zh">Web3的博客</a>。<br>不过使用xLog那就不是技术人员的事了，而是让一个不怎么懂电脑的人来做的事情了。另外他们宣称数据是“Permanently stored on the blockchain”这一点我不太认同，要是说存到了Web3成为了其他人无法修改的数据，这倒是没什么问题，但是存到IPFS上只要没有被Pin，就有可能在节点GC的过程中永远消失。另外我其实对区块链接触不多，不清楚能不能完整的同步他们的链，如果不能那就是私链了，那样元数据也不能永久保留了……所以我只能说这个平台是Web3，可以保证不因为审查而404，但是不能在时间的长河中保留信息。</p>
-<h1 id="技术人员的方法"><a href="#技术人员的方法" class="headerlink" title="技术人员的方法"></a>技术人员的方法</h1><p>所以作为技术人员，我的博客当然直接上IPFS那更好啦，因为他们的平台毕竟可定制性不高，而且好多组件不知道有没有可替代性，比如以太坊JSON-RPC，不过他们的服务好像是都开源了，只要这个链可以被同步，能搭属于自己的RPC那倒是问题不大。<br>直接用IPFS客户端直接上传是最原生的办法，但是我不喜欢在自己电脑上安一堆莫名其妙的软件，像我现在写博客都是直接在Github或者Gitlab上写好然后直接用之前提到的静态页面服务商一次性部署好。所以我也希望能有一个类似的服务商能帮我把我的博客上传到IPFS上。最后我找到的服务商就是<a href="https://www.4everland.org/">4EVERLAND</a>。它可以绑定Git仓库并监听变化，当有变化的时候就会自动部署到IPFS上，并且他们提供免费的Gateway来直接访问在IPFS上的内容，非常的不错。不过有个问题就是不知道什么原因，它的部署模板里面没有Jekyll的语句，然后前端还不能自定义……所以只能靠抓包的方式来修改成自己想要的部署语句。</p>
-<h1 id="从IPFS直接访问"><a href="#从IPFS直接访问" class="headerlink" title="从IPFS直接访问"></a>从IPFS直接访问</h1><p>使用4everland部署完之后直接访问当然也很好，但是总感觉和其他服务商差不多，谁知道它读取网页到底是从自己服务器上还是IPFS网络上读取呢？所以我还想整个更好的方式从IPFS上读取，也能证明它确实在IPFS上了。<br>直接通过Gateway去访问我的博客当然也没问题，但是每次部署的时候CID是会变化的，那这样我想访问也不方便啊……后来我听说可以把CID用一种叫dnslink的方式记录到DNS里，这样就能通过固定又好记的方式来访问。不过那时候我不知道怎么访问dnslink记录的网站……而且每次部署CID会变，那部署完我还要更新我的DNS记录啊？后来我查了查原来还有一种叫IPNS的东西，看了一眼4everland的控制台，原来每个网站它也会生成一个固定的IPNS，然后用dnslink可以指向IPNS。那如何访问呢？IPFS又没有一个IP地址，光TXT记录肯定不够的吧？后来我才知道原来要用CNAME解析到Gateway才能访问，设置之后每次访问Gateway就会自动解析在TXT记录里的dnslink了。这不比xLog自由度高？不过我这个没办法存评论数据，可能xLog的特色就是社交吧，毕竟他们的主项目Crossbell就是主打的社交。希望可以整一个单独的插件，专门用他们的网络来为我这种静态博客提供评论功能，也是一个不错的选择（毕竟ETH公链上的手续费太贵啦😂）。</p>
-<h1 id="更好的永久存储"><a href="#更好的永久存储" class="headerlink" title="更好的永久存储"></a>更好的永久存储</h1><p>前面我说过，IPFS只能防止篡改，但不是作为永久存储的方案，上公链当然是也一种永久存储的方案但是成本太高了我付不起。后来我了解到一种叫做Arweave的东西可以永久存储你的数据，不过这不是免费的，想存得要付AR币到链上才可以。还好4EVERLAND提供了一些免费上传到AR网络的额度，非常的不错，这样我以后每次上传我会把地址写到Github的Releases里面，进一步的提高我博客永久存储的可能性。<br>另外我还听说似乎还有一种叫做ZeroNet的东西也是通过分布式的方式存储数据，据群友所说也能在一定程度上永久存储。不过我试了试访问实在是太困难了😂，而且现在程序也不在维护了，所以也就放弃了。</p>
-<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><p>Web3真是发展的越来越好了，希望能有更多的人参与其中，一起创建不受管束的网络吧。（还有实现我Forever计划😝）<br>不过说来我也挺担心那个Crossbell（就是xLog用的链）的项目，作为不受监管的平台只要知名度上来肯定会被滥用到死，希望他们能活得更长一些吧。</p>
+<p>最近偶然看到了一个很有意思的东西，叫<a href="https://xlog.app/">xLog</a>，大概试了试，这是在一条叫Crossbell的区块链上使用智能合约操作和存储元数据，并把实际数据存到IPFS上的项目。看了一眼还挺有意思，就在上面搭了一个自己的另一个<a href="https://demo.xlog.app/">博客</a>，另外他们还使用这套方案写了一个类似Twitter的社交系统，也叫Crossbell，非常的人性化，可以说是把Web3真正的带给了普通用户。至于怎么搭他们的项目成员写了篇教程，5分钟就能搭好在<a href="https://song.xlog.app/5m-zh">Web3的博客</a>。<br>不过使用xLog那就不是技术人员的事了，而是让一个不怎么懂电脑的人来做的事情了。另外他们宣称数据是“Permanently stored on the blockchain”这一点我不太认同，要是说存到了Web3成为了其他人无法修改的数据，这倒是没什么问题，但是存到IPFS上只要没有被Pin，就有可能在节点GC的过程中永远消失。另外我其实对区块链接触不多，不清楚能不能完整的同步他们的链，如果不能那就是私链了，那样元数据也不能永久保留了……所以我只能说这个平台是Web3，可以保证不因为审查而404，但是不能在时间的长河中保留信息。</p>
+<h2 id="一、技术人员的方法"><a href="#一、技术人员的方法" class="headerlink" title="一、技术人员的方法"></a>一、技术人员的方法</h2><p>所以作为技术人员，我的博客当然直接上IPFS那更好啦，因为他们的平台毕竟可定制性不高，而且好多组件不知道有没有可替代性，比如以太坊JSON-RPC，不过他们的服务好像是都开源了，只要这个链可以被同步，能搭属于自己的RPC那倒是问题不大。<br>直接用IPFS客户端直接上传是最原生的办法，但是我不喜欢在自己电脑上安一堆莫名其妙的软件，像我现在写博客都是直接在Github或者Gitlab上写好然后直接用之前提到的静态页面服务商一次性部署好。所以我也希望能有一个类似的服务商能帮我把我的博客上传到IPFS上。最后我找到的服务商就是<a href="https://www.4everland.org/">4EVERLAND</a>。它可以绑定Git仓库并监听变化，当有变化的时候就会自动部署到IPFS上，并且他们提供免费的Gateway来直接访问在IPFS上的内容，非常的不错。不过有个问题就是不知道什么原因，它的部署模板里面没有Jekyll的语句，然后前端还不能自定义……所以只能靠抓包的方式来修改成自己想要的部署语句。</p>
+<h2 id="二、从IPFS直接访问"><a href="#二、从IPFS直接访问" class="headerlink" title="二、从IPFS直接访问"></a>二、从IPFS直接访问</h2><p>使用4everland部署完之后直接访问当然也很好，但是总感觉和其他服务商差不多，谁知道它读取网页到底是从自己服务器上还是IPFS网络上读取呢？所以我还想整个更好的方式从IPFS上读取，也能证明它确实在IPFS上了。<br>直接通过Gateway去访问我的博客当然也没问题，但是每次部署的时候CID是会变化的，那这样我想访问也不方便啊……后来我听说可以把CID用一种叫dnslink的方式记录到DNS里，这样就能通过固定又好记的方式来访问。不过那时候我不知道怎么访问dnslink记录的网站……而且每次部署CID会变，那部署完我还要更新我的DNS记录啊？后来我查了查原来还有一种叫IPNS的东西，看了一眼4everland的控制台，原来每个网站它也会生成一个固定的IPNS，然后用dnslink可以指向IPNS。那如何访问呢？IPFS又没有一个IP地址，光TXT记录肯定不够的吧？后来我才知道原来要用CNAME解析到Gateway才能访问，设置之后每次访问Gateway就会自动解析在TXT记录里的dnslink了。这不比xLog自由度高？不过我这个没办法存评论数据，可能xLog的特色就是社交吧，毕竟他们的主项目Crossbell就是主打的社交。希望可以整一个单独的插件，专门用他们的网络来为我这种静态博客提供评论功能，也是一个不错的选择（毕竟ETH公链上的手续费太贵啦😂）。</p>
+<h2 id="三、更好的永久存储"><a href="#三、更好的永久存储" class="headerlink" title="三、更好的永久存储"></a>三、更好的永久存储</h2><p>前面我说过，IPFS只能防止篡改，但不是作为永久存储的方案，上公链当然是也一种永久存储的方案但是成本太高了我付不起。后来我了解到一种叫做Arweave的东西可以永久存储你的数据，不过这不是免费的，想存得要付AR币到链上才可以。还好4EVERLAND提供了一些免费上传到AR网络的额度，非常的不错，这样我以后每次上传我会把地址写到Github的Releases里面，进一步的提高我博客永久存储的可能性。<br>另外我还听说似乎还有一种叫做ZeroNet的东西也是通过分布式的方式存储数据，据群友所说也能在一定程度上永久存储。不过我试了试访问实在是太困难了😂，而且现在程序也不在维护了，所以也就放弃了。</p>
+<h2 id="四、感想"><a href="#四、感想" class="headerlink" title="四、感想"></a>四、感想</h2><p>Web3真是发展的越来越好了，希望能有更多的人参与其中，一起创建不受管束的网络吧。（还有实现我Forever计划😝）<br>不过说来我也挺担心那个Crossbell（就是xLog用的链）的项目，作为不受监管的平台只要知名度上来肯定会被滥用到死，希望他们能活得更长一些吧。</p>
 ]]></content>
       <categories>
         <category>随笔分享</category>
@@ -7961,6 +7961,87 @@
       </categories>
       <tags>
         <tag>回忆录</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>用本地 Ollama 模型批量重写了 112 篇文章的 meta description（2026-10-23）</title>
+    <url>/posts/ov1023/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>description 中位数只有 35 字，最短的原文就是 <code>ForeverBlog</code>——这不是&quot;优化空间&quot;，是搜索展示文案根本不存在。</strong></p>
+<p>昨天已经做完 P0-P3 清单里的全部项，今天用户又问「如何提升曝光和流量」。同一个问题重复出现说明昨天的答案没落地。这次换了角度：不再列清单，先用数据定位真实瓶颈。</p>
+<h2 id="一、内容层体检（昨天没查的三项）"><a href="#一、内容层体检（昨天没查的三项）" class="headerlink" title="一、内容层体检（昨天没查的三项）"></a>一、内容层体检（昨天没查的三项）</h2><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>实测</th>
+<th>后果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>description</code> 长度</td>
+<td>中位数 <strong>35 字</strong>，最短 6 字</td>
+<td>SERP 理想 120-155 字，太短时 Google 自己从正文随机截一段，展示文案不可控</td>
+</tr>
+<tr>
+<td>站内链接</td>
+<td><strong>0 &#x2F; 112</strong></td>
+<td>全站孤岛，权重不流动</td>
+</tr>
+<tr>
+<td>配图</td>
+<td><strong>1 &#x2F; 112</strong></td>
+<td>无图搜流量</td>
+</tr>
+<tr>
+<td>正文长度</td>
+<td>中位数 2897 字</td>
+<td>够，不动</td>
+</tr>
+<tr>
+<td>标题长度</td>
+<td>中位数 43 字，100&#x2F;112 超 30 字</td>
+<td>SERP 会截断，但<strong>不建议再改</strong>（昨天刚重写一轮）</td>
+</tr>
+</tbody></table>
+<p>description 这一项最离谱——它本来是唯一能控制&quot;搜索结果里显示哪段话&quot;的地方，却被填成了标题的复制。</p>
+<h2 id="二、新工具-tools-articles-gen-desc-py"><a href="#二、新工具-tools-articles-gen-desc-py" class="headerlink" title="二、新工具 tools/articles/gen_desc.py"></a>二、新工具 <code>tools/articles/gen_desc.py</code></h2><p>按痛点写 meta description，目标 110~150 字，禁止流水账复述代码步骤。参数：<code>--dry-run</code> &#x2F; <code>--limit N</code> &#x2F; <code>--only &lt;文件名子串&gt;</code> &#x2F; <code>--force</code>。默认跳过已 ≥90 字的文章，幂等。</p>
+<p><strong>踩到的坑（重要）</strong>：</p>
+<ol>
+<li>🔴 <strong><code>re.subn</code> 用字符串做替换串会炸</strong>：遇到正文里的 <code>\w</code> 时抛 <code>re.PatternError: bad escape \w</code>，整批在第 32 篇写入处崩掉——已改的 30 篇留着、剩下 81 篇没动。修法：<code>subn(lambda m: &quot;description: &quot; + yq(desc), t, count=1)</code> 用 lambda 绕开转义解析</li>
+<li>模型对「110<del>150 字」执行力不稳，实测出现过 222 &#x2F; 258 字。两道防线：超 165 字带反馈单篇重试；仍超长 → <code>clamp()</code> 在 120</del>155 之间找最后一个句读截断</li>
+</ol>
+<p><strong>质检结果（前 33 篇）</strong>：中位数 139 字，28&#x2F;33 落在 110~165 合格区间，质量红旗 0 篇。</p>
+<h2 id="三、🔴-DeepSeek-余额耗尽（402）"><a href="#三、🔴-DeepSeek-余额耗尽（402）" class="headerlink" title="三、🔴 DeepSeek 余额耗尽（402）"></a>三、🔴 DeepSeek 余额耗尽（402）</h2><p>批量跑到第 97 篇时 API 返回：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">HTTP Error 402 Payment Required</span><br><span class="line">&#123;&quot;error&quot;:&#123;&quot;message&quot;:&quot;Insufficient Balance&quot;,&quot;code&quot;:&quot;invalid_request_error&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>key 是 <code>***</code>，模型 <code>deepseek-v4-pro</code>。最终结果：<strong>65&#x2F;112 篇已改（中位数 35 → 122 字），47 篇仍是旧短描述，0 篇超长。</strong></p>
+<p><strong>连带影响</strong>：<code>build_articles.py --auto</code> 用的是同一个 key，所以 <strong>2026-10-24 08:30 的每日文章刷新会失败</strong>。今天 08:33 那次是欠费前跑完的（<code>tmp/daily.last_success = 2026-10-23</code>），不受影响。</p>
+<h2 id="四、✅-改用本机-Ollama-跑完剩余-47-篇"><a href="#四、✅-改用本机-Ollama-跑完剩余-47-篇" class="headerlink" title="四、✅ 改用本机 Ollama 跑完剩余 47 篇"></a>四、✅ 改用本机 Ollama 跑完剩余 47 篇</h2><p>用户问「能不能用本地模型，太费钱了」→ 本机早有 <code>ollama 0.40.4</code>（127.0.0.1:11434），装的是 <code>qwen3.8-27b</code> 的 3 个量化档 + <code>nomic-embed-text</code>，GPU 是 RTX 2080 Ti（11G）。</p>
+<p>🔴 <strong>最关键的一个坑</strong>：这些模型 <code>capabilities</code> 含 <code>thinking</code>。不传 <code>&quot;think&quot;: false</code> 时，<code>num_predict</code> 会被思考过程全部吃光——实测 2048 token 全烧在 reasoning、<code>content</code> 返回空串、耗时 170s 白跑。<strong>关掉后单篇只要 ~76 token &#x2F; 5s</strong>。ollama 0.40 支持请求级 <code>think</code> 参数。</p>
+<p>接入结果（<code>gen_desc.py --engine local</code>）：</p>
+<ul>
+<li>单篇 5~13s，47 篇 <strong>664s 跑完，0 失败</strong></li>
+<li>最终 112 篇：description 中位数 <strong>139 字</strong>，合格 <strong>109 篇</strong>，超长 0，&lt;90 短描述 0</li>
+<li>字数控制不稳定（实测 18~291 字），靠 <code>clamp()</code> + 双向重试兜底才稳</li>
+<li>本地模型还会把「序号|摘要：」格式前缀抄进正文 → <code>parse()</code> 必须按「竖线左边非数字」分支取右半段</li>
+</ul>
+<p>文章生成也测了：<code>qwen3.8-27b-iq2xxs</code> 用真实素材（6753 字符）写出 <strong>1998 字 &#x2F; 72s</strong>，<code>validate()</code> 一次通过。质量弱于 <code>deepseek-v4-pro</code>（会把「用户」写成第三人称、DESC 只有 27 字偏短），但作为免费兜底完全够用。</p>
+<h2 id="五、部署与线上验证"><a href="#五、部署与线上验证" class="headerlink" title="五、部署与线上验证"></a>五、部署与线上验证</h2><p><code>hexo g</code> 增量只生成 163 files（只改了 front-matter，无需 clean），<code>public/posts/</code> 112 个目录完整。deploy commit <code>89e026a</code>，<code>status --short</code> 为 0、<code>## master</code> 无 ahead&#x2F;behind。线上 <code>blog.demohappy.top</code> 抽查 description 已生效。</p>
+<p>最终部署 commit <code>38f0a65</code>，0 未提交、<code>## master</code> 同步。线上复检 ov0728&#x2F;ov0910&#x2F;ov1010 均为新描述。</p>
+<h2 id="六、给用户的判断（比工具本身重要）"><a href="#六、给用户的判断（比工具本身重要）" class="headerlink" title="六、给用户的判断（比工具本身重要）"></a>六、给用户的判断（比工具本身重要）</h2><p><strong>112 篇是施工日志，搜索需求本来就接近零。</strong> 站内 SEO 天花板很低——description &#x2F; 内链 &#x2F; 配图只是「提升已经搜到的人」的转化率，不能制造流量。能从 0 到 1 的只有站外分发：从 112 篇里提炼「答案型」文章发到掘金&#x2F;知乎。</p>
+<p>已向用户提议下一步：①筛出 8-10 篇有外部搜索价值的 ②改写成 1500 字问题→排查→根因→解法结构。</p>
+<p><strong>遗留</strong>：</p>
+<ul>
+<li><code>build_articles.py</code> 新增引擎开关：<code>ARTICLE_ENGINE=local|deepseek</code>（默认 deepseek），<code>ARTICLE_FALLBACK_LOCAL=0</code> 可关降级。<strong>云端 HTTP 401&#x2F;402&#x2F;403 一律自动降级本地</strong>，并把降级原因打印到 <code>daily_refresh.log</code>——修掉了「欠费 → 当天静默断更、且与素材断流长得一模一样」这个坑</li>
+<li>充值后重跑即可：<code>python tools/articles/gen_desc.py</code>（幂等，只会处理那 47 篇 &lt;90 字的）</li>
+</ul>
+]]></content>
+      <categories>
+        <category>自动化运维</category>
+      </categories>
+      <tags>
+        <tag>SEO</tag>
+        <tag>运维</tag>
+        <tag>调试</tag>
+        <tag>本地模型</tag>
       </tags>
   </entry>
 </search>

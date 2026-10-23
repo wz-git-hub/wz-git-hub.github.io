@@ -6,7 +6,7 @@
   <link href="https://blog.demohappy.top/atom.xml" rel="self"/>
   
   <link href="https://blog.demohappy.top/"/>
-  <updated>2026-10-23T01:36:14.434Z</updated>
+  <updated>2026-10-23T04:14:31.011Z</updated>
   <id>https://blog.demohappy.top/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>用本地 Ollama 模型批量重写了 112 篇文章的 meta description（2026-10-23）</title>
+    <link href="https://blog.demohappy.top/posts/ov1023/"/>
+    <id>https://blog.demohappy.top/posts/ov1023/</id>
+    <published>2026-10-23T13:30:00.000Z</published>
+    <updated>2026-10-23T04:14:31.011Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>description 中位数只有 35 字，最短的原文就是 <code>ForeverBlog</code>——这不是&quot;优化空间&quot;，是搜索展示文案根本不存在。</strong></p><p>昨天已经做完 P0-P3 清单里的全部项，今天用户又问「如何提升曝光和流量」。同一个问题重复出现说明昨天的答案没落地。这次换了角度：不再列清单，先用数据定位真实瓶颈。</p><h2 id="一、内容层体检（昨天没查的三项）"><a href="#一、内容层体检（昨天没查的三项）" class="headerlink" title="一、内容层体检（昨天没查的三项）"></a>一、内容层体检（昨天没查的三项）</h2><table><thead><tr><th>项目</th><th>实测</th><th>后果</th></tr></thead><tbody><tr><td><code>description</code> 长度</td><td>中位数 <strong>35 字</strong>，最短 6 字</td><td>SERP 理想 120-155 字，太短时 Google 自己从正文随机截一段，展示文案不可控</td></tr><tr><td>站内链接</td><td><strong>0 &#x2F; 112</strong></td><td>全站孤岛，权重不流动</td></tr><tr><td>配图</td><td><strong>1 &#x2F; 112</strong></td><td>无图搜流量</td></tr><tr><td>正文长度</td><td>中位数 2897 字</td><td>够，不动</td></tr><tr><td>标题长度</td><td>中位数 43 字，100&#x2F;112 超 30 字</td><td>SERP 会截断，但<strong>不建议再改</strong>（昨天刚重写一轮）</td></tr></tbody></table><p>description 这一项最离谱——它本来是唯一能控制&quot;搜索结果里显示哪段话&quot;的地方，却被填成了标题的复制。</p><h2 id="二、新工具-tools-articles-gen-desc-py"><a href="#二、新工具-tools-articles-gen-desc-py" class="headerlink" title="二、新工具 tools/articles/gen_desc.py"></a>二、新工具 <code>tools/articles/gen_desc.py</code></h2><p>按痛点写 meta description，目标 110~150 字，禁止流水账复述代码步骤。参数：<code>--dry-run</code> &#x2F; <code>--limit N</code> &#x2F; <code>--only &lt;文件名子串&gt;</code> &#x2F; <code>--force</code>。默认跳过已 ≥90 字的文章，幂等。</p><p><strong>踩到的坑（重要）</strong>：</p><ol><li>🔴 <strong><code>re.subn</code> 用字符串做替换串会炸</strong>：遇到正文里的 <code>\w</code> 时抛 <code>re.PatternError: bad escape \w</code>，整批在第 32 篇写入处崩掉——已改的 30 篇留着、剩下 81 篇没动。修法：<code>subn(lambda m: &quot;description: &quot; + yq(desc), t, count=1)</code> 用 lambda 绕开转义解析</li><li>模型对「110<del>150 字」执行力不稳，实测出现过 222 &#x2F; 258 字。两道防线：超 165 字带反馈单篇重试；仍超长 → <code>clamp()</code> 在 120</del>155 之间找最后一个句读截断</li></ol><p><strong>质检结果（前 33 篇）</strong>：中位数 139 字，28&#x2F;33 落在 110~165 合格区间，质量红旗 0 篇。</p><h2 id="三、🔴-DeepSeek-余额耗尽（402）"><a href="#三、🔴-DeepSeek-余额耗尽（402）" class="headerlink" title="三、🔴 DeepSeek 余额耗尽（402）"></a>三、🔴 DeepSeek 余额耗尽（402）</h2><p>批量跑到第 97 篇时 API 返回：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HTTP Error 402 Payment Required</span><br><span class="line">&#123;&quot;error&quot;:&#123;&quot;message&quot;:&quot;Insufficient Balance&quot;,&quot;code&quot;:&quot;invalid_request_error&quot;&#125;&#125;</span><br></pre></td></tr></table></figure><p>key 是 <code>***</code>，模型 <code>deepseek-v4-pro</code>。最终结果：<strong>65&#x2F;112 篇已改（中位数 35 → 122 字），47 篇仍是旧短描述，0 篇超长。</strong></p><p><strong>连带影响</strong>：<code>build_articles.py --auto</code> 用的是同一个 key，所以 <strong>2026-10-24 08:30 的每日文章刷新会失败</strong>。今天 08:33 那次是欠费前跑完的（<code>tmp/daily.last_success = 2026-10-23</code>），不受影响。</p><h2 id="四、✅-改用本机-Ollama-跑完剩余-47-篇"><a href="#四、✅-改用本机-Ollama-跑完剩余-47-篇" class="headerlink" title="四、✅ 改用本机 Ollama 跑完剩余 47 篇"></a>四、✅ 改用本机 Ollama 跑完剩余 47 篇</h2><p>用户问「能不能用本地模型，太费钱了」→ 本机早有 <code>ollama 0.40.4</code>（127.0.0.1:11434），装的是 <code>qwen3.8-27b</code> 的 3 个量化档 + <code>nomic-embed-text</code>，GPU 是 RTX 2080 Ti（11G）。</p><p>🔴 <strong>最关键的一个坑</strong>：这些模型 <code>capabilities</code> 含 <code>thinking</code>。不传 <code>&quot;think&quot;: false</code> 时，<code>num_predict</code> 会被思考过程全部吃光——实测 2048 token 全烧在 reasoning、<code>content</code> 返回空串、耗时 170s 白跑。<strong>关掉后单篇只要 ~76 token &#x2F; 5s</strong>。ollama 0.40 支持请求级 <code>think</code> 参数。</p><p>接入结果（<code>gen_desc.py --engine local</code>）：</p><ul><li>单篇 5~13s，47 篇 <strong>664s 跑完，0 失败</strong></li><li>最终 112 篇：description 中位数 <strong>139 字</strong>，合格 <strong>109 篇</strong>，超长 0，&lt;90 短描述 0</li><li>字数控制不稳定（实测 18~291 字），靠 <code>clamp()</code> + 双向重试兜底才稳</li><li>本地模型还会把「序号|摘要：」格式前缀抄进正文 → <code>parse()</code> 必须按「竖线左边非数字」分支取右半段</li></ul><p>文章生成也测了：<code>qwen3.8-27b-iq2xxs</code> 用真实素材（6753 字符）写出 <strong>1998 字 &#x2F; 72s</strong>，<code>validate()</code> 一次通过。质量弱于 <code>deepseek-v4-pro</code>（会把「用户」写成第三人称、DESC 只有 27 字偏短），但作为免费兜底完全够用。</p><h2 id="五、部署与线上验证"><a href="#五、部署与线上验证" class="headerlink" title="五、部署与线上验证"></a>五、部署与线上验证</h2><p><code>hexo g</code> 增量只生成 163 files（只改了 front-matter，无需 clean），<code>public/posts/</code> 112 个目录完整。deploy commit <code>89e026a</code>，<code>status --short</code> 为 0、<code>## master</code> 无 ahead&#x2F;behind。线上 <code>blog.demohappy.top</code> 抽查 description 已生效。</p><p>最终部署 commit <code>38f0a65</code>，0 未提交、<code>## master</code> 同步。线上复检 ov0728&#x2F;ov0910&#x2F;ov1010 均为新描述。</p><h2 id="六、给用户的判断（比工具本身重要）"><a href="#六、给用户的判断（比工具本身重要）" class="headerlink" title="六、给用户的判断（比工具本身重要）"></a>六、给用户的判断（比工具本身重要）</h2><p><strong>112 篇是施工日志，搜索需求本来就接近零。</strong> 站内 SEO 天花板很低——description &#x2F; 内链 &#x2F; 配图只是「提升已经搜到的人」的转化率，不能制造流量。能从 0 到 1 的只有站外分发：从 112 篇里提炼「答案型」文章发到掘金&#x2F;知乎。</p><p>已向用户提议下一步：①筛出 8-10 篇有外部搜索价值的 ②改写成 1500 字问题→排查→根因→解法结构。</p><p><strong>遗留</strong>：</p><ul><li><code>build_articles.py</code> 新增引擎开关：<code>ARTICLE_ENGINE=local|deepseek</code>（默认 deepseek），<code>ARTICLE_FALLBACK_LOCAL=0</code> 可关降级。<strong>云端 HTTP 401&#x2F;402&#x2F;403 一律自动降级本地</strong>，并把降级原因打印到 <code>daily_refresh.log</code>——修掉了「欠费 → 当天静默断更、且与素材断流长得一模一样」这个坑</li><li>充值后重跑即可：<code>python tools/articles/gen_desc.py</code>（幂等，只会处理那 47 篇 &lt;90 字的）</li></ul>]]></content>
+    
+    
+    <summary type="html">全站 112 篇技术日志文章的 SERP 摘要中位数仅 35 字，最短只有 6 个字，搜索引擎展示完全失控。DeepSeek API 跑到第 97 篇时余额归零返回 402，剩余 47 篇卡住。本机 Ollama 的 qwen3.8-27b 因 thinking 模式吞掉全部 token 导致</summary>
+    
+    
+    
+    <category term="自动化运维" scheme="https://blog.demohappy.top/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/"/>
+    
+    
+    <category term="SEO" scheme="https://blog.demohappy.top/tags/SEO/"/>
+    
+    <category term="运维" scheme="https://blog.demohappy.top/tags/%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="调试" scheme="https://blog.demohappy.top/tags/%E8%B0%83%E8%AF%95/"/>
+    
+    <category term="本地模型" scheme="https://blog.demohappy.top/tags/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B/"/>
+    
+  </entry>
   
   <entry>
     <title>xverify14 只读审计核验 Codex 四个行为测试能否捕获代码劣化（2026-10-22）</title>
@@ -496,33 +523,6 @@
     <category term="自动化运维" scheme="https://blog.demohappy.top/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/"/>
     
     <category term="排障" scheme="https://blog.demohappy.top/tags/%E6%8E%92%E9%9A%9C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>127 笔平仓记录复盘确认 SL 放宽为负优化并已回退（2026-09-20）</title>
-    <link href="https://blog.demohappy.top/posts/ov0920/"/>
-    <id>https://blog.demohappy.top/posts/ov0920/</id>
-    <published>2026-09-20T13:30:00.000Z</published>
-    <updated>2026-10-23T01:40:37.164Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>“67% 的 5% 止损触发不是假摔，是真崩盘。”</strong></p><p>今天下午把 Hyperliquid testnet 上这几个月攒下的平仓记录拉出来做了一次完整回放回测，原本以为只是例行核对一下参数，结果直接推翻了自己上周对 factor_ic 止损的一个调整。先打开今天生成的那份 TLDR 文件，路径还挂在 default&#x2F;resources&#x2F;craw_app1_wz&#x2F;backtest-comprehensive-2026-09-20&#x2F;Comprehensive_Backtest_-_2026-09-20&#x2F;TLDR_10more_86032086_1.md 下面，光看摘要就意识到问题不小。</p><h2 id="一、背景：127-笔平仓，5-个策略一起回放"><a href="#一、背景：127-笔平仓，5-个策略一起回放" class="headerlink" title="一、背景：127 笔平仓，5 个策略一起回放"></a>一、背景：127 笔平仓，5 个策略一起回放</h2><p>这次回测的样本是数据库 hl_smart_money.db 里 127 条已平仓记录，时间跨度从 2026-07-30 到 2026-09-10，全部是 HL testnet 的模拟单。覆盖 5 个策略：factor_ic、sentiment、token、market_flow、smart_money。回放工具用的是 HL testnet 的 candle API（<a href="https://api.hyperliquid-testnet.xyz/info%EF%BC%89%EF%BC%8C%E8%A7%84%E5%88%99%E6%98%AF">https://api.hyperliquid-testnet.xyz/info），规则是</a> 1 小时 K 线从入场点重放到入场后 48 小时，中间按模拟的 SL&#x2F;TP&#x2F;timeout 逻辑退出。脚本今天写了好几个：replay_backtest.py 专门跑 factor_ic 的 59 笔全量回放，replay_sentiment.py 跑 sentiment 的 27 笔乘 4 个持有期，replay_deepdive.py 逐笔比 SL 5% 和 10% 的差异，replay_final.py 出汇总，结果落在 replay_results.json，每个单子存了 5 个字段。</p><h2 id="二、总览：active-组合有-18-04-的改进空间"><a href="#二、总览：active-组合有-18-04-的改进空间" class="headerlink" title="二、总览：active 组合有 +$18.04 的改进空间"></a>二、总览：active 组合有 +$18.04 的改进空间</h2><p>TL;DR 表先给了一版大账：</p><table><thead><tr><th>Strategy</th><th>Current</th><th>Counterfactual</th><th>Improvement</th></tr></thead><tbody><tr><td>factor_ic (59 trades, B+C+D)</td><td>$-16.50</td><td>$+16.99</td><td><strong>+$33.49</strong></td></tr><tr><td>sentiment (27 trades, 72h)</td><td>$+67.54</td><td>$+52.09</td><td>-$15.45 (cap risk)</td></tr><tr><td>token</td><td>$+139.23 (N&#x3D;6)</td><td>n&#x2F;a</td><td>n&#x2F;a (naturally stopped)</td></tr><tr><td>market_flow</td><td>-$36.50</td><td>n&#x2F;a</td><td>n&#x2F;a (already killed)</td></tr><tr><td><strong>TOTAL active</strong></td><td><strong>$+51.04</strong></td><td><strong>$+69.08</strong></td><td><strong>+$18.04</strong></td></tr></tbody></table><p>其中有一条 critical correction 写得很醒目：<strong>optimization A（SL 5% -&gt; 10%）是负优化，已回退。</strong> 这条我今天花最多时间验证，后面单独说。先说整体：两个还在跑的 active 策略里，factor_ic 目前实际亏 16 块 5，但如果把上个月做的 B+C+D 过滤套上，反事实能赚 16 块 9 毛 9，加上 sentiment 的 72h 封顶虽然比无上限少赚 15 块 4 毛 5，但整体 active 从 +51.04 能优化到 +69.08，净改进 +18.04。token 那 6 笔已经自然停了，赚 139.23；market_flow 亏 36.50，已经 kill 掉不再看。</p><h2 id="三、factor-ic-回放：完美-5-SL-能赚，实盘亏在延迟和超时"><a href="#三、factor-ic-回放：完美-5-SL-能赚，实盘亏在延迟和超时" class="headerlink" title="三、factor_ic 回放：完美 5% SL 能赚，实盘亏在延迟和超时"></a>三、factor_ic 回放：完美 5% SL 能赚，实盘亏在延迟和超时</h2><p>factor_ic 的 59 笔回放是最有信息量的。模拟和实盘的差异拉出来是这样：</p><table><thead><tr><th>Rule</th><th>Sim PnL</th><th>Note</th></tr></thead><tbody><tr><td>Actual (trader real)</td><td>$-16.50</td><td>real execution, slippage&#x2F;timeout failures</td></tr><tr><td>Sim 5% SL (perfect)</td><td>$+10.98</td><td>trader didn&#39;t trigger every 5% SL</td></tr><tr><td>Sim 10% SL (perfect)</td><td>$-1.87</td><td>SL widening let 4 real breakdowns worsen</td></tr></tbody></table><p>一句话：如果每笔都严格按 5% 止损触发，这 59 笔能赚 10.98；如果当时把止损放宽到 10%，反而会亏 1.87。实盘为什么亏 16.50？中间差了 27.48，拆开看有三个原因：一部分 timeout 平仓其实是自然反弹的位置，原本应该触发 SL 的；5% SL 事件里有 4 次是真崩盘；还有 trader 经常挂在 HL API 上，导致平仓延迟。这三点都能解释为什么实盘比完美模拟差这么多。</p><p>接着套用上个月定的 B+C+D 过滤条件（MIN_SCORE &gt;&#x3D; 0.9 且剔除 APT），剩下 14 笔：实际 +12.22，模拟 5% SL +16.99，模拟 10% SL +13.01。<strong>B+C+D 的净改进就是 +$33.49，从 -16.50 拉到 +16.99。</strong> 这部分验证通过，过滤条件没白加。</p><h2 id="四、优化-A-的失败：5-SL-放宽到-10-是负优化"><a href="#四、优化-A-的失败：5-SL-放宽到-10-是负优化" class="headerlink" title="四、优化 A 的失败：5% SL 放宽到 10% 是负优化"></a>四、优化 A 的失败：5% SL 放宽到 10% 是负优化</h2><p>上周我一度觉得 factor_ic 的 5% 止损太紧，很多单子可能被假摔扫掉，所以想做一个 optimization A：把 STOP_LOSS_PCT 从 5% 放宽到 10%。今天把模拟中真正触发 5% SL 的 6 笔单子拉出来逐一对比：</p><table><thead><tr><th>Trade</th><th>Sym</th><th>Side</th><th>Score</th><th>5% SL</th><th>10% SL</th><th>Diff</th></tr></thead><tbody><tr><td>#83</td><td>AVAX</td><td>SHORT</td><td>0.77</td><td>-$4.01</td><td>-$0.78</td><td>+$3.23</td></tr><tr><td>#97</td><td>ARB</td><td>SHORT</td><td>0.83</td><td>-$4.02</td><td>-$8.02</td><td>-$4.00</td></tr><tr><td>#98</td><td>APT</td><td>SHORT</td><td>0.84</td><td>-$4.02</td><td>-$4.12</td><td>-$0.11</td></tr><tr><td>#102</td><td>AAVE</td><td>SHORT</td><td>0.80</td><td>-$4.00</td><td>-$7.99</td><td>-$3.99</td></tr><tr><td>#106</td><td>AAVE</td><td>SHORT</td><td>0.84</td><td>-$4.03</td><td>-$8.04</td><td>-$4.01</td></tr><tr><td>#112</td><td>SOL</td><td>SHORT</td><td>0.91</td><td>-$3.99</td><td>-$7.97</td><td>-$3.98</td></tr></tbody></table><p>统计下来只有 2 笔（33%）是假摔，也就是 #83 AVAX 和 #98 APT，放宽到 10% 能少亏一点；剩下 4 笔（67%）全是真崩盘，5% 止损反而正确，放宽到 10% 直接让亏损翻倍。算净账：4 笔真崩盘按 10% SL 多亏 -$15.98，2 笔假摔按 10% SL 改善 +$3.13，合起来净损失 -$12.85。<strong>结论很硬：我之前“5% 太紧导致假摔”的假设是错的，67% 的触发是真崩盘。</strong> 所以今天直接执行回退：把 STRATEGY_RISK_OVERRIDES.factor_ic.STOP_LOSS_PCT 这个覆盖项删掉，回到 5% 默认值。这个负优化不会再上了。</p><h2 id="五、sentiment-回放：持有越久越好，但-72h-是合理上限"><a href="#五、sentiment-回放：持有越久越好，但-72h-是合理上限" class="headerlink" title="五、sentiment 回放：持有越久越好，但 72h 是合理上限"></a>五、sentiment 回放：持有越久越好，但 72h 是合理上限</h2><p>sentiment 的 27 笔单子按不同 MAX_HOLD 跑了四档，再加上实盘无上限的对照：</p><table><thead><tr><th>MAX_HOLD</th><th>Sim PnL</th><th>TP</th><th>SL</th><th>Timeout</th><th>Note</th></tr></thead><tbody><tr><td>24h</td><td>$+29.23</td><td>5</td><td>0</td><td>22</td><td>conservative</td></tr><tr><td>48h</td><td>$+42.25</td><td>11</td><td>0</td><td>16</td><td>balanced</td></tr><tr><td>72h</td><td>$+52.09</td><td>12</td><td>0</td><td>15</td><td><strong>current choice</strong></td></tr><tr><td>96h</td><td>$+57.17</td><td>14</td><td>0</td><td>13</td><td>aggressive</td></tr><tr><td>Actual (no cap)</td><td>$+67.54</td><td>n&#x2F;a</td><td>n&#x2F;a</td><td>n&#x2F;a</td><td>trader sometimes &gt;96h</td></tr></tbody></table><p>几个发现很清楚：第一，sentiment 不管怎么限持有期都是正收益，哪怕 24h 也有 +29.23；第二，TP 次数（11-14）远大于 SL（0），说明这些单子大多是顺势持仓，没有被止损扫过；第三，持有期越长收益越高，从 24h 到 72h 多了 +$22.86，提升 78%，但从 72h 到 96h 只多 +$5.08，边际收益很薄；第四，实盘无上限的 +$67.54 反而比所有模拟都高，因为 trader 有时候拿超过 96h，吃到了大趋势。</p><p>那 72h 封顶值不值得？它牺牲了比无上限少赚的 $15.45，换来的是把极端持仓时间压下来、降低 margin call 风险。而且</p>]]></content>
-    
-    
-    <summary type="html">复盘Hyperliquid testnet 127笔平仓记录发现，67%的5%止损触发不是假摔而是真崩盘，证明上周放宽factor_ic的SL属负优化，已回退。样本来自hl_smart_money.db，用1小时K线回放并按SL/TP退出</summary>
-    
-    
-    
-    <category term="量化策略" scheme="https://blog.demohappy.top/categories/%E9%87%8F%E5%8C%96%E7%AD%96%E7%95%A5/"/>
-    
-    
-    <category term="量化" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96/"/>
-    
-    <category term="排障" scheme="https://blog.demohappy.top/tags/%E6%8E%92%E9%9A%9C/"/>
-    
-    <category term="交易系统" scheme="https://blog.demohappy.top/tags/%E4%BA%A4%E6%98%93%E7%B3%BB%E7%BB%9F/"/>
-    
-    <category term="回测验证" scheme="https://blog.demohappy.top/tags/%E5%9B%9E%E6%B5%8B%E9%AA%8C%E8%AF%81/"/>
     
   </entry>
   
