@@ -1,0 +1,315 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Hyperliquid 下单报 Order has invalid price：低价币价格精度算错 | Forever BLog</title><meta name="author" content="DEMOHAPI"><meta name="copyright" content="DEMOHAPI"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Hyperliquid 下单返回 Order has invalid price，主币正常、只有低价币失败——根因是客户端按固定小数位格式化价格，而 Hyperliquid 的价格精度由 szDecimals 和 5 位有效数字共同决定，0.001234 被舍入成 0.00 就成了无效价格。本文给出精度推导与下单前校验。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hyperliquid 下单报 Order has invalid price：低价币价格精度算错">
+<meta property="og:url" content="https://blog.demohappy.top/posts/hyperliquid-invalid-price/">
+<meta property="og:site_name" content="Forever BLog">
+<meta property="og:description" content="Hyperliquid 下单返回 Order has invalid price，主币正常、只有低价币失败——根因是客户端按固定小数位格式化价格，而 Hyperliquid 的价格精度由 szDecimals 和 5 位有效数字共同决定，0.001234 被舍入成 0.00 就成了无效价格。本文给出精度推导与下单前校验。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://demohapi.4everland.link/ipfs/bafybeig36qwmf3k4gxhj4wpoh35p3u66bkbcwwhxfjnk2jnjw4dk42wx7y">
+<meta property="article:published_time" content="2026-10-23T02:40:00.000Z">
+<meta property="article:modified_time" content="2026-10-23T07:48:38.413Z">
+<meta property="article:author" content="DEMOHAPI">
+<meta property="article:tag" content="排障">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="量化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://demohapi.4everland.link/ipfs/bafybeig36qwmf3k4gxhj4wpoh35p3u66bkbcwwhxfjnk2jnjw4dk42wx7y"><link rel="shortcut icon" href="https://demohapi.4everland.link/ipfs/bafkreicb6jujwvhw4zfl6d2ki27n3zuofgf4t3wkoavkfqoxerlcycseyq"><link rel="canonical" href="https://blog.demohappy.top/posts/hyperliquid-invalid-price/"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Hyperliquid 下单报 Order has invalid price：低价币价格精度算错","description":"Hyperliquid 下单返回 Order has invalid price，主币正常、只有低价币失败——根因是客户端按固定小数位格式化价格，而 Hyperliquid 的价格精度由 szDecimals 和 5 位有效数字共同决定，0.001234 被舍入成 0.00 就成了无效价格。本文给出精度推导与下单前校验。","datePublished":"2026-10-23T10:40:00+08:00","dateModified":"2026-10-23T15:48:38+08:00","inLanguage":"zh-CN","author":{"@type":"Person","name":"DEMOHAPI","url":"https://blog.demohappy.top/about/"},"publisher":{"@type":"Person","name":"DEMOHAPI","url":"https://blog.demohappy.top/about/"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.demohappy.top/posts/hyperliquid-invalid-price/"},"image":"https://demohapi.4everland.link/ipfs/bafybeig36qwmf3k4gxhj4wpoh35p3u66bkbcwwhxfjnk2jnjw4dk42wx7y"}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://blog.demohappy.top/"},{"@type":"ListItem","position":2,"name":"Hyperliquid 下单报 Order has invalid price：低价币价格精度算错"}]}</script><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googlefonts.cn/css?family=Kaushan+Script" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"简","msgToSimplifiedChinese":"繁"},
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"距离上次更新已经过了","messageNext":"天，文章所描述的內容可能已经发生变化，请留意。"},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":10,"languages":{"author":"作者: DEMOHAPI","link":"链接: ","source":"来源: Forever BLog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Hyperliquid 下单报 Order has invalid price：低价币价格精度算错',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-10-23 15:48:38'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/mobile-fix.css?v=1"><link rel="stylesheet" href="/css/index-pages.css?v=3"><link rel="alternate" href="/atom.xml" title="Forever BLog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://demohapi.4everland.link/ipfs/bafybeigczmfcg5rhbuvgajgjrihah4jpk63n5cjtey62dy5ul72puh37qq" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">119</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">28</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/books/"><i class="fa-fw fas fa-book-reader"></i><span> 书库</span></a></div><div class="menus_item"><a class="site-page" href="/news/"><i class="fa-fw fas fa-newspaper"></i><span> 资讯</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/douyin/"><i class="fa-fw fab fa-tiktok"></i><span> 抖音</span></a></li><li><a class="site-page child" href="/market/"><i class="fa-fw fas fa-chart-line"></i><span> 行情</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-book"></i><span> 高级</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://stats.uptimerobot.com/5pXZ1tgAl5"><span> 🚀 服务状态</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('https://demohapi.4everland.link/ipfs/bafybeig36qwmf3k4gxhj4wpoh35p3u66bkbcwwhxfjnk2jnjw4dk42wx7y')"><nav id="nav"><span id="blog-info"><a href="/" title="Forever BLog"><img class="site-icon" src="https://demohapi.4everland.link/ipfs/bafkreih6xrehehlw2eqm4k2trkiagblz6w6ueybwjbvnosmek2d4ppxoka"/></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/books/"><i class="fa-fw fas fa-book-reader"></i><span> 书库</span></a></div><div class="menus_item"><a class="site-page" href="/news/"><i class="fa-fw fas fa-newspaper"></i><span> 资讯</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/douyin/"><i class="fa-fw fab fa-tiktok"></i><span> 抖音</span></a></li><li><a class="site-page child" href="/market/"><i class="fa-fw fas fa-chart-line"></i><span> 行情</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-book"></i><span> 高级</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://stats.uptimerobot.com/5pXZ1tgAl5"><span> 🚀 服务状态</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Hyperliquid 下单报 Order has invalid price：低价币价格精度算错</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-10-23T02:40:00.000Z" title="发表于 2026-10-23 10:40:00">2026-10-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-23T07:48:38.413Z" title="更新于 2026-10-23 15:48:38">2026-10-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%87%8F%E5%8C%96%E7%B3%BB%E7%BB%9F/">量化系统</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Hyperliquid 下单报 Order has invalid price：低价币价格精度算错"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="现象：主币能成交，小币全失败"><a href="#现象：主币能成交，小币全失败" class="headerlink" title="现象：主币能成交，小币全失败"></a>现象：主币能成交，小币全失败</h2><p>策略在 testnet 跑了两周，BTC、ETH 的下单一直正常。加入一批低价币之后，所有小币种的单子都被拒：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;status&quot;:&quot;err&quot;,&quot;response&quot;:&quot;Order has invalid price.&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不是余额不足，不是杠杆超限，就是价格不合法。而且失败是<strong>选择性的</strong>——同一个策略、同一套代码，价格在 1 以上的币全部通过，<code>0.0x</code> 区间的币全部被拒。</p>
+<p>这个模式本身就指向了答案：问题跟「价格怎么格式化」有关，跟下单逻辑无关。</p>
+<h2 id="根因：价格被舍入成了-0"><a href="#根因：价格被舍入成了-0" class="headerlink" title="根因：价格被舍入成了 0"></a>根因：价格被舍入成了 0</h2><p>先看当时的格式化代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">px = <span class="built_in">round</span>(price, <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>简单粗暴，两位小数。对 BTC（60000 以上）毫无影响，对价格 <code>0.001234</code> 的币：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">round</span>(<span class="number">0.001234</span>, <span class="number">2</span>)</span><br><span class="line"><span class="number">0.0</span></span><br></pre></td></tr></table></figure>
+
+<p>价格变成了 <code>0.0</code>。交易所收到一个价格为 0 的订单，返回 <code>Order has invalid price</code> 完全合理——这不是交易所苛刻，是客户端送了个垃圾数据。</p>
+<p>但为什么会写死两位小数？因为最初的代码从交易所返回的元数据里取「价格精度」字段：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">px_decimals = asset_meta[<span class="string">&quot;pxDecimals&quot;</span>]   <span class="comment"># 想象中应该有这个字段</span></span><br></pre></td></tr></table></figure>
+
+<p>而 Hyperliquid 的 <code>meta</code> 接口返回的 universe 里**只有 <code>szDecimals</code>，没有 <code>pxDecimals</code>**。取不到就 <code>KeyError</code>，外面套了个 <code>try/except</code> 兜底成默认值 <code>2</code>——错误被吞掉了，问题被藏了两个月。</p>
+<h2 id="Hyperliquid-的真实精度规则"><a href="#Hyperliquid-的真实精度规则" class="headerlink" title="Hyperliquid 的真实精度规则"></a>Hyperliquid 的真实精度规则</h2><p>价格精度不是一个独立字段，而是由两条约束共同决定（永续合约）：</p>
+<ol>
+<li><strong>最多 5 位有效数字</strong></li>
+<li><strong>小数位数最多 <code>6 - szDecimals</code></strong></li>
+</ol>
+<p>两条取更严格的那个。</p>
+<p>举几个例子：</p>
+<table>
+<thead>
+<tr>
+<th>价格</th>
+<th>szDecimals</th>
+<th>允许小数位</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>62345.7</td>
+<td>5</td>
+<td>1</td>
+<td><code>62346</code>（5 位有效数字）</td>
+</tr>
+<tr>
+<td>3.14159</td>
+<td>4</td>
+<td>2</td>
+<td><code>3.14</code></td>
+</tr>
+<tr>
+<td>0.0012345</td>
+<td>0</td>
+<td>6</td>
+<td><code>0.001234</code>（小数位被 cap 到 6）</td>
+</tr>
+<tr>
+<td>0.00001234</td>
+<td>0</td>
+<td>6</td>
+<td><code>0.000012</code></td>
+</tr>
+</tbody></table>
+<p>注意最后一行：价格太小时，<code>6 - szDecimals</code> 这条约束比 5 位有效数字更严格，会把有效数字压到 2 位。<strong>精度不够时只能放弃一部分有效数字</strong>，否则下单必失败。</p>
+<h2 id="修复：按规则推导精度"><a href="#修复：按规则推导精度" class="headerlink" title="修复：按规则推导精度"></a>修复：按规则推导精度</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">price_decimals</span>(<span class="params">price: <span class="built_in">float</span>, sz_decimals: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;返回该价格允许的小数位数（Hyperliquid 永续规则）。&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> price &lt;= <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="comment"># 约束一：5 位有效数字所需的小数位</span></span><br><span class="line">    exp = math.floor(math.log10(price))</span><br><span class="line">    sig_dec = <span class="number">4</span> - exp</span><br><span class="line">    <span class="comment"># 约束二：小数位上限</span></span><br><span class="line">    cap = <span class="number">6</span> - sz_decimals</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">max</span>(<span class="number">0</span>, <span class="built_in">min</span>(cap, sig_dec))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">format_price</span>(<span class="params">price: <span class="built_in">float</span>, sz_decimals: <span class="built_in">int</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;格式化成交易所接受的字符串。&quot;&quot;&quot;</span></span><br><span class="line">    d = price_decimals(price, sz_decimals)</span><br><span class="line">    <span class="keyword">if</span> d &lt;= <span class="number">0</span>:</span><br><span class="line">        <span class="comment"># 整数价：按 5 位有效数字四舍五入</span></span><br><span class="line">        digits = <span class="number">5</span> - <span class="built_in">int</span>(math.floor(math.log10(price))) - <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">str</span>(<span class="built_in">int</span>(<span class="built_in">round</span>(price, digits)))</span><br><span class="line">    <span class="keyword">return</span> <span class="string">f&quot;<span class="subst">&#123;price:.&#123;d&#125;</span>f&#125;&quot;</span>.rstrip(<span class="string">&quot;0&quot;</span>).rstrip(<span class="string">&quot;.&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><code>szDecimals</code> 从哪来？<code>POST /info</code> 带 <code>&#123;&quot;type&quot;:&quot;meta&quot;&#125;</code>，返回的 <code>universe</code> 数组每一项都有 <code>szDecimals</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">meta = post_info(&#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;meta&quot;</span>&#125;)</span><br><span class="line">sz_map = &#123;a[<span class="string">&quot;name&quot;</span>]: <span class="built_in">int</span>(a[<span class="string">&quot;szDecimals&quot;</span>]) <span class="keyword">for</span> a <span class="keyword">in</span> meta[<span class="string">&quot;universe&quot;</span>]&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="顺带暴露的第二个问题：精度直接决定最小下单量"><a href="#顺带暴露的第二个问题：精度直接决定最小下单量" class="headerlink" title="顺带暴露的第二个问题：精度直接决定最小下单量"></a>顺带暴露的第二个问题：精度直接决定最小下单量</h2><p>修好价格之后，小币还是有一部分失败，报的是另一类错误——<code>Order has invalid size</code>。</p>
+<p>原因相同：下单数量也有精度要求，由 <code>szDecimals</code> 直接给出。数量 <code>round(size, 2)</code> 对 <code>szDecimals=0</code> 的币（只能整数）没问题，但对 <code>szDecimals=4</code> 的币会把 <code>0.00005</code> 舍成 <code>0.0</code>，同样变成无效值。</p>
+<p>更麻烦的是<strong>最小名义金额</strong>。Hyperliquid 要求单笔订单名义价值不低于 10 USDC。低价币按固定金额计算数量时：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">size = 10 / 0.00001234 ≈ 810,000 枚</span><br></pre></td></tr></table></figure>
+
+<p>这时候仓位规模远超预期。所以下单前必须同时校验三个值：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">validate_order</span>(<span class="params">px: <span class="built_in">float</span>, sz: <span class="built_in">float</span>, sz_decimals: <span class="built_in">int</span>, min_notional=<span class="number">10.0</span></span>) -&gt; <span class="built_in">str</span> | <span class="literal">None</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;返回错误原因，None 表示通过。&quot;&quot;&quot;</span></span><br><span class="line">    px_str = format_price(px, sz_decimals)</span><br><span class="line">    sz_str = <span class="string">f&quot;<span class="subst">&#123;sz:.&#123;sz_decimals&#125;</span>f&#125;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">float</span>(px_str) &lt;= <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">f&quot;价格精度不足：<span class="subst">&#123;px&#125;</span> 在 szDecimals=<span class="subst">&#123;sz_decimals&#125;</span> 下会被舍入为 0&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">float</span>(sz_str) &lt;= <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">f&quot;数量精度不足：<span class="subst">&#123;sz&#125;</span> 在 szDecimals=<span class="subst">&#123;sz_decimals&#125;</span> 下会被舍入为 0&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">float</span>(px_str) * <span class="built_in">float</span>(sz_str) &lt; min_notional:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">f&quot;名义价值不足：<span class="subst">&#123;<span class="built_in">float</span>(px_str)*<span class="built_in">float</span>(sz_str):<span class="number">.2</span>f&#125;</span> &lt; <span class="subst">&#123;min_notional&#125;</span>&quot;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+
+<p>在真正发单前跑一遍，错误在本地下单前就暴露，而不是等交易所拒绝。</p>
+<h2 id="为什么这个-bug-藏了两个月"><a href="#为什么这个-bug-藏了两个月" class="headerlink" title="为什么这个 bug 藏了两个月"></a>为什么这个 bug 藏了两个月</h2><p>复盘一下，有三层原因叠加：</p>
+<p><strong>第一层</strong>，<code>pxDecimals</code> 字段确实不存在，但代码用 <code>try/except</code> 兜底而不是报错。异常被吞了，程序继续跑，只是精度错了。</p>
+<p><strong>第二层</strong>，主币占总成交量的大头，日常测试基本都在主币上跑。低价币只在扩展标的池时才被引入，时机很晚。</p>
+<p><strong>第三层</strong>，交易所的报错信息 <code>Order has invalid price</code> 没有说明<strong>为什么</strong>无效。它不会告诉你「你的价格是 0」。如果报错里带上收到的价格，定位时间会从两天缩到两分钟。</p>
+<p>第三点值得单独记：<strong>下单前把格式化后的字符串打日志</strong>。这不是可有可无的调试信息，而是唯一能事后定位精度问题的证据。现在每次发单都会记录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[order] BTC px=62346 sz=0.001 → px_str=62346 sz_str=0.001</span><br><span class="line">[order] XYZ px=0.001234 sz=12000 → px_str=0.001234 sz_str=12000 notional=14.81</span><br></pre></td></tr></table></figure>
+
+<p>出问题时，一眼就能看出是价格错了还是数量错了。</p>
+<h2 id="收口"><a href="#收口" class="headerlink" title="收口"></a>收口</h2><p>低价币下单失败，九成是精度问题，排查顺序：</p>
+<ol>
+<li><strong>打印格式化后的价格字符串</strong>，看是不是 <code>0</code> 或 <code>0.00</code></li>
+<li>**查 <code>szDecimals</code>**，确认 <code>6 - szDecimals</code> 这条约束</li>
+<li><strong>验证有效数字</strong>，5 位是硬上限</li>
+<li><strong>校验名义价值</strong>，≥ 10 USDC 是另一道门槛</li>
+</ol>
+<p>根本原则是：精度不能靠猜，也不能靠兜底。取不到精度信息就应当让程序失败，而不是悄悄用一个默认值继续跑——默认值在 99% 的场景下是对的，恰好会让人永远发现不了那 1%。</p>
+<hr>
+<p>这次修复的完整背景在 <a href="/posts/ov0722/">记录一次 Hyperliquid Testnet 自动交易亏损原因核对</a>，同期的风控加固（白名单 fail-closed、脏价格守卫）见 <a href="/posts/ov1007/">记录一次 Hyperliquid 链上-DB 漂移告警与 A2 扫描</a>。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.demohappy.top">DEMOHAPI</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.demohappy.top/posts/hyperliquid-invalid-price/">https://blog.demohappy.top/posts/hyperliquid-invalid-price/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.demohappy.top" target="_blank">Forever BLog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%8E%92%E9%9A%9C/">排障</a><a class="post-meta__tags" href="/tags/Python/">Python</a><a class="post-meta__tags" href="/tags/%E9%87%8F%E5%8C%96/">量化</a></div><div class="post_share"><div class="social-share" data-image="https://demohapi.4everland.link/ipfs/bafybeig36qwmf3k4gxhj4wpoh35p3u66bkbcwwhxfjnk2jnjw4dk42wx7y" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/hexo-deploy-wipe/" title="hexo deploy 把站点推成空白？因为用管道看了部署日志"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeig36qwmf3k4gxhj4wpoh35p3u66bkbcwwhxfjnk2jnjw4dk42wx7y" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">hexo deploy 把站点推成空白？因为用管道看了部署日志</div></div></a></div><div class="next-post pull-right"><a href="/posts/4everland-invalid-config/" title="4everland 自定义域一直报 Invalid Configuration？Cloudflare 橙云是元凶"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeida7wrii3n4sfbvmgohctijnrjowwhh4xx7zf5k6ecvmva6xopami" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">4everland 自定义域一直报 Invalid Configuration？Cloudflare 橙云是元凶</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/ollama-empty-content/" title="Ollama 调 API 返回空 content？thinking 模型吃光 num_predict 的排查与修复"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeibna5sxkzfqfnntbvju22wzd3wtm54wjlfl6lqxzuq57g4vcwd7yi" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-23</div><div class="title">Ollama 调 API 返回空 content？thinking 模型吃光 num_predict 的排查与修复</div></div></a></div><div><a href="/posts/ov1019/" title="源码改回故障形态测试依然全绿，defi_dashboard交叉验证失灵（2026-10-19）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeida7wrii3n4sfbvmgohctijnrjowwhh4xx7zf5k6ecvmva6xopami" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-19</div><div class="title">源码改回故障形态测试依然全绿，defi_dashboard交叉验证失灵（2026-10-19）</div></div></a></div><div><a href="/posts/ov1015/" title="换手对账连续翻向暴露首日持仓被当空仓（2026-10-15）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeida7wrii3n4sfbvmgohctijnrjowwhh4xx7zf5k6ecvmva6xopami" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-15</div><div class="title">换手对账连续翻向暴露首日持仓被当空仓（2026-10-15）</div></div></a></div><div><a href="/posts/ov1012/" title="移动端热榜死链源自存储层漏查 item_id，浮层问题另在 flex 布局（2026-10-12）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeida7wrii3n4sfbvmgohctijnrjowwhh4xx7zf5k6ecvmva6xopami" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-12</div><div class="title">移动端热榜死链源自存储层漏查 item_id，浮层问题另在 flex 布局（2026-10-12）</div></div></a></div><div><a href="/posts/ov1009/" title="rolling_signal_backtest 两个 P0 修复后多重校正推翻 p&#x3D;0.049 显著性（2026-10-09）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeida7wrii3n4sfbvmgohctijnrjowwhh4xx7zf5k6ecvmva6xopami" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-09</div><div class="title">rolling_signal_backtest 两个 P0 修复后多重校正推翻 p&#x3D;0.049 显著性（2026-10-09）</div></div></a></div><div><a href="/posts/ov1007/" title="Hyperliquid 链上余额与数据库漂移两个数量级，A2 扫描同步排查（2026-10-07）"><img class="cover" src="https://demohapi.4everland.link/ipfs/bafybeig36qwmf3k4gxhj4wpoh35p3u66bkbcwwhxfjnk2jnjw4dk42wx7y" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-07</div><div class="title">Hyperliquid 链上余额与数据库漂移两个数量级，A2 扫描同步排查（2026-10-07）</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://demohapi.4everland.link/ipfs/bafybeigczmfcg5rhbuvgajgjrihah4jpk63n5cjtey62dy5ul72puh37qq" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">DEMOHAPI</div><div class="author-info__description">量化实盘、工厂数字化与自动化运维的一手排障记录 —— DEMOHAPI 的技术笔记。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">119</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">28</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/wz-git-hub"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://twitter.com/wwwdemohapi" rel="external nofollow noreferrer" target="_blank" title="twitter"><i class="fab fa-twitter" style="color: #2DAAE2;"></i></a><a class="social-icon" href="mailto:demohapi@foxmail.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><p style="text\-align:center;">如果你还能看到这个Blog！</p> <p style="text\-align:center;">就是我永恒小世界的胜利！</p> <img src="https://demohapi.4everland.link/ipfs/bafkreiebp4yzbtc6futxkm74r452kctuky2ip4nzif2tjwam25mrjecks4" title="我的钱包"></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%B0%E8%B1%A1%EF%BC%9A%E4%B8%BB%E5%B8%81%E8%83%BD%E6%88%90%E4%BA%A4%EF%BC%8C%E5%B0%8F%E5%B8%81%E5%85%A8%E5%A4%B1%E8%B4%A5"><span class="toc-number">1.</span> <span class="toc-text">现象：主币能成交，小币全失败</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B9%E5%9B%A0%EF%BC%9A%E4%BB%B7%E6%A0%BC%E8%A2%AB%E8%88%8D%E5%85%A5%E6%88%90%E4%BA%86-0"><span class="toc-number">2.</span> <span class="toc-text">根因：价格被舍入成了 0</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hyperliquid-%E7%9A%84%E7%9C%9F%E5%AE%9E%E7%B2%BE%E5%BA%A6%E8%A7%84%E5%88%99"><span class="toc-number">3.</span> <span class="toc-text">Hyperliquid 的真实精度规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%EF%BC%9A%E6%8C%89%E8%A7%84%E5%88%99%E6%8E%A8%E5%AF%BC%E7%B2%BE%E5%BA%A6"><span class="toc-number">4.</span> <span class="toc-text">修复：按规则推导精度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%BA%E5%B8%A6%E6%9A%B4%E9%9C%B2%E7%9A%84%E7%AC%AC%E4%BA%8C%E4%B8%AA%E9%97%AE%E9%A2%98%EF%BC%9A%E7%B2%BE%E5%BA%A6%E7%9B%B4%E6%8E%A5%E5%86%B3%E5%AE%9A%E6%9C%80%E5%B0%8F%E4%B8%8B%E5%8D%95%E9%87%8F"><span class="toc-number">5.</span> <span class="toc-text">顺带暴露的第二个问题：精度直接决定最小下单量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B8%AA-bug-%E8%97%8F%E4%BA%86%E4%B8%A4%E4%B8%AA%E6%9C%88"><span class="toc-number">6.</span> <span class="toc-text">为什么这个 bug 藏了两个月</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B6%E5%8F%A3"><span class="toc-number">7.</span> <span class="toc-text">收口</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/ov1023/" title="用本地 Ollama 模型批量重写了 112 篇文章的 meta description（2026-10-23）"><img src="https://demohapi.4everland.link/ipfs/bafybeida7wrii3n4sfbvmgohctijnrjowwhh4xx7zf5k6ecvmva6xopami" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="用本地 Ollama 模型批量重写了 112 篇文章的 meta description（2026-10-23）"/></a><div class="content"><a class="title" href="/posts/ov1023/" title="用本地 Ollama 模型批量重写了 112 篇文章的 meta description（2026-10-23）">用本地 Ollama 模型批量重写了 112 篇文章的 meta description（2026-10-23）</a><time datetime="2026-10-23T13:30:00.000Z" title="发表于 2026-10-23 21:30:00">2026-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/hexo-indexnow/" title="新站几天不被收录？用 IndexNow 主动提交给 Bing 和 Yandex"><img src="https://demohapi.4everland.link/ipfs/bafybeida7wrii3n4sfbvmgohctijnrjowwhh4xx7zf5k6ecvmva6xopami" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="新站几天不被收录？用 IndexNow 主动提交给 Bing 和 Yandex"/></a><div class="content"><a class="title" href="/posts/hexo-indexnow/" title="新站几天不被收录？用 IndexNow 主动提交给 Bing 和 Yandex">新站几天不被收录？用 IndexNow 主动提交给 Bing 和 Yandex</a><time datetime="2026-10-23T03:40:00.000Z" title="发表于 2026-10-23 11:40:00">2026-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/hexo-deploy-wipe/" title="hexo deploy 把站点推成空白？因为用管道看了部署日志"><img src="https://demohapi.4everland.link/ipfs/bafybeig36qwmf3k4gxhj4wpoh35p3u66bkbcwwhxfjnk2jnjw4dk42wx7y" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="hexo deploy 把站点推成空白？因为用管道看了部署日志"/></a><div class="content"><a class="title" href="/posts/hexo-deploy-wipe/" title="hexo deploy 把站点推成空白？因为用管道看了部署日志">hexo deploy 把站点推成空白？因为用管道看了部署日志</a><time datetime="2026-10-23T03:10:00.000Z" title="发表于 2026-10-23 11:10:00">2026-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/hyperliquid-invalid-price/" title="Hyperliquid 下单报 Order has invalid price：低价币价格精度算错"><img src="https://demohapi.4everland.link/ipfs/bafybeig36qwmf3k4gxhj4wpoh35p3u66bkbcwwhxfjnk2jnjw4dk42wx7y" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hyperliquid 下单报 Order has invalid price：低价币价格精度算错"/></a><div class="content"><a class="title" href="/posts/hyperliquid-invalid-price/" title="Hyperliquid 下单报 Order has invalid price：低价币价格精度算错">Hyperliquid 下单报 Order has invalid price：低价币价格精度算错</a><time datetime="2026-10-23T02:40:00.000Z" title="发表于 2026-10-23 10:40:00">2026-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/4everland-invalid-config/" title="4everland 自定义域一直报 Invalid Configuration？Cloudflare 橙云是元凶"><img src="https://demohapi.4everland.link/ipfs/bafybeida7wrii3n4sfbvmgohctijnrjowwhh4xx7zf5k6ecvmva6xopami" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="4everland 自定义域一直报 Invalid Configuration？Cloudflare 橙云是元凶"/></a><div class="content"><a class="title" href="/posts/4everland-invalid-config/" title="4everland 自定义域一直报 Invalid Configuration？Cloudflare 橙云是元凶">4everland 自定义域一直报 Invalid Configuration？Cloudflare 橙云是元凶</a><time datetime="2026-10-23T02:10:00.000Z" title="发表于 2026-10-23 10:10:00">2026-10-23</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://demohapi.4everland.link/ipfs/bafybeig36qwmf3k4gxhj4wpoh35p3u66bkbcwwhxfjnk2jnjw4dk42wx7y')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By DEMOHAPI</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><div class="js-pjax"><script>(()=>{
+  const getGiscusTheme = theme => {
+    return theme === 'dark' ? 'dark' : 'light'
+  }
+
+  const loadGiscus = () => {
+    const config = Object.assign({
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'wz-git-hub/wz-git-hub.github.io',
+      'data-repo-id': 'R_kgDOKu6rHA',
+      'data-category-id': 'DIC_kwDOKu6rHM4CbGGw',
+      'data-mapping': 'pathname',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true
+    },{"data-lang":"zh-CN","data-input-position":"top","data-loading":"lazy"})
+
+    const ele = document.createElement('script')
+    for (let key in config) {
+      ele.setAttribute(key, config[key])
+    }
+    document.getElementById('giscus-wrap').appendChild(ele)
+  }
+
+  const changeGiscusTheme = theme => {
+    const sendMessage = message => {
+      const iframe = document.querySelector('iframe.giscus-frame')
+      if (!iframe) return
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+    }
+
+    sendMessage({
+      setConfig: {
+        theme: getGiscusTheme(theme)
+      }
+    });
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if ('Giscus' === 'Giscus' || !false) {
+    if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment= loadGiscus
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
