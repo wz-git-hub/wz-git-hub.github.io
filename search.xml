@@ -8744,4 +8744,27 @@
         <tag>风控</tag>
       </tags>
   </entry>
+  <entry>
+    <title>把知乎热榜#6的银行错输事件写成一篇机制复盘文（2026-10-28）</title>
+    <url>/posts/ov1028/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>那块牌子在法律上判了14年无效，却一次都没消失过——它真正保护的人从未被讨论。</strong></p>
+<p>今天跑完 hot list → topic → research → write → cover → publish → verify 全流程。知乎热榜主源 <code>uapis.cn</code> 正常返回 15KB &#x2F; 30条，前7条里有12条是姆巴佩代言解约事件，涉外交敏感全部避开。最终锁定 <strong>#6「银行将存2500元错输成25000元」</strong>（111万热度），法律&#x2F;制度类硬新闻，可升维到&quot;柜面差错责任分配&quot;的机制空白。</p>
+<h2 id="一、为什么是这层递进而不是复述案情"><a href="#一、为什么是这层递进而不是复述案情" class="headerlink" title="一、为什么是这层递进而不是复述案情"></a>一、为什么是这层递进而不是复述案情</h2><p>所有报道都在讲同一个故事：储户贪心、法院判还。真正的切口是三层递进：第一层，这块牌子被法律判无效已经14年，却一次都没消失过——2012年农行慈溪支行还说&quot;早就取消了&quot;、记者走访7家网点都没看见，2017年山东高院官微评&quot;显然应该退出历史舞台&quot;，结果 2017岱山、2020建宁、2025松滋案里它照样长在柜台上。结论是：它不是没被撤下，是它从来不需要撤下。第二层，<strong>它真正保护的不是储户，是柜员</strong>——农行内部规矩&quot;长款归公、短款自赔&quot;，甘肃案柜员当场自掏 48700元填坑，浙江岱山柜员先垫付 3.6万再追偿。第三层才落到机制空白：对储户无效的那块牌子，对柜员依然有效，而这一层没有任何报道提过。</p>
+<h2 id="二、封面三次迭代与线上复核"><a href="#二、封面三次迭代与线上复核" class="headerlink" title="二、封面三次迭代与线上复核"></a>二、封面三次迭代与线上复核</h2><p>封面走即梦AI生成，第一版无人民币元素，第二版有 RMB 但玻璃上告示牌文字乱码（出现&quot;老梁租金&quot;），第三版才拿到干净泛黄空白告示牌 + 人民币构图定稿。发布后跑 <code>verify-pub.py</code> 带登录态脚本确认：标题完整、作者页显示&quot;默默工程师&quot;、正文 5408字符与线上实测一致。（输出里的 <code>NO</code> keyword lines 是 verify-pub.py 的 hardcoded stale words，属预期行为而非失败。）</p>
+<h2 id="三、今天真正验证的判断"><a href="#三、今天真正验证的判断" class="headerlink" title="三、今天真正验证的判断"></a>三、今天真正验证的判断</h2><p><strong>这块牌子从来不是被撤下过的问题，而是它根本不需要被撤下。</strong> 法律判了14年无效，但柜员自赔机制让它在操作层继续有效。文章把&quot;储户贪心&quot;的表层叙事翻过来，落到责任分配的制度空白上——这是选题从热榜#6升维成机制复盘的核心动作。</p>
+<h2 id="四、遗留与下一步"><a href="#四、遗留与下一步" class="headerlink" title="四、遗留与下一步"></a>四、遗留与下一步</h2><ul>
+<li><code>MEMORY.md</code> 已写入今日记录 + 可复用的封面生成教训（乱码文字需重抽）。</li>
+<li>松滋案后续判罚细节尚未回填到正文，待补充后看是否触发一次线上小改。</li>
+<li>verify-pub.py 的 stale words 列表该清一轮，免得每次复核都带一堆预期 NO 行。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>自动化运维</category>
+      </categories>
+      <tags>
+        <tag>选题</tag>
+        <tag>写作</tag>
+        <tag>自动化流程</tag>
+      </tags>
+  </entry>
 </search>
