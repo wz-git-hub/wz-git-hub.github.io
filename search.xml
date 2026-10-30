@@ -8822,4 +8822,31 @@
         <tag>素材核验</tag>
       </tags>
   </entry>
+  <entry>
+    <title>中资网贷印度亏损70亿复盘与WorkBuddy自动闭环（2026-10-29）</title>
+    <url>/posts/ov1029/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="一、选题切入：反直觉的数据证伪"><a href="#一、选题切入：反直觉的数据证伪" class="headerlink" title="一、选题切入：反直觉的数据证伪"></a>一、选题切入：反直觉的数据证伪</h2><p><strong>先破「印度人不还钱」这条全网叙事，再在制度层面重建。</strong></p>
+<p>今天盯着知乎热榜第4条“百家中资网贷出海印度亏损70亿退场”，热度197万。表面看是资金盘崩了，但真正值得写的是：为什么印度本土fintech没跟着死？助手拉了一组硬数据——印度央行2026年6月《金融稳定报告》里，金融科技逾期率6.4%、NBFC 5.7%、银行4.1%，对比国内某些平台坏账率飙到50%-80%。更扎心的是，本土fintech在2026年3月拿下56.8%市场份额，余额同比+41.6%。<strong>人走了，市场没萎缩，反而长得更快</strong>。</p>
+<p>这里有个极易踩坑的细节：很多文章把“逾期率6.4%”直接写成“坏账率”，这是两把尺子硬碰硬。印度牌照机构的bad-debt rate确实低，但那是overdue rate的口径差异。文中明确指出了这一点，且没拿它做论据，避免混淆视听。</p>
+<h2 id="二、WorkBuddy-自动闭环：先领后派"><a href="#二、WorkBuddy-自动闭环：先领后派" class="headerlink" title="二、WorkBuddy 自动闭环：先领后派"></a>二、WorkBuddy 自动闭环：先领后派</h2><p><strong>通道 A 零配置，脚本静默降级。</strong></p>
+<p>下午顺手把 WorkBuddy 积分助手跑了一遍。命令直接指向 <code>C:/Users/Administrator/.workbuddy/binaries/python/versions/3.13.12.old.106036/python</code> 执行 <code>scripts/buddy_station.py checkin --travel-auto</code>。脚本自动读取本机登录态，无需任何授权配置。</p>
+<p>签到接口幂等安全，当日首签返回“✅ 签到成功”，非重复发奖。旅行闭环逻辑很稳：Buddy 当前在「咖啡馆」，约2小时0分到达倒计时，可领10分（未到点暂不领取）。今日派遣已达上限，脚本正确跳过新派遣、绝不超发，回显“已派出前往咖啡馆”是既有行程而非新增。最终积分余额定格在 <strong>2100</strong>，本周4&#x2F;7天记录，无异常报错。桌面系统通知尝试弹了一次但失败静默降级，不影响主结果。</p>
+<h2 id="三、封面生成：拒绝Lorem-Ipsum"><a href="#三、封面生成：拒绝Lorem-Ipsum" class="headerlink" title="三、封面生成：拒绝Lorem Ipsum"></a>三、封面生成：拒绝Lorem Ipsum</h2><p><strong>几何箭头+断裂石柱，冷蓝琥珀深色新闻风。</strong></p>
+<p>配图走了两轮。第一版构图不错（悬浮手机+断裂石柱），但手机屏上全是 <code>Lorem</code> &#x2F; <code>BONITRE</code> 乱码，卢比纸币上的假字母也露馅了。重生成时加了更严的约束：手机只允许显示一个几何箭头，底座必须是可见的物理碎裂效果。最终版干净无乱码，落盘为 <code>cover-20261029.jpg</code>。</p>
+<h2 id="四、发布校验与哈希冻结"><a href="#四、发布校验与哈希冻结" class="headerlink" title="四、发布校验与哈希冻结"></a>四、发布校验与哈希冻结</h2><p><strong>4905字符实测，已知stale keywords不视为失败。</strong></p>
+<p>文章推上去后，线上实测4905字符（本地文件是4173字符&#x2F;158段）。日志里出现的 <code>kw NO lines</code> 其实是10-17日遗留的硬编码stale keywords，不是本次发布失败信号。标题、作者名、正文均复核无误。</p>
+<h2 id="五、来也-APA：确定性执行与AI智能体"><a href="#五、来也-APA：确定性执行与AI智能体" class="headerlink" title="五、来也 APA：确定性执行与AI智能体"></a>五、来也 APA：确定性执行与AI智能体</h2><p><strong>传统RPA内核+AI自然语言生成。</strong></p>
+<p>下午还查了“来也科技”的产品线能否在WorkBuddy里白嫖。严格说，Laiye是独立厂商，不内置于WorkBuddy，但它的 <strong>UiBot Creator（现升级为 Laiye Automation Creator V1.5 社区版）</strong> 提供永久免费的在线&#x2F;离线激活方案。核心能力是用自然语言或录屏生成可执行流程，底层仍是确定性、版本化、可审计的RPA内核，而非飘忽的概率性Agent。V1.5还加了弹窗自愈和知识沉淀为可复用Skill，对高价值重复流程很友好。</p>
+<h2 id="六、遗留与下一步"><a href="#六、遗留与下一步" class="headerlink" title="六、遗留与下一步"></a>六、遗留与下一步</h2><p><strong>事故事实两处修正，同类漏洞未堵。</strong></p>
+<p>上午那份 <code>xverify44</code> 审计报告（针对2026-10-28 21:56生产事故）还挂着。实测发现：① 所谓“交互式会话注销”实为 <strong>ScMonitorPower</strong>（显示器电源切换），全窗口无任何注销事件；② “6个进程同一时刻死”至少分两波，guard在21:56:40还活着并经ensure拉起主看门狗后才二次死亡。另外启动文件夹里还挂着 <code>start-defi-trading.bat</code> 等交互式登录项，同类风险未堵上。<strong>下一步得把这几个bat文件从启动目录挪走</strong>，否则下次开机还是会双开实例。</p>
+]]></content>
+      <categories>
+        <category>自动化运维</category>
+      </categories>
+      <tags>
+        <tag>运维</tag>
+        <tag>量化</tag>
+        <tag>复盘</tag>
+      </tags>
+  </entry>
 </search>
