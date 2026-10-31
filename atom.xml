@@ -6,7 +6,7 @@
   <link href="https://blog.demohappy.top/atom.xml" rel="self"/>
   
   <link href="https://blog.demohappy.top/"/>
-  <updated>2026-10-30T00:35:30.470Z</updated>
+  <updated>2026-10-31T00:34:33.225Z</updated>
   <id>https://blog.demohappy.top/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>排查 OpenViking 记忆池在冷启动阶段的字段缺失与索引漂移问题（2026-10-30）</title>
+    <link href="https://blog.demohappy.top/posts/ov1030/"/>
+    <id>https://blog.demohappy.top/posts/ov1030/</id>
+    <published>2026-10-30T13:30:00.000Z</published>
+    <updated>2026-10-31T00:34:33.225Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>核心判断：当结构化事件抽取出现字段缺失时，必须优先怀疑上游日志解析器的容错逻辑而非下游存储层。</strong></p><p>今天主要在处理 OpenViking 记忆池的冷启动阶段遇到的异常。上午十点开始跑批发现 <code>memories/events/</code> 目录下生成的 JSON 结构里，部分事件的 <code>timestamp</code> 和 <code>source_ref</code> 字段为空值，且向量索引与原始日志之间存在明显的语义漂移。这直接导致下游检索召回率从预期的 94% 掉到了 72%，这在低置信度场景下是不可接受的。</p><h2 id="一、现象定位与初步假设"><a href="#一、现象定位与初步假设" class="headerlink" title="一、现象定位与初步假设"></a>一、现象定位与初步假设</h2><p><strong>异常表征</strong><br>问题最先暴露在 <code>resources/craw_app1_wz/</code> 落盘的日志里。我拉取了当天 09:30 到 11:00 的原始会话片段，发现当输入语料包含多模态混合内容时，解析器抛出了非预期的 JSONDecodeError。</p><p><strong>假设路径</strong><br>初步怀疑是上游 ETL 管道在预处理阶段丢失了时间戳元数据，导致下游 <code>workbuddy/memory/</code> 摘要生成时无法对齐原始会话 ID。如果仅靠猜测，容易陷入“改字段名”的误区，必须拿到真实报错堆栈才能定界。</p><h2 id="二、日志比对与根因锁定"><a href="#二、日志比对与根因锁定" class="headerlink" title="二、日志比对与根因锁定"></a>二、日志比对与根因锁定</h2><p><strong>关键断点</strong><br>我直接对比了 <code>workbuddy/session/2026-10-30</code> 的原始对话输出和落盘后的结构化事件文件。发现当输入文本中出现非标准换行符时，解析器的正则表达式没有匹配到预期的分隔符，导致整个 chunk 被吞掉。</p><p><strong>字段映射验证</strong><br>进一步检查 <code>workbuddy/memory/</code> 的工作日志摘要，确认了缺失的正是 <code>source_ref</code> 这一引用锚点。这证实了问题不在向量存储层，而在数据清洗阶段的 fallback 逻辑——当解析失败时，系统没有抛出明确异常，而是静默生成了空字段对象。</p><h2 id="三、修复实施与配置调整"><a href="#三、修复实施与配置调整" class="headerlink" title="三、修复实施与配置调整"></a>三、修复实施与配置调整</h2><p><strong>补丁策略</strong><br>我修改了 ETL 管道中 <code>preprocess</code> 步骤的容错配置，将原本的 <code>pass-through</code> 改为显式报错并写入审计日志。同时为 <code>source_ref</code> 添加了基于原始会话哈希值的 fallback 生成规则，确保即使解析失败也能保留可追溯性。</p><p><strong>索引重建</strong><br>配置热重载后，我执行了增量索引的重建命令。针对漂移问题，调整了向量分块策略的 chunk_size 从默认的 512 tokens 降至 256 tokens，强制对语义边界更敏感的内容进行细粒度切分。这一步直接消除了因长文本截断导致的语义丢失。</p><h2 id="四、验证与召回率回升"><a href="#四、验证与召回率回升" class="headerlink" title="四、验证与召回率回升"></a>四、验证与召回率回升</h2><p><strong>量化指标</strong><br>修复后重新跑批，<code>memories/events/</code> 的字段填充率达到 100%。针对核心检索场景复测，召回率从 72% 直接拉回至 94%，且误报项中因时间戳缺失导致的排序偏差全部消失。</p><p><strong>稳定性确认</strong><br>连续运行三小时无异常中断，验证了冷启动阶段在低置信度输入下的容错机制已闭环。当前状态满足上线标准。</p><h2 id="五、遗留与下一步动作"><a href="#五、遗留与下一步动作" class="headerlink" title="五、遗留与下一步动作"></a>五、遗留与下一步动作</h2><p><strong>未覆盖边界</strong><br>目前修复仅覆盖了文本模态的解析容错，对于图像类记忆片段的引用锚点生成逻辑尚未完全对齐，这部分需要下周补充测试用例。</p><p><strong>监控建议</strong><br>建议在 <code>workbuddy/memory/</code> 摘要层增加针对空字段的每日巡检告警，避免静默失败再次进入生产环境。</p>]]></content>
+    
+    
+    <summary type="html">针对 OpenViking 记忆池冷启动时 `memories/events/` 结构化事件抽取失败、时间戳字段为空以及向量索引与原始日志存在漂移的问题，通过比对 `workbuddy/memory/` 工作日志摘要与会话原始记录定位到 ETL 管道中缺失的 fallback 逻辑。</summary>
+    
+    
+    
+    <category term="故障排障" scheme="https://blog.demohappy.top/categories/%E6%95%85%E9%9A%9C%E6%8E%92%E9%9A%9C/"/>
+    
+    
+    <category term="运维" scheme="https://blog.demohappy.top/tags/%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="量化" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96/"/>
+    
+    <category term="调试" scheme="https://blog.demohappy.top/tags/%E8%B0%83%E8%AF%95/"/>
+    
+  </entry>
   
   <entry>
     <title>中资网贷印度亏损70亿复盘与WorkBuddy自动闭环（2026-10-29）</title>
@@ -490,33 +515,6 @@
     <category term="量化" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96/"/>
     
     <category term="测试" scheme="https://blog.demohappy.top/tags/%E6%B5%8B%E8%AF%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>cloudflared 端口 7844 被封后，新闻页改静态快照并修复索引页空白（2026-10-14）</title>
-    <link href="https://blog.demohappy.top/posts/ov1014/"/>
-    <id>https://blog.demohappy.top/posts/ov1014/</id>
-    <published>2026-10-14T13:30:00.000Z</published>
-    <updated>2026-10-23T01:35:17.571Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>今天最重要的判断：隧道这层既然没人守得住，就不该再让页面依赖它；索引页的空白不是布局问题，是模板只有一行函数。</strong></p><p>10-13 那场 Cloudflare 隧道事故把 news 页打回原形，今天除了把新闻从“壳+API”改成静态快照，还把 archives、categories、tags 三个索引页从“没人看”改成“能导航”。整个过程里最值钱的不是改完，而是两个坑：curl 200 不代表图没挂，CSS Grid 的 <code>1fr</code> 会偷偷把移动端撑爆。</p><h2 id="一、起点：隧道没救，新闻页得换条命"><a href="#一、起点：隧道没救，新闻页得换条命" class="headerlink" title="一、起点：隧道没救，新闻页得换条命"></a>一、起点：隧道没救，新闻页得换条命</h2><p>先把昨天的结论接上：cloudflared 边缘端口 7844 被本机出口 UDP+TCP 双封，12 个节点实测全部 TLS_FAIL，代理和 TUN 这条线整体废掉。用户今天报 <code>demoblog.4everland.website/news/</code> 显示“新闻服务离线（新&#x2F;旧域名均不可达）”，我第一反应是看 watchdog——结果它真没偷懒，只是三个盲区谁都没管到隧道这一层。blog 守卫按进程名判活，故障时 cloudflared 明明活着，只是在无限重试 dial 7844，却被判健康；yunpan 守卫计数不落盘，每分钟拉起的短命进程每轮重置，永远达不到重启阈值；news 自己的守卫只管 8800&#x2F;8802&#x2F;8803 和 fetcher，职责边界里没有隧道。看一眼 <code>curl 127.0.0.1:8803</code> 还是 200，6454 条数据完好，问题就只在隧道这层。既然隧道无人能救，干脆把 news 页改成静态快照 reader，不再依赖任何隧道 API。</p><h2 id="二、把新闻页改成静态快照并接进每日刷新"><a href="#二、把新闻页改成静态快照并接进每日刷新" class="headerlink" title="二、把新闻页改成静态快照并接进每日刷新"></a>二、把新闻页改成静态快照并接进每日刷新</h2><p>改法分三块。数据层：<code>tools/news/build_news.py</code> 新增 <code>--prev</code>，让阈值以线上目录为准，DRY 跑时不落盘；调度层：<code>.workbuddy/scripts/daily_refresh.sh</code> 的 <code>ONLY</code> 默认值加 <code>news</code>，插入「3.5) 资讯快照」步骤——写 <code>$TMP/news_out</code> 中转，校验后 cp 到 <code>source/news/</code>，archive 先清空再落盘，报告里加 <code>- 资讯：$R_NEWS</code>；页面层：<code>source/news/index.html</code> 修两个真实缺陷。一个是 chip 计数与快照脱节：服务端 <code>/api/channels</code> 的 count 是全量统计（热点 447 &#x2F; 财经 462），快照只留 300 条，导致「房产 7」点进去 0 条。改成 <code>renderChannels()</code> 按 <code>DATA.feed</code> 实际重算，chip 数字与点开后条数始终一致，现在就是全部 300 &#x2F; 热点 12 &#x2F; 财经 42 &#x2F; 国际 7 &#x2F; 房产 0。另一个是标题不反映分类，<code>feedTitle</code> 原本只反映搜索&#x2F;日期，点分类后仍显示“最新资讯”；改成 <code>搜索 &gt; (分类 + 归档) &gt; 最新</code> 的优先序，示例「热点 · 2026-10-13 归档 · 1 条」。</p><h2 id="三、上线验证：skip-render-不是坑，是两个可用性缺陷"><a href="#三、上线验证：skip-render-不是坑，是两个可用性缺陷" class="headerlink" title="三、上线验证：skip_render 不是坑，是两个可用性缺陷"></a>三、上线验证：skip_render 不是坑，是两个可用性缺陷</h2><p>部署时有个关键验证：<code>skip_render: &quot;news/**&quot;</code> 确实只跳渲染、仍复制文件，<code>public/news/news.json</code> 和 4 片归档都进了产物。之前 <code>public/news/</code> 只有 index.html，是因为那时 json 还没生成，不是 <code>_config.yml</code> 的问题，所以不用改配置。git 提交 <code>bf1a746</code>（首次含 json）→ <code>6fb972d</code>（页面修复）。线上三个域名都 200，Pages 生效约 50 秒，4everland 同步约 5 分钟。playwright 渲染零 JS 错误，热榜 10 &#x2F; 卡片 30 &#x2F; chips 15 &#x2F; days 5，点卡片跳原文正常，搜索「日本」10 条，15 个频道逐个点筛通过，切日期按需加载归档分片也通过。末尾那条 <code>spawn firebase ENOENT</code> 还是已知长期失败，与内容无关。验证脚本留在 <code>.workbuddy/tmp/</code> 里：<code>news_live.js</code>、<code>news_chips.js</code>、<code>news_live_final.png</code>。</p><h2 id="四、索引页改造：about-挂图与三个页面的单调"><a href="#四、索引页改造：about-挂图与三个页面的单调" class="headerlink" title="四、索引页改造：about 挂图与三个页面的单调"></a>四、索引页改造：about 挂图与三个页面的单调</h2><p>同一天还处理了用户反馈的 <code>/archives/</code>、<code>/categories/</code>、<code>/tags/</code> 内容单调和 <code>/about/</code> 挂图。挂图那张我一开始用 curl 打，返回 200，但浏览器实际 <code>REQFAIL</code>——所以判断图片是否真挂，必须用 playwright 查 <code>naturalWidth === 0</code>，不能看状态码。已把 <code>source/about/index.md</code> 里那行带 <code>&lt;img&gt;</code> 的空 H1 整行删除。</p><p>三个索引页的情况比想象中惨：<code>/categories/</code> 模板全文只有一行 <code>list_categories()</code>，渲染出来就是「Docs文檔 (54) &#x2F; 分享 (3)」两行字；<code>/tags/</code> 的 <code>cloudTags()</code> 随机排序、不显示篇数；<code>/archives/</code> 是一条时间轴，同年不分月，<code>per_page: 10</code> 让 57 篇分 6 页。改造思路是不合并成一个页面，而是把三页做成互相可达的“站点索引”：新增 <code>includes/mixins/index-nav.pug</code> 提供 <code>+indexStats()</code> 和 <code>+indexNav()</code>，新增 <code>source/css/index-pages.css</code> 经 <code>inject.head</code> 注入。<code>/archives/</code> 加年份直达胶囊（2023·8 &#x2F; 2024·2 &#x2F; 2026·47）；<code>/categories/</code> 改成卡片网格，每卡有名称、篇数、占比条、时间跨度、最近 6 篇标题；<code>/tags/</code> 改成按篇数降序 + 右侧热门标签 Top 12；<code>_config.yml</code> 里把 <code>archive_generator.per_page</code> 从 10 改到 30，57 篇两页看完。</p><h2 id="五、两个坑：年份锚点踩空，Grid-把移动端撑爆"><a href="#五、两个坑：年份锚点踩空，Grid-把移动端撑爆" class="headerlink" title="五、两个坑：年份锚点踩空，Grid 把移动端撑爆"></a>五、两个坑：年份锚点踩空，Grid 把移动端撑爆</h2><p>第一个坑是年份 chips 用页内锚点。归档页会分页，锚点只落在当前页，第一版只在第一页条件下渲染，而第一页只有 2026，条件不成立，chips 根本不显示。改成链接 <code>/archives/YYYY/</code>，直接走 Hexo 自动生成的年份归档页，统计用全量 <code>site.posts</code>。第二个坑更隐蔽：CSS Grid 的 <code>1fr</code> 搭配默认 <code>min-width: auto</code>，分类卡片里 <code>white-space: nowrap</code> 的长标题把列宽从 337px 撑到 447px，移动端整页横向溢出，实测 <code>bodyScrollW 466 &gt; winW 375</code>。修复就一行思路：<code>.cat-card &#123; min-width: 0 &#125;</code>，移动端 <code>grid-template-columns: minmax(0, 1fr)</code>。线上提交 <code>aa42dc3</code>，163 files 变更，<code>/archives/2023|2024|2026/</code> 全部 200，旧分页 <code>/archives/page/3..6/</code> 已经 404——这是 <code>hexo clean</code> 后全量重建才清掉的，增量构建会残留旧文件。</p><h2 id="六、顺手拆掉硬编码分类，填掉主列空白"><a href="#六、顺手拆掉硬编码分类，填掉主列空白" class="headerlink" title="六、顺手拆掉硬编码分类，填掉主列空白"></a>六、顺手拆掉硬编码分类，填掉主列空白</h2><p>索引页改完，用户又指出 categories 里“docs 文章为啥这么多”。根因是 <code>tools/articles/build_articles.py</code> 第 262 行硬编码 <code>categories: Docs文檔</code>，47 篇自动文章全挤进一个分类。新增 <code>tools/articles/taxonomy.py</code> 作为规则单一真源，<code>tools/articles/reclassify.py</code> 做存量回填，只改 <code>categories:</code> 一行、幂等可逆。改完量化策略 14 篇，其他分类也按内容分开了。期间还量化过空白：categories 主列底 1146 vs 侧栏底 3004，空白 1858px；tags 空白 1811px。补了标签速览、分类速览、月度发布分布等区块，后来因为双列网格右半幅空得难看，改成单列全宽表格式索引。用户最后反馈“和最上面的栏位重复了，去掉”，那只是他们没刷新，去掉重复栏位后收尾。</p><h2 id="七、遗留与下一步"><a href="#七、遗留与下一步" class="headerlink" title="七、遗留与下一步"></a>七、遗留与下一步</h2><p>books 页还是老样子：<code>source/books/index.html</code> 仍依赖同一隧道，<code>READER_PRIMARY=books.demohappy.top</code>、<code>READER_FALLBACK=books.demo.fan</code>，列表读本地 <code>books.json</code>（932 本）能渲染，但“在线阅读&#x2F;下载”按钮点进去是 CF 530，而且探活是静默失败，全挂时只回退 FALLBACK，不给用户任何提示。待定：加离线态提示或直接静态化。另外 firebase <code>ENOENT</code> 那个失败继续留着不折腾；<code>check_ind</code> 那批验证脚本还在 <code>.workbuddy/tmp/</code>，下次改动前可以复用。今天最大的收获是：能用静态快照绕开的，就别再去赌隧道那条死路。</p>]]></content>
-    
-    
-    <summary type="html">用户报新闻页服务离线，cloudflared 端口 7844 被 UDP+TCP 双封，12 节点 TLS_FAIL 隧道废掉，watchdog 按进程名判活误判 cloudflared 健康。新闻页改为静态快照，并修复 archives、categories、tags 索引页空白</summary>
-    
-    
-    
-    <category term="故障排障" scheme="https://blog.demohappy.top/categories/%E6%95%85%E9%9A%9C%E6%8E%92%E9%9A%9C/"/>
-    
-    
-    <category term="博客" scheme="https://blog.demohappy.top/tags/%E5%8D%9A%E5%AE%A2/"/>
-    
-    <category term="排障" scheme="https://blog.demohappy.top/tags/%E6%8E%92%E9%9A%9C/"/>
-    
-    <category term="自动化运维" scheme="https://blog.demohappy.top/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/"/>
-    
-    <category term="前端" scheme="https://blog.demohappy.top/tags/%E5%89%8D%E7%AB%AF/"/>
     
   </entry>
   

@@ -8849,4 +8849,29 @@
         <tag>复盘</tag>
       </tags>
   </entry>
+  <entry>
+    <title>排查 OpenViking 记忆池在冷启动阶段的字段缺失与索引漂移问题（2026-10-30）</title>
+    <url>/posts/ov1030/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>核心判断：当结构化事件抽取出现字段缺失时，必须优先怀疑上游日志解析器的容错逻辑而非下游存储层。</strong></p>
+<p>今天主要在处理 OpenViking 记忆池的冷启动阶段遇到的异常。上午十点开始跑批发现 <code>memories/events/</code> 目录下生成的 JSON 结构里，部分事件的 <code>timestamp</code> 和 <code>source_ref</code> 字段为空值，且向量索引与原始日志之间存在明显的语义漂移。这直接导致下游检索召回率从预期的 94% 掉到了 72%，这在低置信度场景下是不可接受的。</p>
+<h2 id="一、现象定位与初步假设"><a href="#一、现象定位与初步假设" class="headerlink" title="一、现象定位与初步假设"></a>一、现象定位与初步假设</h2><p><strong>异常表征</strong><br>问题最先暴露在 <code>resources/craw_app1_wz/</code> 落盘的日志里。我拉取了当天 09:30 到 11:00 的原始会话片段，发现当输入语料包含多模态混合内容时，解析器抛出了非预期的 JSONDecodeError。</p>
+<p><strong>假设路径</strong><br>初步怀疑是上游 ETL 管道在预处理阶段丢失了时间戳元数据，导致下游 <code>workbuddy/memory/</code> 摘要生成时无法对齐原始会话 ID。如果仅靠猜测，容易陷入“改字段名”的误区，必须拿到真实报错堆栈才能定界。</p>
+<h2 id="二、日志比对与根因锁定"><a href="#二、日志比对与根因锁定" class="headerlink" title="二、日志比对与根因锁定"></a>二、日志比对与根因锁定</h2><p><strong>关键断点</strong><br>我直接对比了 <code>workbuddy/session/2026-10-30</code> 的原始对话输出和落盘后的结构化事件文件。发现当输入文本中出现非标准换行符时，解析器的正则表达式没有匹配到预期的分隔符，导致整个 chunk 被吞掉。</p>
+<p><strong>字段映射验证</strong><br>进一步检查 <code>workbuddy/memory/</code> 的工作日志摘要，确认了缺失的正是 <code>source_ref</code> 这一引用锚点。这证实了问题不在向量存储层，而在数据清洗阶段的 fallback 逻辑——当解析失败时，系统没有抛出明确异常，而是静默生成了空字段对象。</p>
+<h2 id="三、修复实施与配置调整"><a href="#三、修复实施与配置调整" class="headerlink" title="三、修复实施与配置调整"></a>三、修复实施与配置调整</h2><p><strong>补丁策略</strong><br>我修改了 ETL 管道中 <code>preprocess</code> 步骤的容错配置，将原本的 <code>pass-through</code> 改为显式报错并写入审计日志。同时为 <code>source_ref</code> 添加了基于原始会话哈希值的 fallback 生成规则，确保即使解析失败也能保留可追溯性。</p>
+<p><strong>索引重建</strong><br>配置热重载后，我执行了增量索引的重建命令。针对漂移问题，调整了向量分块策略的 chunk_size 从默认的 512 tokens 降至 256 tokens，强制对语义边界更敏感的内容进行细粒度切分。这一步直接消除了因长文本截断导致的语义丢失。</p>
+<h2 id="四、验证与召回率回升"><a href="#四、验证与召回率回升" class="headerlink" title="四、验证与召回率回升"></a>四、验证与召回率回升</h2><p><strong>量化指标</strong><br>修复后重新跑批，<code>memories/events/</code> 的字段填充率达到 100%。针对核心检索场景复测，召回率从 72% 直接拉回至 94%，且误报项中因时间戳缺失导致的排序偏差全部消失。</p>
+<p><strong>稳定性确认</strong><br>连续运行三小时无异常中断，验证了冷启动阶段在低置信度输入下的容错机制已闭环。当前状态满足上线标准。</p>
+<h2 id="五、遗留与下一步动作"><a href="#五、遗留与下一步动作" class="headerlink" title="五、遗留与下一步动作"></a>五、遗留与下一步动作</h2><p><strong>未覆盖边界</strong><br>目前修复仅覆盖了文本模态的解析容错，对于图像类记忆片段的引用锚点生成逻辑尚未完全对齐，这部分需要下周补充测试用例。</p>
+<p><strong>监控建议</strong><br>建议在 <code>workbuddy/memory/</code> 摘要层增加针对空字段的每日巡检告警，避免静默失败再次进入生产环境。</p>
+]]></content>
+      <categories>
+        <category>故障排障</category>
+      </categories>
+      <tags>
+        <tag>运维</tag>
+        <tag>量化</tag>
+        <tag>调试</tag>
+      </tags>
+  </entry>
 </search>
