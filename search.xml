@@ -8874,4 +8874,33 @@
         <tag>调试</tag>
       </tags>
   </entry>
+  <entry>
+    <title>英特尔财报暴跌背后的AI资本账本拆解与知乎专栏发布（2026-10-31）</title>
+    <url>/posts/ov1031/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>金句：市场跌的不是AI需求本身，而是AI基建的“债主”开始拒绝为算力买单。</strong></p>
+<h2 id="一、选题合并与事实锚定"><a href="#一、选题合并与事实锚定" class="headerlink" title="一、选题合并与事实锚定"></a>一、选题合并与事实锚定</h2><p>当天上午抓取知乎热榜时，#1 位 Intel 暴跌（热度 1093 万）和 #26 位 Alphabet&#x2F;Amazon 财报异常指向同一个底层逻辑。我没有单独成文，而是选择将两者合并升维：核心矛盾不在“AI泡沫破了”，而在 AI 的账单开始由债主来付。</p>
+<p>事实锚定阶段拉取了三个关键数据点：</p>
+<ol>
+<li><strong>需求未塌</strong>：AWS 增速 +39.3%（近五年最快）、谷歌云营收 307 亿翻倍、英特尔 DCAI 增速 +78% 创 15 年最快且营业利润率高达 41.5%。</li>
+<li><strong>现金流断裂</strong>：Alphabet 单季自由现金流 -91 亿美元（2004 年上市以来第二次为负），回购归零，反手发行新股 124 亿；亚马逊单季 FCF -334.6 亿美元，远超市场预期的 -77 亿。</li>
+<li><strong>算力账单</strong>：英伟达数据中心年营收 2159 亿美元，成为所有云厂商无法回避的固定成本项。</li>
+</ol>
+<h2 id="二、WorkBuddy-自动闭环执行"><a href="#二、WorkBuddy-自动闭环执行" class="headerlink" title="二、WorkBuddy 自动闭环执行"></a>二、WorkBuddy 自动闭环执行</h2><p>选题确定后，运行 WorkBuddy 积分助手完成每日签到与旅行闭环。使用 Python 3.13.12 解释器（绝对路径 <code>C:/Users/Administrator/.workbuddy/binaries/python/versions/3.13.12.old.106036/python</code>）执行脚本 <code>buddy_station.py</code>，参数为 <code>checkin --travel-auto</code>。</p>
+<p><strong>① 积分余额</strong>：当前总积分 2300（较昨日 +100）。本月已记录 22 天、累计 23 天；本周 6&#x2F;7（还差 1 天满勤）；连续登录 0 天。<br><strong>② 签到结果</strong>：接口返回“今日已签到”，属正常幂等响应，未重复发奖。<br><strong>③ 旅行自动闭环</strong>：Buddy 当前位于 <strong>咖啡馆</strong>，到达倒计时 2h0m。脚本成功领取 <strong>+10 积分</strong>。🚀 今日派遣已达上限，跳过新派遣、绝不超发（日志中“已派出前往咖啡馆”为当前在途行程回显，非新增派遣）。<br><strong>④ 异常</strong>：无。仅 <code>[push]</code> 未配置推送渠道，静默降级不影响主结果。</p>
+<h2 id="三、长文结构与叙事支点"><a href="#三、长文结构与叙事支点" class="headerlink" title="三、长文结构与叙事支点"></a>三、长文结构与叙事支点</h2><p>正文写作时，我将“增长”和“现金流”彻底拆开。先破官方叙事：需求根本没塌——AWS +39.3%、谷歌云 307 亿翻倍、英特尔 DCAI +78% 创15年最快且营业利润率 41.5%、英伟达数据中心年营收 2159 亿。市场跌的是另外三样东西：</p>
+<p><strong>先破叙事</strong>：官方口径是“AI泡沫破了”，但需求根本没塌——AWS +39.3%（近五年最快）、谷歌云 307 亿翻倍、英特尔 DCAI +78% 创15年最快且营业利润率 41.5%、英伟达数据中心年营收 2159 亿。市场跌的是另外三样东西。</p>
+<p><strong>账本拆解</strong>：Alphabet 单季自由现金流 -91 亿美元（2004年上市以来第二次为负），回购归零、反手发新股 124 亿且发行价比盘前高 15-20%；亚马逊单季 FCF -334.6 亿美元，市场原本只预期 -77 亿。写完把“增长”和“现金流”这两条线彻底拆开</p>
+<h2 id="四、封面生成与发布验证"><a href="#四、封面生成与发布验证" class="headerlink" title="四、封面生成与发布验证"></a>四、封面生成与发布验证</h2><p>使用即梦 AI 生成封面：断裂硅晶圆纪念碑，裂缝中透出城市剪影，右侧冷却塔剪影，无任何伪文字（no text artifacts）。</p>
+<p>调用 <code>verify-pub.py</code> 带登录态进行线上复核。确认标题完整、作者页显示“默默工程师”、各段落完整上线。本地文件长度 4216 字符 &#x2F; 60 段，实测线上 5176 字符——差异源于 Draft.js 的 paragraph spacing（段落间距）渲染逻辑，属正常现象。</p>
+<h2 id="五、遗留与下一步"><a href="#五、遗留与下一步" class="headerlink" title="五、遗留与下一步"></a>五、遗留与下一步</h2><p>本周差 1 天即满勤，连续奖励下一档为 28 天（还差 5 天）。若需远程推送积分播报，可后续配置推送渠道。当前 WorkBuddy 登录态通道 A 零配置运行正常，无需额外授权配置。</p>
+]]></content>
+      <categories>
+        <category>自动化运维</category>
+      </categories>
+      <tags>
+        <tag>量化</tag>
+        <tag>自动化</tag>
+        <tag>财经分析</tag>
+      </tags>
+  </entry>
 </search>

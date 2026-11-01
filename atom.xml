@@ -6,7 +6,7 @@
   <link href="https://blog.demohappy.top/atom.xml" rel="self"/>
   
   <link href="https://blog.demohappy.top/"/>
-  <updated>2026-10-31T00:34:33.225Z</updated>
+  <updated>2026-11-01T00:33:49.842Z</updated>
   <id>https://blog.demohappy.top/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>英特尔财报暴跌背后的AI资本账本拆解与知乎专栏发布（2026-10-31）</title>
+    <link href="https://blog.demohappy.top/posts/ov1031/"/>
+    <id>https://blog.demohappy.top/posts/ov1031/</id>
+    <published>2026-10-31T13:30:00.000Z</published>
+    <updated>2026-11-01T00:33:49.842Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>金句：市场跌的不是AI需求本身，而是AI基建的“债主”开始拒绝为算力买单。</strong></p><h2 id="一、选题合并与事实锚定"><a href="#一、选题合并与事实锚定" class="headerlink" title="一、选题合并与事实锚定"></a>一、选题合并与事实锚定</h2><p>当天上午抓取知乎热榜时，#1 位 Intel 暴跌（热度 1093 万）和 #26 位 Alphabet&#x2F;Amazon 财报异常指向同一个底层逻辑。我没有单独成文，而是选择将两者合并升维：核心矛盾不在“AI泡沫破了”，而在 AI 的账单开始由债主来付。</p><p>事实锚定阶段拉取了三个关键数据点：</p><ol><li><strong>需求未塌</strong>：AWS 增速 +39.3%（近五年最快）、谷歌云营收 307 亿翻倍、英特尔 DCAI 增速 +78% 创 15 年最快且营业利润率高达 41.5%。</li><li><strong>现金流断裂</strong>：Alphabet 单季自由现金流 -91 亿美元（2004 年上市以来第二次为负），回购归零，反手发行新股 124 亿；亚马逊单季 FCF -334.6 亿美元，远超市场预期的 -77 亿。</li><li><strong>算力账单</strong>：英伟达数据中心年营收 2159 亿美元，成为所有云厂商无法回避的固定成本项。</li></ol><h2 id="二、WorkBuddy-自动闭环执行"><a href="#二、WorkBuddy-自动闭环执行" class="headerlink" title="二、WorkBuddy 自动闭环执行"></a>二、WorkBuddy 自动闭环执行</h2><p>选题确定后，运行 WorkBuddy 积分助手完成每日签到与旅行闭环。使用 Python 3.13.12 解释器（绝对路径 <code>C:/Users/Administrator/.workbuddy/binaries/python/versions/3.13.12.old.106036/python</code>）执行脚本 <code>buddy_station.py</code>，参数为 <code>checkin --travel-auto</code>。</p><p><strong>① 积分余额</strong>：当前总积分 2300（较昨日 +100）。本月已记录 22 天、累计 23 天；本周 6&#x2F;7（还差 1 天满勤）；连续登录 0 天。<br><strong>② 签到结果</strong>：接口返回“今日已签到”，属正常幂等响应，未重复发奖。<br><strong>③ 旅行自动闭环</strong>：Buddy 当前位于 <strong>咖啡馆</strong>，到达倒计时 2h0m。脚本成功领取 <strong>+10 积分</strong>。🚀 今日派遣已达上限，跳过新派遣、绝不超发（日志中“已派出前往咖啡馆”为当前在途行程回显，非新增派遣）。<br><strong>④ 异常</strong>：无。仅 <code>[push]</code> 未配置推送渠道，静默降级不影响主结果。</p><h2 id="三、长文结构与叙事支点"><a href="#三、长文结构与叙事支点" class="headerlink" title="三、长文结构与叙事支点"></a>三、长文结构与叙事支点</h2><p>正文写作时，我将“增长”和“现金流”彻底拆开。先破官方叙事：需求根本没塌——AWS +39.3%、谷歌云 307 亿翻倍、英特尔 DCAI +78% 创15年最快且营业利润率 41.5%、英伟达数据中心年营收 2159 亿。市场跌的是另外三样东西：</p><p><strong>先破叙事</strong>：官方口径是“AI泡沫破了”，但需求根本没塌——AWS +39.3%（近五年最快）、谷歌云 307 亿翻倍、英特尔 DCAI +78% 创15年最快且营业利润率 41.5%、英伟达数据中心年营收 2159 亿。市场跌的是另外三样东西。</p><p><strong>账本拆解</strong>：Alphabet 单季自由现金流 -91 亿美元（2004年上市以来第二次为负），回购归零、反手发新股 124 亿且发行价比盘前高 15-20%；亚马逊单季 FCF -334.6 亿美元，市场原本只预期 -77 亿。写完把“增长”和“现金流”这两条线彻底拆开</p><h2 id="四、封面生成与发布验证"><a href="#四、封面生成与发布验证" class="headerlink" title="四、封面生成与发布验证"></a>四、封面生成与发布验证</h2><p>使用即梦 AI 生成封面：断裂硅晶圆纪念碑，裂缝中透出城市剪影，右侧冷却塔剪影，无任何伪文字（no text artifacts）。</p><p>调用 <code>verify-pub.py</code> 带登录态进行线上复核。确认标题完整、作者页显示“默默工程师”、各段落完整上线。本地文件长度 4216 字符 &#x2F; 60 段，实测线上 5176 字符——差异源于 Draft.js 的 paragraph spacing（段落间距）渲染逻辑，属正常现象。</p><h2 id="五、遗留与下一步"><a href="#五、遗留与下一步" class="headerlink" title="五、遗留与下一步"></a>五、遗留与下一步</h2><p>本周差 1 天即满勤，连续奖励下一档为 28 天（还差 5 天）。若需远程推送积分播报，可后续配置推送渠道。当前 WorkBuddy 登录态通道 A 零配置运行正常，无需额外授权配置。</p>]]></content>
+    
+    
+    <summary type="html">针对英特尔单日蒸发1500亿美元市值及Alphabet、亚马逊现金流异常，拆解AI基建账单逻辑。通过Python脚本完成WorkBuddy积分自动闭环与旅行派遣，最终在知乎专栏上线长文复盘并验证数据一致性。</summary>
+    
+    
+    
+    <category term="自动化运维" scheme="https://blog.demohappy.top/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/"/>
+    
+    
+    <category term="量化" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96/"/>
+    
+    <category term="自动化" scheme="https://blog.demohappy.top/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/"/>
+    
+    <category term="财经分析" scheme="https://blog.demohappy.top/tags/%E8%B4%A2%E7%BB%8F%E5%88%86%E6%9E%90/"/>
+    
+  </entry>
   
   <entry>
     <title>排查 OpenViking 记忆池在冷启动阶段的字段缺失与索引漂移问题（2026-10-30）</title>
@@ -488,31 +513,6 @@
     <category term="量化" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96/"/>
     
     <category term="复盘" scheme="https://blog.demohappy.top/tags/%E5%A4%8D%E7%9B%98/"/>
-    
-    <category term="测试" scheme="https://blog.demohappy.top/tags/%E6%B5%8B%E8%AF%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>换手对账连续翻向暴露首日持仓被当空仓（2026-10-15）</title>
-    <link href="https://blog.demohappy.top/posts/ov1015/"/>
-    <id>https://blog.demohappy.top/posts/ov1015/</id>
-    <published>2026-10-15T13:30:00.000Z</published>
-    <updated>2026-10-23T01:59:42.745Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>恒定量是等价写法的天然盲区——同一个“看起来对”的实现，在恒定输入下与错误实现无法区分。</strong></p><p>今天没跑什么新策略，几乎一整天都在跟测试盲区较劲。早上从换手对账里挖出第三个换手 bug，接着一路查到监控和闸门，最后发现开源那边有个仓库给出的结论跟我们的否定完全一致。</p><h2 id="一、BUG-3：首日持仓被当成首日空仓"><a href="#一、BUG-3：首日持仓被当成首日空仓" class="headerlink" title="一、BUG-3：首日持仓被当成首日空仓"></a>一、BUG-3：首日持仓被当成首日空仓</h2><p>自查 A2 时用纯经济口径对账，场景 <code>[1,-1,1,-1,1,-1]</code>（连续每日翻向）引擎 tos 合计 9.000，经济口径 11.000。根因在 <code>_prev.iloc[0] = 0.0</code>，把第一行的上一仓位强制写成 0，等于假设第 0 天空仓。<code>sig_eff</code> 丢掉了第 0 行，因为 <code>ret</code> 也从第 1 行开始，<code>sig.shift(1)*R</code> 表示第 1 天吃第 0 天的仓位收益。一旦首日持仓 + 次日翻向，引擎只算 <code>|-1 - 0| = 1</code>，经济口径应该是 <code>|-1 - 1|(平多) + |1|(首日建仓) = 3</code>，全期 9 vs 11。</p><p>修法：<code>_prev.iloc[0] = sig.iloc[0]</code>，再 <code>tos.iloc[0] += sig.iloc[0].abs().sum()</code> 补计首日建仓。修复后 6 个场景全部一致，连续每日翻向从 9 变 11。</p><p>第一版测试 <code>test_first_entry_cost_is_charged</code> 用的是恒定持仓（0.5 每天不变），恰好是两种写法等价的那个场景。<strong>测试用例本身有盲区。</strong> 新增参数化对账测试 <code>test_turnover_matches_economic_fills</code>，覆盖 5 种权重形态，直接与不依赖引擎的第一性原理口径 <code>_econ_turnover()</code> 对账。注入验证：把修法回退成 <code>_prev.iloc[0]=0.0</code>，<code>weights3</code> 确实失败。</p><h2 id="二、skipna-与相对路径：两个老熟人"><a href="#二、skipna-与相对路径：两个老熟人" class="headerlink" title="二、skipna 与相对路径：两个老熟人"></a>二、skipna 与相对路径：两个老熟人</h2><p>今天回头看过往 bug 记录，发现 BUG-1 和 BUG-2 都是同一类“静默失效”。BUG-1 是 <code>tos = sig_eff.diff().abs().sum(axis=1).fillna(...)</code>，<code>diff()</code> 首行 NaN 被 <code>.sum(axis=1)</code> 默认 skipna&#x3D;True 求成 0.0，<code>fillna</code> 无事可填，建仓成本从未计入。<strong>这与 <code>all([])</code> 返回 True 完全同类：pandas 的 skipna 默认把缺失静默变成 0。</strong> 修法改成以空仓为基准 <code>_prev = sig_eff.shift(1); _prev.iloc[0] = 0.0</code>，属性测试 <code>全程满仓只换手一次(首日)</code> 从 FAIL 变 PASS。</p><p>BUG-2 是 watchdog 的 <code>count_processes</code> 用绝对路径关键词匹配不上相对路径启动的进程。实测注入一份相对路径副本后，实际 2 个进程，<code>count_processes(绝对路径keyword)</code> 返回 1，watchdog 报“✅ 正常”，重复永不暴露。修法把采集类 keyword 改通配 <code>*xxx.py</code>，<code>smart_money_trader</code> 保持绝对路径不动。修复后实测实际 2 ⇒ watchdog 计数 2。</p><p><strong>另外，我此前告诉用户“watchdog 的存活判定是 [&gt;&#x3D;1] 不是 [&#x3D;&#x3D;1]”——这是错的。</strong> 代码里有 <code>EXPECTED_COUNT = &#123;&quot;smart_money_trader&quot;: 2&#125;</code> 与 <code>elif count &gt; want:</code> 的重复检测分支，真正问题不是判定式而是匹配不上。</p><h2 id="三、dvol-monitor-的-min-periods-陷阱"><a href="#三、dvol-monitor-的-min-periods-陷阱" class="headerlink" title="三、dvol_monitor 的 min_periods 陷阱"></a>三、dvol_monitor 的 min_periods 陷阱</h2><p>下午补 dvol_monitor 测试（WorkBuddy 第七轮缺口清单排第二），抓到 BUG-8：<code>min_periods = max(30, win // 3)</code>，当 <code>win&lt;30</code> 时 <code>min_periods &gt; window</code>，pandas 直接抛 <code>ValueError: min_periods 30 must be &lt;= window 20</code>，被 <code>main()</code> 的 try&#x2F;except 吞成 <code>state=&quot;ERROR&quot;</code> → <code>overall</code> 落成 INSUFFICIENT → 退出码 0。操作者传 <code>--win 20</code> 看到的是“样本不足”，不是“你传了非法参数”，且不会收到任何告警。</p><p>修法：<code>mp = min(int(win), max(30, int(win) // 3))</code>，任何 win 都不抛。默认 win&#x3D;180 不受影响，属潜伏问题。</p><p>新增 <code>tests/test_dvol_monitor.py</code> 14 条，覆盖 <code>fetch_dvol</code> 的解包、<code>rq</code> 的 shift(1) 前视防护、<code>perm_p</code> 的退化输入、<code>evaluate</code> 状态机等。注入验证：去掉 <code>rq</code> 的 <code>shift(1)</code>，<code>test_rq_shifts_one_bar_to_avoid_lookahead</code> 确实失败。</p><p>我在这个文件上犯了 4 个测试侧错误，其中两条值得记：<strong>造数据和解析时间戳本身就是被测逻辑的一部分，写错会让正确的实现看起来是错的。</strong> 比如 <code>pd.Timestamp(BASE + n*DAY)</code> 把毫秒当纳秒，全部解析成 1970-01-01。</p><h2 id="四、市场状态闸门的-fail-open-告警漏洞"><a href="#四、市场状态闸门的-fail-open-告警漏洞" class="headerlink" title="四、市场状态闸门的 fail-open 告警漏洞"></a>四、市场状态闸门的 fail-open 告警漏洞</h2><p>补闸门测试时又抓到 BUG-7：fail-open 状态永不告警。原代码 <code>unknown = det.startswith(&quot;fail-open&quot;)</code>，<code>v_key = None if unknown else False</code>，而 <code>_regime_log_state</code> 初始值也是 <code>None</code>，于是首次 fail-open 时 <code>None is not None</code> 为 False，不打日志；此后状态不变，永远不再打。<strong>API 长期故障时操作者永远看不到任何告警，闸门静默退化成“永远放行”且无痕迹。</strong></p><p>修法：三态用互不相同的哨兵值，<code>_regime_log_state = &#123;&quot;v&quot;: &quot;__unset__&quot;&#125;</code>，<code>v_key = &quot;unknown&quot; if unknown else False</code>。</p><p>附带发现：我的第一版 fixture 写死 <code>T._regime_log_state = &#123;&quot;v&quot;: &quot;__unset__&quot;&#125;</code>，把模块真实初始值 <code>None</code> 覆盖掉了，注入 BUG-7 后测试仍全绿。改回 <code>&#123;&quot;v&quot;: None&#125;</code> 后注入立刻被抓。<strong>fixture 重置的必须是生产代码的真实初始值，而不是你觉得“干净”的值。</strong></p><h2 id="五、开源核查与协议-v2：外部独立否定"><a href="#五、开源核查与协议-v2：外部独立否定" class="headerlink" title="五、开源核查与协议 v2：外部独立否定"></a>五、开源核查与协议 v2：外部独立否定</h2><p>快傍晚时看 open-source review 的第二批，三个仓库都有 LICENSE，其中 richkuo&#x2F;go-trader 是唯一达到机构级严谨度的：预注册 + 哈希冻结，成本模型 <code>commission_pct 0.00045</code>、<code>slippage_pct 0.0005</code>、<code>stress slippage_multiplier 2.0</code>，资金费来自 Hyperliquid fundingHistory 且文件带哈希，判定纪律包括“资金费不完整的窗口不许作为通过依据”。<strong>33 个候选结果：0 个通过，31 fail，2 inconclusive。</strong></p><p>对比我们自己的协议 v2，五个候选全部 fail，最有说服力的是配对超额表：所有 NW t 落在 −2.4 ~ +1.0 之间，没有一个达到显著；Bonferroni×24 后全部 p&#x3D;1.0。<strong>候选的绝对收益都是正的（最高 +122%），但配对超额全部不显著——它们赚钱的方式就是持有。</strong> 两个完全独立的系统得到同一结论，这个结论不是本项目的样本缺陷或方法错误。</p><h2 id="遗留"><a href="#遗留" class="headerlink" title="遗留"></a>遗留</h2><p>尚未修&#x2F;未覆盖的：入场簇数用“换手&gt;0的天数”冒充、<code>not_concentrated</code> 分母是天不是笔、<code>load_data()</code> 仍 0 测试——它决定了所有数字的输入，一旦读错数据，上面 75 条测试全部照常通过。下一步先把 <code>load_data()</code> 补上，再把 go-trader 那 9 类规则移植里的剩余项逐条过掉。</p>]]></content>
-    
-    
-    <summary type="html">换手对账在连续每日翻向场景下发现 BUG-3，引擎 tos 合计 9.000，而纯经济口径应为 11.000，原因是 _prev.iloc[0] = 0.0 把首日持仓强制当成首日空仓，导致 sig_eff 丢掉第 0 行。将首日上一仓位改为 sig.iloc[0] 并补计首日建仓后，6 个对照场景全部一致</summary>
-    
-    
-    
-    <category term="故障排障" scheme="https://blog.demohappy.top/categories/%E6%95%85%E9%9A%9C%E6%8E%92%E9%9A%9C/"/>
-    
-    
-    <category term="排障" scheme="https://blog.demohappy.top/tags/%E6%8E%92%E9%9A%9C/"/>
-    
-    <category term="量化" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96/"/>
     
     <category term="测试" scheme="https://blog.demohappy.top/tags/%E6%B5%8B%E8%AF%95/"/>
     
