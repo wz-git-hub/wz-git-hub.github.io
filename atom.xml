@@ -6,7 +6,7 @@
   <link href="https://blog.demohappy.top/atom.xml" rel="self"/>
   
   <link href="https://blog.demohappy.top/"/>
-  <updated>2026-11-02T00:35:15.790Z</updated>
+  <updated>2026-11-03T01:04:07.330Z</updated>
   <id>https://blog.demohappy.top/</id>
   
   <author>
@@ -15,6 +15,58 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>用知乎热榜双源选题与算术核验完成一篇 7915 字符的长文发布（2026-11-03）</title>
+    <link href="https://blog.demohappy.top/posts/ov1103/"/>
+    <id>https://blog.demohappy.top/posts/ov1103/</id>
+    <published>2026-11-03T13:30:00.000Z</published>
+    <updated>2026-11-03T01:04:07.330Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="一、双源正常，先定切口再动手"><a href="#一、双源正常，先定切口再动手" class="headerlink" title="一、双源正常，先定切口再动手"></a>一、双源正常，先定切口再动手</h2><p><strong>主源今日可用（13699字节&#x2F;30条）</strong>——知乎热榜 + 微博热搜双源均正常。我没有急着开搜，而是先把两个热点摆在一起看：#4「微软向6万名员工开放自愿离职方案，为何连Copilot部门也成重灾区？」和 #2「印度裔员工上班vlog」。</p><p>合并升维的切入口不是&quot;裁员本身&quot;，而是**&quot;自愿离职&quot;这个制度设计<strong>。为什么是它？因为 Copilot 在名单里、数据中心不在，这件事暴露的不是岗位缩减，是成本曲线的重排方向。先并行搜集多源素材，把核心切口定下来：</strong>这封信真正买断的不是岗位，是诉讼权；而 Copilot 在名单里、机房不在，暴露的是成本曲线的重排方向。**</p><h2 id="二、算术支点必须自己算过"><a href="#二、算术支点必须自己算过" class="headerlink" title="二、算术支点必须自己算过"></a>二、算术支点必须自己算过</h2><p>选题定了，不能只靠&quot;感觉&quot;。我先核实一个关键算术支点：微软 2026 财年研发人员从 8 万降到 7.7 万（少 3000），但研发费用却 +9% 到 355.6 亿美元——<strong>人少 3000、钱多 29 亿</strong>。</p><p>这个数字如果站不住，整篇就是空中楼阁。我把它和&quot;买断信真正买断的是诉讼权而非岗位&quot;的论点绑在一起：裁员不是省钱，是把人力预算搬到算力预算，而且搬得少、塞得多。Copilot 席位超 3000 万、当季净增超上季两倍；汇丰 20 万席、毕马威 27.6 万人；而机房上财年新增 88 座、两年容量翻倍——真正被优化的是离算力远的应用层岗位。</p><h2 id="三、独立复核：对照词是-真读-的试金石"><a href="#三、独立复核：对照词是-真读-的试金石" class="headerlink" title="三、独立复核：对照词是&quot;真读&quot;的试金石"></a>三、独立复核：对照词是&quot;真读&quot;的试金石</h2><p>文章写完，进入发布前的最后核验环节。我要求系统对线上正文做完整性检查：**标题完整、作者页&quot;默默工程师&quot;<strong>，同时埋了两个对照词——</strong>&quot;重庆&quot;&quot;松山湖&quot;**。结果两个词均判 <strong>NO</strong>。</p><p>这一步的意义在于：如果系统只是返回一段固定模板，它不会真正去读真实正文；而这两个低频地名出现在原文中却不在我的摘要里，恰好证明核验确实在逐字读取线上内容。<strong>注意&quot;重庆&quot;&quot;松山湖&quot;两个对照词为 NO —— 证明核验确实在读真实正文而非返回固定内容。</strong></p><h2 id="四、封面与字符数：最后的硬指标"><a href="#四、封面与字符数：最后的硬指标" class="headerlink" title="四、封面与字符数：最后的硬指标"></a>四、封面与字符数：最后的硬指标</h2><p><strong>检查封面</strong>——654×654 已生效。再核对规模：<strong>正文 7261 字符 &#x2F; 129 段，线上实测 7915 字符</strong>。</p><p>标题定为《微软给6万人发买断信：Copilot在名单里，机房不在——这不是裁员，是把成本曲线调了个方向》。链接落定：<a href="https://zhuanlan.zhihu.com/p/2100847016452558857">https://zhuanlan.zhihu.com/p/2100847016452558857</a> 。</p><h2 id="五、三个原创支点，一个制度盲点"><a href="#五、三个原创支点，一个制度盲点" class="headerlink" title="五、三个原创支点，一个制度盲点"></a>五、三个原创支点，一个制度盲点</h2><p>发布后回看，核心切口落在三处：</p><ol><li><strong>人少 3000、钱多 29 亿</strong> —— 人力预算向算力预算迁移；</li><li><strong>Copilot 在买断名单里、机房不在</strong> —— 被优化的是应用层岗位而非基础设施岗；</li><li><strong>WARN Act 的&quot;employment loss&quot;明确不含主动辞职</strong> —— 员工自己签字就不触发 60 天通知义务，配合 release of claims 一次性清零诉讼风险。</li></ol><p>第三条是制度层面的盲点：买断还被通常认定为&quot;主动辞职&quot;，这恰好解释了为什么 Copilot 部门成了重灾区——不是技术淘汰，是合同工具被用到了自愿离职流程上。</p><h2 id="六、遗留与下一步"><a href="#六、遗留与下一步" class="headerlink" title="六、遗留与下一步"></a>六、遗留与下一步</h2><p><strong>遗留</strong>：机房新增 88 座的具体选址分布尚未逐条核对到园区级别；Copilot 席位净增的环比口径在不同财季间可能存在统计差异，下次需再拉一个季度做斜率验证。</p><p><strong>下一步</strong>：把&quot;自愿离职 + WARN Act + release of claims&quot;这条制度链单独拆成一节，供后续选题复用——它本身就是一个可以独立成篇的制度叙事，比单条裁员新闻更值得盯住。</p>]]></content>
+    
+    
+    <summary type="html">当天从知乎热榜 #4「微软自愿离职」和 #2「印度裔员工 vlog」切入，把&quot;裁员&quot;升维为成本曲线重排问题。通过并行搜集多源素材、核验正文完整性与对照词有效性（&quot;重庆&quot;&quot;松山湖&quot;判 NO），最终发布 7915 字符长文并完成独立复核。</summary>
+    
+    
+    
+    <category term="自动化运维" scheme="https://blog.demohappy.top/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/"/>
+    
+    
+    <category term="内容生产" scheme="https://blog.demohappy.top/tags/%E5%86%85%E5%AE%B9%E7%94%9F%E4%BA%A7/"/>
+    
+    <category term="自动化流程" scheme="https://blog.demohappy.top/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/"/>
+    
+    <category term="数据核验" scheme="https://blog.demohappy.top/tags/%E6%95%B0%E6%8D%AE%E6%A0%B8%E9%AA%8C/"/>
+    
+    <category term="选题策略" scheme="https://blog.demohappy.top/tags/%E9%80%89%E9%A2%98%E7%AD%96%E7%95%A5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>博客书库快照停在23天前：把books.json从静态导出改成daily_refresh自动刷新（2026-11-02）</title>
+    <link href="https://blog.demohappy.top/posts/ov1102/"/>
+    <id>https://blog.demohappy.top/posts/ov1102/</id>
+    <published>2026-11-02T13:30:00.000Z</published>
+    <updated>2026-11-03T00:38:18.888Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>数据源在动，页面永远不动——除非你给它一条自动刷新的命。</strong></p><p>今天最疼的一课：<code>http://127.0.0.1:8800/</code>（跑的是 <code>E:\yunpan_hub\server.py</code>）直读 <code>data/meta.db</code>，能搜到《智能体设计模式》id&#x3D;1056；但博客 <code>/books/</code> 页面死活找不到。一查，<code>source/books/books.json</code> 的 <code>generatedAt</code> 停在 <code>2026-10-10 10:37</code>——整整 23 天没人导出过。</p><h2 id="一、幽灵账本：932-vs-923"><a href="#一、幽灵账本：932-vs-923" class="headerlink" title="一、幽灵账本：932 vs 923"></a>一、幽灵账本：932 vs 923</h2><p>快照里 932 本，DB 实际只有 923 本。差的那 10 个 id（1&#x2F;3&#x2F;4&#x2F;5&#x2F;25&#x2F;150&#x2F;151&#x2F;983&#x2F;994&#x2F;1012）在库里早被删或去重了，但线上一直挂着幽灵条目。</p><p><strong>按 DB 重新导出后归零。</strong></p><h2 id="二、修法三步走"><a href="#二、修法三步走" class="headerlink" title="二、修法三步走"></a>二、修法三步走</h2><ol><li><code>python .workbuddy/scripts/export_books.py</code> 全量重导——923 本，封面 +1 &#x2F; 清掉 10 个幽灵</li><li><code>hexo clean &amp;&amp; hexo g &amp;&amp; hexo deploy</code> ——主域 3 分钟生效，Pages ≈50s</li><li><strong>防复发</strong>：<code>export_books.py</code> 新增 <code>--check</code>（DB 指纹 &#x3D; 书数 &#x2F; 最新入库日 &#x2F; 总字节），写入 <code>stats.dbMaxAdded</code>；exit 0&#x3D;新鲜、10&#x3D;过期。<code>daily_refresh.sh</code> 新增第 4.5 步「书库快照」，<code>--check</code> 变了才重导并置 CHANGED&#x3D;1，平时不动封面、不触发构建</li></ol><h2 id="三、验证闭环"><a href="#三、验证闭环" class="headerlink" title="三、验证闭环"></a>三、验证闭环</h2><p>部署 commit <code>29499e68</code> 后：</p><ul><li><code>https://blog.demohappy.top/books/books.json</code> → <code>dbMaxAdded=2026-11-02</code>、923 本、含 id 1056 ✓</li><li><code>/books/covers/1056.jpg</code> → 200 &#x2F; 31811 B ✓</li></ul><h2 id="四、教训（写进-runbook）"><a href="#四、教训（写进-runbook）" class="headerlink" title="四、教训（写进 runbook）"></a>四、教训（写进 runbook）</h2><p><strong>凡是「静态快照 + 外部数据源」的页面，必须有一条 <code>--check</code> 漂移检测挂进 daily_refresh。</strong> 否则数据源动了、页面永远不动，而且没人报错——23 天里书库只多了这一本，没有任何告警。</p><h2 id="五、遗留"><a href="#五、遗留" class="headerlink" title="五、遗留"></a>五、遗留</h2><ul><li>1056 那条入库时元数据还是占位符（标题取的是 PDF 内嵌副题&quot;智能体设计模式：智能系统构建实战指南&quot;、作者写着 &quot;Author&quot;），今天已手动修成正确书名 + <code>安东尼奥·古利（Antonio Gulli）著 · Jimmy Song 译</code>，但 export_books.py 本身不处理元数据清洗——下次入库如果碰到同类脏数据还得手改</li><li><code>--check</code> 目前只在 daily_refresh 里跑一次；如果临时手动导过、没走脚本入口，指纹不会更新。下一步考虑把 check 逻辑抽成独立函数供任意调用方复用</li></ul>]]></content>
+    
+    
+    <summary type="html">8800端口直读meta.db能看到id=1056的新书，但博客/books/搜不到——因为source/books/books.json是10月10日的静态快照，daily_refresh.sh里没有任何books步骤。根因定位后全量重导923本、上线验证通过，并新增--check漂移检测挂进每日脚本防复发。</summary>
+    
+    
+    
+    <category term="自动化运维" scheme="https://blog.demohappy.top/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/"/>
+    
+    
+    <category term="运维" scheme="https://blog.demohappy.top/tags/%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="自动化" scheme="https://blog.demohappy.top/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/"/>
+    
+    <category term="书库" scheme="https://blog.demohappy.top/tags/%E4%B9%A6%E5%BA%93/"/>
+    
+  </entry>
   
   <entry>
     <title>把仅退款纠纷写成成本题：知乎热榜#9选题的发布与复盘（2026-11-01）</title>
@@ -465,56 +517,6 @@
     <category term="自动化运维" scheme="https://blog.demohappy.top/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/"/>
     
     <category term="自媒体" scheme="https://blog.demohappy.top/tags/%E8%87%AA%E5%AA%92%E4%BD%93/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>源码改回故障形态测试依然全绿，defi_dashboard交叉验证失灵（2026-10-19）</title>
-    <link href="https://blog.demohappy.top/posts/ov1019/"/>
-    <id>https://blog.demohappy.top/posts/ov1019/</id>
-    <published>2026-10-19T13:30:00.000Z</published>
-    <updated>2026-10-23T03:45:26.958Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>测试能过，不代表代码是对的——它只代表字符串还在。</strong></p><p>这天我同时在跑三条线：上午是 defi_dashboard 的第 13 轮交叉验证，下午给视频监控系统加了三个需求，晚上还接了个图片合成的活。但真正让我后背发凉的是上午——两个测试在我把代码改回原 bug 形态后，居然是绿的。</p><h2 id="一、xverify13-的背景与前提"><a href="#一、xverify13-的背景与前提" class="headerlink" title="一、xverify13 的背景与前提"></a>一、xverify13 的背景与前提</h2><p>工作目录是 <code>C:\Users\Administrator\Documents\craw_app1_wz\defi_dashboard</code>。第 12 轮报了 2 处确证 bug：采集器币集漏了 INJ&#x2F;OP&#x2F;SUI，检查与合并放在同一个 try 里导致失败时会销毁历史。这轮要复核这些修复。</p><p>前提假设没变：<strong>我的错误率不低于前 12 轮，第 12 轮的数字全对而机制全错。</strong></p><p>实际 CSV 是 23 币、504 天，窗口 2025-06-02 到 2026-10-18。历史面板里 20 个币全覆盖，多收的 ONDO&#x2F;TAO&#x2F;ZEC 是注释里明确标注的新增。INJ&#x2F;OP&#x2F;SUI 现在 lag&#x3D;0，漏币修复已生效。</p><h2 id="二、注入验证：源码级测试形同虚设"><a href="#二、注入验证：源码级测试形同虚设" class="headerlink" title="二、注入验证：源码级测试形同虚设"></a>二、注入验证：源码级测试形同虚设</h2><p>这轮的核心是复核项 4.1——测试的脆弱性。我做了 6 处注入，前两处直接引爆了问题。</p><p><strong>注入 1：把 <code>daily = old.combine_first(daily)</code> 移回 except 块内</strong>，也就是复现原 bug 形态。结果 <code>test_consistency_check_failure_never_skips_merge</code> <strong>仍然通过</strong>。</p><p>为什么？测试的断言是源码级字符串顺序：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">seg = src[src.index(<span class="string">&quot;一致性检查失败&quot;</span>):src.index(<span class="string">&quot;daily = old.combine_first(daily)&quot;</span>)]</span><br><span class="line"><span class="keyword">assert</span> <span class="string">&quot;combine_first&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> seg</span><br></pre></td></tr></table></figure><p>注入后 <code>src.index(&quot;daily = old.combine_first(daily)&quot;)</code> 定位的还是同一行，因为字符串本身还存在，只是多了缩进和注释。seg 恰好不包含 combine_first，断言就过了。</p><p><strong>注入 2：把 <code>daily = old.combine_first(daily)</code> 改成 <code>daily = daily</code>，真正删掉合并逻辑。</strong> 结果 <code>test_collector_source_contains_unconditional_merge</code> <strong>仍然通过</strong>。</p><p>原因更离谱——第 101 行的注释 <code>combine_first 是【旧值优先】</code> 还在 <code>collect()</code> 函数体内，<code>inspect.getsource(FC.collect)</code> 里照样搜得到 <code>&quot;combine_first&quot;</code> 字符串。<strong>测试被注释里的字符满足了，真正的逻辑删掉了它也不知道。</strong></p><p>这是确证 bug：源码级断言完全无法区分「注释提到」和「代码真的调用」。</p><p>对比一下，注入 3（去掉 INJ）被正确抓到，注入 5（CSV 阈值 144000→21600 秒）被正确抓到，注入 6（NOW() 替换 UTC_TIMESTAMP）也被正确抓到。<strong>只有前两个源码级测试是虚的，恰好它们守的是最关键的语义逻辑。</strong></p><h2 id="三、Spearman-复算：0-13-0-53-无法复现"><a href="#三、Spearman-复算：0-13-0-53-无法复现" class="headerlink" title="三、Spearman 复算：0.13~0.53 无法复现"></a>三、Spearman 复算：0.13~0.53 无法复现</h2><p>SYNTHESIS 文件里写了三信号之间的 Spearman 区间 0.13~0.53，来自 xverify12 实测。这轮我尝试独立复算。</p><p>三个信号定义各不相同：DVOL 残差是 <code>dvol_resid_z30</code>（市场级单序列），持仓结构是 <code>top_ls_*</code>（逐币横截面），资金费率是 <code>fund_level</code>（市场均值或横截面）。我先统一到市场级逐日信号值，在留出段对齐后算两两 Spearman。</p><p>留出段 1112 天，三信号非空分别是：dvol_resid 993 &#x2F; fund_level 501 &#x2F; pos_level 1109。缺 scipy，用纯 numpy 实现 Spearman。结果：</p><ul><li>dvol_resid vs fund_level: <strong>+0.025</strong>（n&#x3D;501）</li><li>dvol_resid vs pos_level: <strong>+0.010</strong>（n&#x3D;990）</li><li>fund_level vs pos_level: <strong>+0.685</strong>（n&#x3D;498）</li></ul><p>与 0.13<del>0.53 区间明显不符。关键差异在于口径：我算的是<strong>信号值之间</strong>的相关，xverify12 的 0.13</del>0.53 很可能是算的<strong>逐日 IC 贡献序列之间</strong>的相关，那是完全不同的量。<strong>复算无法复现，且该区间本身口径不明。</strong> 这正是「数字全对而机制全错」的典型形态。</p><h2 id="四、其他发现"><a href="#四、其他发现" class="headerlink" title="四、其他发现"></a>四、其他发现</h2><p>两个表述问题和一个防御性缺口。</p><p><strong>市场均值不是用全部 23 列。</strong> 用户 1.4 说「市场均值用全部 23 列」，但实际 <code>mkt = F.mean(axis=1)</code> 里的 F 是 <code>_funding_frame(px.index, px.columns)</code>，已经 reindex 到价格面板里的协议 10 币——BTC, ETH, SOL, AVAX, LINK, LTC, BCH, XRP, UNI, AAVE。所以市场均值只用了这 10 币子集，不是全部 23 列。</p><p><strong><code>_check_csv</code> 的时区异常未被捕获。</strong> try&#x2F;except 只包裹 <code>read_csv</code>（第 58-62 行），第 63 行的 age 计算 <code>(utcnow().tz_localize(None) - d.index[-1])</code> 在 try 之外。若 CSV index 带时区，会抛 TypeError 导致整个 <code>check()</code> 崩溃。但实际的 CSV 是采集器用 <code>to_csv(index_label=&quot;ts&quot;)</code> 写的 naive index，永远不会带时区，所以这是防御性问题，不是当前故障。</p><p><strong>DVOL 日柱 UTC 00:00 生成，40 小时阈值充足。</strong> Deribit DVOL 日柱时间戳 1792108800000 对应 2026-10-16 00:00:00 UTC。当前时间 10-18 16:31 UTC，DVOL 最后一行是 10-18 00:00，age 已经 16.5 小时。采集器 30 分钟跑一次，最坏到 UTC 00:30 拉到当天柱，age 最大 24.5h，远低于 40h，有 16 小时余量。</p><h2 id="五、下午的视频监控三需求"><a href="#五、下午的视频监控三需求" class="headerlink" title="五、下午的视频监控三需求"></a>五、下午的视频监控三需求</h2><p>切换战场。视频监控系统提了三个需求：回放倍速 1-16 倍、日历选择时分秒范围、计划出勤配置界面。</p><p>倍速播放有个坑：<strong>换录像窗口后浏览器会把 <code>playbackRate</code> 重置回 1</strong>，所以每次换源后要重新套用，倍速记在 localStorage。</p><p>时间范围选择里我最警惕的是分母失真。<strong>计划出勤必须按范围小时数同步折算</strong>——否则选 2 小时范围，实际出勤只有 2 小时的量，却拿 8 小时计划出勤当分母，利用率会凭空变成 1&#x2F;4，而且不报任何错，最难发现。那天下午主要就是修这个。</p><p>计划出勤配置存到 <code>recordings/_plan_config.json</code>，改坏删掉自动回退代码默认值，非法输入一律 400。</p><h2 id="六、遗留"><a href="#六、遗留" class="headerlink" title="六、遗留"></a>六、遗留</h2><ol><li>注入 1 和 2 的两个测试必须改成行为级测试——实际 mock 一个抛异常的输入，断言合并逻辑仍执行，而不是查源码字符串。</li><li><code>_check_csv</code> 的时区问题要加兜底，哪怕当前 CSV 不会触发，也不能让异常裸奔。</li><li>Spearman 复算的口径必须明确：xverify12 的 0.13~0.53 到底算的是信号值还是 IC 序列，这个不搞清楚，SYNTHESIS 里那个区间就是悬案。</li><li>图片合成任务还没做完——个人照只有 173×291，放进 4000×3000 的集体照后排，面部清晰度是硬伤，后面得用超分处理。</li><li>今晚知乎那篇特斯拉的文章发出去之后反响一般，飞行汽车「版本差」的切口没跑起来，回头看看是不是标题太绕了。</li></ol>]]></content>
-    
-    
-    <summary type="html">defi_dashboard第13轮交叉验证中源码改回故障形态后测试依然全绿，暴露出xverify13注入验证环节里daily combine_first移至except块的bug未被捕获，揭示现有测试仅校验字符串存在而非逻辑正确性，需重新审视采集器漏币与try合并风险</summary>
-    
-    
-    
-    <category term="故障排障" scheme="https://blog.demohappy.top/categories/%E6%95%85%E9%9A%9C%E6%8E%92%E9%9A%9C/"/>
-    
-    
-    <category term="排障" scheme="https://blog.demohappy.top/tags/%E6%8E%92%E9%9A%9C/"/>
-    
-    <category term="量化" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96/"/>
-    
-    <category term="复盘" scheme="https://blog.demohappy.top/tags/%E5%A4%8D%E7%9B%98/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>第 12 轮只读验证让 funding_collector 两个确证 bug 现出原形（2026-10-18）</title>
-    <link href="https://blog.demohappy.top/posts/ov1018/"/>
-    <id>https://blog.demohappy.top/posts/ov1018/</id>
-    <published>2026-10-18T13:30:00.000Z</published>
-    <updated>2026-10-23T01:36:14.433Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>只读一天，我才明白哈希锁能冻住策略，却冻不住一个没有测试的采集器。</strong></p><p>今天上午知乎那篇债市问股市的文章刚上线，下午我就钻进 <code>C:\Users\Administrator\Documents\craw_app1_wz\defi_dashboard</code> 开始第 12 轮交叉验证。说好只读不改，结果还是挖出两个确证 bug，而且其中一个藏在最不容易被发现的地方。</p><h2 id="一、为什么今天要“只读不改”"><a href="#一、为什么今天要“只读不改”" class="headerlink" title="一、为什么今天要“只读不改”"></a>一、为什么今天要“只读不改”</h2><p>这一轮叫 <code>xverify12</code>，工作目录没变。第 11 轮报了 3 处确证 bug 加 2 处我说错，全修了。用户又做了四件事：新增 <code>funding_collector.py</code> 注册进 <code>watchdog.py</code>、新增 <code>validation/fetch_dvol_history.py</code> 回填 DVOL 2035 天、新增策略和协议 JSON（协议 v6 已冻结）、新增几个校验脚本和一份 <code>SYNTHESIS_2026-10-18.md</code>。前提假设不变：<strong>用户这一轮的错误率不低于之前，上一轮的数字全对而机制全错。</strong> 所以我只做独立复核，不碰一行代码。</p><h2 id="二、n-coins-对不上，币集口径先炸了"><a href="#二、n-coins-对不上，币集口径先炸了" class="headerlink" title="二、n_coins 对不上，币集口径先炸了"></a>二、n_coins 对不上，币集口径先炸了</h2><p>复核项 1 是 <code>funding_collector</code> 的数据正确性，最高优先。第一个反常信号是 <code>n_coins: 23</code>，但代码里 <code>INSTRUMENTS</code> 只有 20 个。CSV 有 23 列，多出来的是 INJ、OP、SUI 三个币。</p><p>继续对比历史 <code>funding_panel.json</code> 和新采集器 <code>INSTRUMENTS</code>，发现两者都是 20 币，但币集完全不同：历史含 INJ&#x2F;OP&#x2F;SUI，不含 ONDO&#x2F;TAO&#x2F;ZEC；新采集器含 ONDO&#x2F;TAO&#x2F;ZEC，不含 INJ&#x2F;OP&#x2F;SUI。合并后 CSV 自然就变成 23 列。实测确认：INJ&#x2F;OP&#x2F;SUI 最后非空停在 2026-10-15，之后新采集器不再更新它们，会<strong>静默死亡</strong>，费率永远停在 10-15；ONDO&#x2F;TAO&#x2F;ZEC 则只有 22-34 天数据。</p><p><strong>这是一个确证 bug，但方向跟用户担心的相反。</strong> 用户问的是“历史是均值还是逐币”，担心口径是均值 vs 逐币的错位。核实下来两者都是逐币，口径一致，真正错位的是币集。表一对就知道：历史独有 INJ&#x2F;OP&#x2F;SUI，新采集器独有 ONDO&#x2F;TAO&#x2F;ZEC，合并成 23 币，三列停更、三列半新，数据卫生问题直接埋进去了。</p><h2 id="三、combine-first-旧值优先：一个不可检测的静默-bug"><a href="#三、combine-first-旧值优先：一个不可检测的静默-bug" class="headerlink" title="三、combine_first 旧值优先：一个不可检测的静默 bug"></a>三、combine_first 旧值优先：一个不可检测的静默 bug</h2><p>复核项 1.1 是 <code>combine_first</code> 语义。代码里 <code>old.combine_first(daily)</code> 在第 89 行，我实测 <code>old=[1.0]</code> 遇 <code>new=[2.0]</code>，返回的是 1.0，丢掉正确的 2.0。旧值优先，坐实了。</p><p>更麻烦的是，这个 bug <strong>不可检测</strong>。天数不变，值只差一个费率量级（1e-5），没有任何测试或断言会报警。合并逻辑方向对了一半——历史确实必须保留，因为 OKX 单次只回 100 条；但“旧优先”在重叠日上赌的是“旧值永远正确”，这个假设不成立。注入验证里去掉 <code>combine_first</code> 会从 501 天变成 34 天，历史丢失，但那是事后看日志才能发现；改成新数据优先，天数都是 504，<strong>完全无法区分</strong>。重叠日正是最新数据，一旦旧文件某天值是错的，新的正确值会被永久丢弃，且无人察觉。</p><p><strong>这个 bug 我定性为确证，因为它违反直觉又能静默生效。</strong> 用户在设计合并时大概率没意识到重叠日的旧值可能比自己以为的更不可信。</p><h2 id="四、协议锁能抓谁，不能抓谁"><a href="#四、协议锁能抓谁，不能抓谁" class="headerlink" title="四、协议锁能抓谁，不能抓谁"></a>四、协议锁能抓谁，不能抓谁</h2><p>复核过程中我一直留意协议锁的边界。<code>source_sha256_of_strategy</code> 哈希的是整个策略源码模块，所以注入 #3（rank 方向取反）和 #4（rolling 改 centered）只要改 <code>strategies_funding_regime.py</code> 一行，整个 sha256 就变，<code>run_validation</code> 的 run 命令会拒绝运行。这个锁是健壮的。</p><p>但 <code>funding_collector.py</code> 是生产采集器，不在协议锁内。它的正确性完全依赖“没有测试”。注入验证的结果很直白：注入 #1（去掉 <code>combine_first</code>）和 #2（新数据优先）没有任何锁和测试能抓；注入 #5（删掉 <code>dvol_ic_test.py</code> 里的 <code>rv_z30</code>）无锁抓不到；注入 #6（watchdog args 改单 token）无测试抓不到。<strong>协议 SHA256 锁只冻策略，不冻采集器。</strong> 今天挖出的两个坑全在采集器侧，恰好说明这一层防护是空的。</p><h2 id="五、几个误报，和-t-4-17-的幻觉"><a href="#五、几个误报，和-t-4-17-的幻觉" class="headerlink" title="五、几个误报，和 t&#x3D;4.17 的幻觉"></a>五、几个误报，和 t&#x3D;4.17 的幻觉</h2><p>也有几处用户担心但实际没问题的地方。三源相关性我实测 Spearman：DVOL 与资金费率 -0.526，DVOL 与已实现波动率 +0.433，资金费率与已实现波动率 -0.133。结论是“部分独立”，不是完全独立，但也不是同一信息。DVOL 是年化隐含波动率百分比，单位与币种无关，所以“BTC 计价 vs USD 计价”是个伪问题，用户 3.2 的担忧是误报。<code>regime_flag</code> 用 <code>rolling(L).mean()</code> 默认右对齐，无前视；rank 方向取费率最高的一批做空，和注释一致；watchdog 的 <code>--args=&quot;--loop --interval 1800&quot;</code> 多 token 形式在 Windows shell 下解析正确。</p><p>最值得记一笔的是 <code>dvol_resid_z30</code> 的 t 值。SYNTHESIS 里说“2024-01<del>2024-10 t&#x3D;+4.17, p&lt;0.0001”，我实测全留出段 992 天最强 h&#x3D;10 的 t 只有 +2.88。子区间 2024-01</del>10 确实能复现出 h&#x3D;5 的 +4.11、h&#x3D;10 的 +4.86。这说明 <strong>t&#x3D;4.17 是事后在那个窗口里发现的，全期根本不显著</strong>。SYNTHESIS 自己承认“每一段显著，之后消失”，但它往“市场状态变了”上解释，更简单的解释是多重检验和数据窥探。这条我标记为需要进一步验证，不在今天两个确证 bug 之列。</p><h2 id="六、遗留与下一步"><a href="#六、遗留与下一步" class="headerlink" title="六、遗留与下一步"></a>六、遗留与下一步</h2><p>今天挖出的两个确证 bug 都还没修：币集不一致导致 CSV 里 3 币停更、3 币半新；<code>combine_first</code> 旧值优先在重叠日静默丢正确值。协议锁管不到采集器，目前没有任何自动测试能拦住这两个问题。INJ&#x2F;OP&#x2F;SUI 的静默死亡不影响协议策略（协议只用 10 币），但数据卫生问题迟早要解决。下一步准备给 <code>funding_collector.py</code> 补一组针对 <code>combine_first</code> 和币集对齐的测试，至少在合并前加一个币集一致性断言。<code>dvol_ic_test</code> 的 <code>family_size=28</code> 把 <code>rv_z30</code> 基线也算进去会虚增 family，但它只是探索脚本不写入协议，先记着。今天只读，明天再动手改。</p>]]></content>
-    
-    
-    <summary type="html">第 12 轮只读验证发现 funding_collector 两个确证 bug，其中一个极隐蔽。用户新增 funding_collector.py 注册 watchdog、回填 DVOL 2035 天和协议 v6 策略后，n_coins 报 23 而 INSTRUMENTS 只有 20，CSV</summary>
-    
-    
-    
-    <category term="故障排障" scheme="https://blog.demohappy.top/categories/%E6%95%85%E9%9A%9C%E6%8E%92%E9%9A%9C/"/>
-    
-    
-    <category term="量化" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96/"/>
-    
-    <category term="复盘" scheme="https://blog.demohappy.top/tags/%E5%A4%8D%E7%9B%98/"/>
-    
-    <category term="数据工程" scheme="https://blog.demohappy.top/tags/%E6%95%B0%E6%8D%AE%E5%B7%A5%E7%A8%8B/"/>
     
   </entry>
   
