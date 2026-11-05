@@ -9045,4 +9045,33 @@
         <tag>浏览器凭据管理</tag>
       </tags>
   </entry>
+  <entry>
+    <title>修复知乎自动发布链路的会话过期与进程冲突问题（2026-11-05）</title>
+    <url>/posts/ov1105/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>核心判断：当 Cookie 彻底失效时，必须把“人”作为唯一的认证变量；而工程上最大的风险在于进程状态不同步。</strong></p>
+<h2 id="一、死掉的会话与并行的选题挖掘"><a href="#一、死掉的会话与并行的选题挖掘" class="headerlink" title="一、死掉的会话与并行的选题挖掘"></a>一、死掉的会话与并行的选题挖掘</h2><p>早上醒来，昨天的自动任务还是卡在了登录态上。我第一时间去查那个 <code>z_c0</code> 的 Cookie——文件时间戳还停在 10 月 13 日，虽然名义上的有效期到 2027 年 4 月，但服务端早就把它吊销了。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># API 返回：</span></span><br><span class="line">ERR_TICKET_NOT_EXIST (HTTP 401)</span><br></pre></td></tr></table></figure>
+
+<p>确认是死 Cookie 后，我并行推进两条线：一边去拉今日热榜（反正要抓的），一边扫盘看有没有更新的有效会话。结果很干脆——磁盘上只有四月份过期的旧 Cookie，没有新料；知乎热榜解析出 30 条、微博 50 条，但核心痛点没变：<strong>必须有人扫码才能恢复登录态</strong>。</p>
+<p>既然 Edge 和 Chrome 的解密路径昨天已经榨干，只剩人工扫码这条路。我把后台任务挂上：启动 QR Login，同时去深挖选题方向——A股热度第 6 名（96 万），是个关于“央行降息 + 回购增持再贷款制度化”的重金融题。</p>
+<h2 id="二、ETF-机制-vs-政策工具：挖出最尖锐的角度"><a href="#二、ETF-机制-vs-政策工具：挖出最尖锐的角度" class="headerlink" title="二、ETF 机制 vs 政策工具：挖出最尖锐的角度"></a>二、ETF 机制 vs 政策工具：挖出最尖锐的角度</h2><p>边等扫码边看素材时，我发现这轮行情里有个反直觉的裂缝：<strong>官方叙事里的&quot;三重共振&quot;在数据面前站不住</strong>。A 股当天暴涨 9.92%，但真正发力的是 ETF 机制，不是那个政策工具本身。</p>
+<p>央行把回购利率降到 1% 并转为“长期制度性安排”，4400 亿申请额度 vs &quot;申请≠投放&quot;——这些数字拼起来就是最锋利的原创角度：<strong>钱不在政策工具里，在 ETF 的机械动作里</strong>。杠杆以创纪录的速度逃离，这才是当天的真相。</p>
+<h2 id="三、Profile-Lock：幽灵进程与死锁诊断"><a href="#三、Profile-Lock：幽灵进程与死锁诊断" class="headerlink" title="三、Profile Lock：幽灵进程与死锁诊断"></a>三、Profile Lock：幽灵进程与死锁诊断</h2><p>真正让链路卡住的不是登录本身，而是<strong>进程状态不同步</strong>。我启动 Supervisor 时，发现原浏览器（pid 7236）成了孤儿进程——还攥着 Profile 的锁不放。新实例被挡在门外，陷入重试循环。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 诊断逻辑：</span></span><br><span class="line"><span class="comment"># - 旧 watchdog 已 kill (预期内)</span></span><br><span class="line"><span class="comment"># - pid 5580 仍持 profile lock → 必须手动清理</span></span><br><span class="line"><span class="comment"># - 杀掉幽灵进程后，新实例才能拿到锁</span></span><br></pre></td></tr></table></figure>
+
+<p>杀掉那个 stale browser 之后，新的 QR 窗口才真正起来：<code>浏览器已启动，等待扫码</code>。日志确认 Chromium（pid 49124）活得好好的——<strong>唯一干净的一个浏览器实例</strong>。</p>
+<h2 id="四、Watchdog-的时间差与双发风险"><a href="#四、Watchdog-的时间差与双发风险" class="headerlink" title="四、Watchdog 的时间差与双发风险"></a>四、Watchdog 的时间差与双发风险</h2><p>有个隐蔽的坑：<strong>watchdog 在 08:49 到期，但 QR 窗口开到 09:06</strong>——中间那 17 分钟的缝隙里扫码会被漏掉。我立刻把 watchdog 延到 12:17，带锁文件重启；supervisor 也同步延期，保证 QR 不掉线。</p>
+<p>还差一层保险：万一双发？查了进程树——launcher→interpreter 的父子关系正常，<strong>恰好一个 watchdog、一个 supervisor、一个 login</strong>。不是重复实例，是干净的单链。</p>
+<h2 id="五、Markdown-清洗与发布脚本的契约验证"><a href="#五、Markdown-清洗与发布脚本的契约验证" class="headerlink" title="五、Markdown 清洗与发布脚本的契约验证"></a>五、Markdown 清洗与发布脚本的契约验证</h2><p>等待扫码时我没闲着。文章写完先验长度：6298 chars &#x2F; 94 paragraphs；封面图生成后确认为纯几何零文字。接着跑 Markdown stripping——38-char title, 6381 chars，<strong>零残留标记</strong>。</p>
+<p>最后核了一遍发布脚本的契约：<code>publish-py.py</code> 用的是 <code>storage_state</code>（不是那个被锁住的 profile），和登录脚本无冲突；日期处理与标题安全也过一遍。整条管道已武装完毕——就等那一次扫码落地的瞬间，自动触发发布。<strong>遗留</strong>：等待扫码本身是外部依赖，无法工程化消除；但链路侧的每一个可验证点都已闭环。</p>
+]]></content>
+      <categories>
+        <category>自动化运维</category>
+      </categories>
+      <tags>
+        <tag>自动化运维</tag>
+        <tag>量化内容生产</tag>
+        <tag>调试复盘</tag>
+      </tags>
+  </entry>
 </search>
