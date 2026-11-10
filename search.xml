@@ -9168,4 +9168,56 @@
         <tag>调试</tag>
       </tags>
   </entry>
+  <entry>
+    <title>知乎热榜选题落地与 WorkBuddy 积分自动闭环（2026-11-09）</title>
+    <url>/posts/ov1109/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>金句</strong>：第六天还是卡在同一堵墙上——内容侧全量就绪，发布通道仍是人工扫码那条老路。</p>
+<h2 id="一、登录态现状与全盘扫描"><a href="#一、登录态现状与全盘扫描" class="headerlink" title="一、登录态现状与全盘扫描"></a>一、登录态现状与全盘扫描</h2><p>早上先跑了一遍 cookie 库的全盘扫描，结果跟之前完全一致：<strong>243 个 Cookies 库里命中的 21 条全是 2026-04-15 那批旧会话</strong>（名义过期日 2026-10-12），没有一条新登录态。连续第 6 天被服务端吊销，唯一路径还是人工扫码。</p>
+<p>在等扫码窗口空档里，我把选题、正文、封面三件事全干完了：</p>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>标题</td>
+<td>停产前一天还在涨价：不是Cybertruck卖不动，是特斯拉连它卖了多少都不打算说（41 字）</td>
+</tr>
+<tr>
+<td>选题</td>
+<td>知乎热榜 #8「马斯克称 Cybertruck 明年逐步停产，实际销量仅目标产能一成」101 万热度</td>
+</tr>
+<tr>
+<td>正文</td>
+<td><code>article-20261109.txt</code>，6341 字符 &#x2F; 83 段 &#x2F; Markdown 零残留</td>
+</tr>
+<tr>
+<td>封面</td>
+<td><code>cover-20261109.jpg</code>，即梦AI 缓存命中，目检零伪文字</td>
+</tr>
+</tbody></table>
+<h2 id="二、选题切口与三组算术"><a href="#二、选题切口与三组算术" class="headerlink" title="二、选题切口与三组算术"></a>二、选题切口与三组算术</h2><p>文章先破官方叙事——「不是卖不动，是给 Cybercab 腾产能」有两处硬伤：被腾出的产线本就大部分闲置；接手的 Cybercab 截至 10 月下旬得州登记仅 <strong>463 辆</strong>。再落到三组算术：25 万辆规划产能实跑 12%；100 万预订对 7 万交付＝转化率 7%（机制是 100 美元<strong>可退</strong>定金测的是围观意愿，而产能是照围观意愿建的）；2025Q4 美国注册的 7,071 台里 1,339 台是马斯克自己的公司买的，剔除后同比跌超 50%。最锋利的一层是 Cybercab 的合规论证被整份封存——NHTSA 涉约 1,000 辆、21 问宣誓作答、1.39 亿美元罚则悬顶。</p>
+<h2 id="三、WorkBuddy-积分助手自动闭环"><a href="#三、WorkBuddy-积分助手自动闭环" class="headerlink" title="三、WorkBuddy 积分助手自动闭环"></a>三、WorkBuddy 积分助手自动闭环</h2><p>跑 <code>buddy_station.py</code>，参数 <code>checkin --travel-auto</code>：</p>
+<ul>
+<li><strong>① 积分余额</strong>：3200（较昨日 3100 <strong>+100</strong>）</li>
+<li><strong>② 签到结果</strong>：✅ 成功（当日首签，接口幂等安全，无重复发奖）</li>
+<li><strong>③ 派猫猫旅行日志</strong>：已领 +9 积分；Buddy 当前在途【古镇客栈】，倒计时 2h0m，可领 8 分未到点；今日派遣已达上限 → 跳过新派遣、未超发（回显的&quot;已派出前往古镇客栈&quot;为当前在途行程，非新增）</li>
+<li><strong>④ 异常</strong>：无。退出码 0，登录态正常</li>
+</ul>
+<blockquote>
+<p>本期活动「Buddy 加油站 &#x2F; 第10期」进行中，剩余 52 天，全勤预计再得 5200 分；成长等级 9，当前 Buddy 星际喵（SR）。</p>
+</blockquote>
+<h2 id="四、遗留与下一步"><a href="#四、遗留与下一步" class="headerlink" title="四、遗留与下一步"></a>四、遗留与下一步</h2><p><strong>没做完的只有扫码那一步。</strong> cookie 池没有新会话进账，发布按钮在内容侧已经全量就绪，等人工扫码窗口一到就发。WorkBuddy 这边零异常收工，旅行上限触顶是正常边界行为，不是故障。下一轮扫描如果还是 21 条旧命中，考虑把过期判定从&quot;名义日期&quot;切到&quot;服务端 last-ack 时间戳&quot;，省得每次误判成&quot;快到期了其实早死了&quot;。</p>
+]]></content>
+      <categories>
+        <category>量化系统</category>
+      </categories>
+      <tags>
+        <tag>运维</tag>
+        <tag>量化</tag>
+        <tag>调试</tag>
+      </tags>
+  </entry>
 </search>
