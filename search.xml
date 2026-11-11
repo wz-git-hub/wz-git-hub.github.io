@@ -9220,4 +9220,43 @@
         <tag>回忆录</tag>
       </tags>
   </entry>
+  <entry>
+    <title>修复博客封面图重复的两个叠加 bug（同批次规划与日期正则）（2026-11-10）</title>
+    <url>/posts/ov1110/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>静态顺序算法必须和展示层用同一套全序（含时间），批量执行还不能只依赖已落盘状态。</strong>这两条今天踩完才记下来，代价是两篇相邻撞了同一张 IPFS 图。</p>
+<h2 id="一、现象与定位入口"><a href="#一、现象与定位入口" class="headerlink" title="一、现象与定位入口"></a>一、现象与定位入口</h2><p>ov1107 与 ov1108 用同一张封面 <code>mva6xopami</code>。先怀疑只是单次生成错乱，跑了一遍 reflow：改动 5 篇——全是 10-23 那批同日文章互换位置，首页相邻重复仍有 4 处（10-22~10-23 段）。说明不是单点问题，是两套顺序不一致在叠加。</p>
+<h2 id="二、根因一：cover-at-只看磁盘"><a href="#二、根因一：cover-at-只看磁盘" class="headerlink" title="二、根因一：cover_at 只看磁盘"></a>二、根因一：cover_at 只看磁盘</h2><p>11-08 早上那次运行 <code>待写 2 个</code>（11-08、11-07，倒序）：</p>
+<ul>
+<li><code>cover_at(&quot;2026-11-08&quot;)</code> → prev&#x3D;11-06(q57g4v) → cvmva；</li>
+<li>写盘后再算 <code>&quot;2026-11-07&quot;</code> → prev <strong>还是</strong> 11-06 → 同样得 cvmva。</li>
+</ul>
+<p>倒序逐篇必然错位：第二篇的&quot;前一篇&quot;取决于第一篇，而第一篇是更晚日期。修法是把 <code>cover_at(date, pool, assigned)</code> 加第三参接收「本次已规划未落盘」的 <code>&#123;日期:封面&#125;</code>；主循环前<strong>按日期升序把整批规划好</strong>（<code>plan</code>），生成仍走 todo 原倒序。</p>
+<h2 id="三、根因二：date-正则丢时间戳"><a href="#三、根因二：date-正则丢时间戳" class="headerlink" title="三、根因二：date 正则丢时间戳"></a>三、根因二：date 正则丢时间戳</h2><p><code>re.search(r&quot;^date:\s*(\S+)&quot;)</code> 遇空格即止，dt 变成 <code>2026-10-23</code>。同一天 7 篇（10-23 补史那批）key 完全相同，<code>sort()</code> 退化成按 abbrlink 字母序——而首页展示是<strong>按完整时间倒序</strong>。两套顺序不一致 ⇒ 相邻撞封面。</p>
+<p>修法：正则改 <code>r&quot;^date:\s*(\S+(?:[ T]\S+)?)&quot;</code>；比较统一取 <code>dt[:10]</code>（assigned key 只有日期）。<code>reflow_cover.py</code> 的 RE_DATE 同步改。</p>
+<h2 id="四、兜底收口与验证"><a href="#四、兜底收口与验证" class="headerlink" title="四、兜底收口与验证"></a>四、兜底收口与验证</h2><p><strong>副作用可控</strong>：修后 reflow 改动 5 篇，全是 10-23 那批同日互换；11 月及以后不受影响（reflow 用 <code>pool[i % n]</code>，只与索引有关）。</p>
+<p><strong>兜底</strong>：<code>daily_refresh.sh</code> 新增 <strong>4.4) 封面顺序收口</strong>——文章步骤后跑 <code>reflow_cover.py</code>（幂等），有改动则 <code>CHANGED=1</code> 打 WARN「生成器 cover_at 又算错了」。报告新增「封面：」一行，变量 <code>R_COVER</code>。</p>
+<p>验证三关都过：</p>
+<ul>
+<li>首页顺序相邻同封面 <strong>0</strong>；</li>
+<li>reflow 二次 <code>--dry-run</code> <strong>0</strong> 改动；</li>
+<li><code>cover_at</code> 预测 11-10→mva、11-11→w4d、11-12→7g4v（批量规划连续递增）。</li>
+</ul>
+<p>Pages 已生效：ov1107&#x3D;mva &#x2F; ov1108&#x3D;w4d &#x2F; ov1109&#x3D;7g4v。主域等 4everland 刷新。提交 <code>4a9b1b0e..53308c8e</code>。</p>
+<h2 id="五、教训与遗留"><a href="#五、教训与遗留" class="headerlink" title="五、教训与遗留"></a>五、教训与遗留</h2><p><strong>核心结论</strong>：「静态顺序 + 外部状态」的算法必须用<strong>与展示层一致的全序</strong>（含时间），且批量执行时不能只依赖已落盘状态。</p>
+<p><strong>遗留</strong>：</p>
+<ul>
+<li>主域 4everland 缓存刷新仍在路上，Pages 侧先验完；</li>
+<li><code>cover_at</code> 新第三参目前是显式传入的「本次规划」字典——后续若引入跨日回补，需把 plan 生命周期从&quot;单次运行&quot;提到更稳的状态源（例如按周&#x2F;月落盘）；</li>
+<li>reflow 兜底已挂到 daily_refresh.sh 4.4，但<strong>没有告警出口</strong>（只打 WARN），下次撞封面时靠人眼发现——可考虑把 <code>R_COVER</code> 非零接进播报或钉钉通道。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>故障排障</category>
+      </categories>
+      <tags>
+        <tag>博客生成</tag>
+        <tag>封面分配</tag>
+        <tag>幂等收口</tag>
+      </tags>
+  </entry>
 </search>

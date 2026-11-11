@@ -6,7 +6,7 @@
   <link href="https://blog.demohappy.top/atom.xml" rel="self"/>
   
   <link href="https://blog.demohappy.top/"/>
-  <updated>2026-11-10T10:18:15.287Z</updated>
+  <updated>2026-11-11T00:37:16.743Z</updated>
   <id>https://blog.demohappy.top/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>修复博客封面图重复的两个叠加 bug（同批次规划与日期正则）（2026-11-10）</title>
+    <link href="https://blog.demohappy.top/posts/ov1110/"/>
+    <id>https://blog.demohappy.top/posts/ov1110/</id>
+    <published>2026-11-10T13:30:00.000Z</published>
+    <updated>2026-11-11T00:37:16.743Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>静态顺序算法必须和展示层用同一套全序（含时间），批量执行还不能只依赖已落盘状态。</strong>这两条今天踩完才记下来，代价是两篇相邻撞了同一张 IPFS 图。</p><h2 id="一、现象与定位入口"><a href="#一、现象与定位入口" class="headerlink" title="一、现象与定位入口"></a>一、现象与定位入口</h2><p>ov1107 与 ov1108 用同一张封面 <code>mva6xopami</code>。先怀疑只是单次生成错乱，跑了一遍 reflow：改动 5 篇——全是 10-23 那批同日文章互换位置，首页相邻重复仍有 4 处（10-22~10-23 段）。说明不是单点问题，是两套顺序不一致在叠加。</p><h2 id="二、根因一：cover-at-只看磁盘"><a href="#二、根因一：cover-at-只看磁盘" class="headerlink" title="二、根因一：cover_at 只看磁盘"></a>二、根因一：cover_at 只看磁盘</h2><p>11-08 早上那次运行 <code>待写 2 个</code>（11-08、11-07，倒序）：</p><ul><li><code>cover_at(&quot;2026-11-08&quot;)</code> → prev&#x3D;11-06(q57g4v) → cvmva；</li><li>写盘后再算 <code>&quot;2026-11-07&quot;</code> → prev <strong>还是</strong> 11-06 → 同样得 cvmva。</li></ul><p>倒序逐篇必然错位：第二篇的&quot;前一篇&quot;取决于第一篇，而第一篇是更晚日期。修法是把 <code>cover_at(date, pool, assigned)</code> 加第三参接收「本次已规划未落盘」的 <code>&#123;日期:封面&#125;</code>；主循环前<strong>按日期升序把整批规划好</strong>（<code>plan</code>），生成仍走 todo 原倒序。</p><h2 id="三、根因二：date-正则丢时间戳"><a href="#三、根因二：date-正则丢时间戳" class="headerlink" title="三、根因二：date 正则丢时间戳"></a>三、根因二：date 正则丢时间戳</h2><p><code>re.search(r&quot;^date:\s*(\S+)&quot;)</code> 遇空格即止，dt 变成 <code>2026-10-23</code>。同一天 7 篇（10-23 补史那批）key 完全相同，<code>sort()</code> 退化成按 abbrlink 字母序——而首页展示是<strong>按完整时间倒序</strong>。两套顺序不一致 ⇒ 相邻撞封面。</p><p>修法：正则改 <code>r&quot;^date:\s*(\S+(?:[ T]\S+)?)&quot;</code>；比较统一取 <code>dt[:10]</code>（assigned key 只有日期）。<code>reflow_cover.py</code> 的 RE_DATE 同步改。</p><h2 id="四、兜底收口与验证"><a href="#四、兜底收口与验证" class="headerlink" title="四、兜底收口与验证"></a>四、兜底收口与验证</h2><p><strong>副作用可控</strong>：修后 reflow 改动 5 篇，全是 10-23 那批同日互换；11 月及以后不受影响（reflow 用 <code>pool[i % n]</code>，只与索引有关）。</p><p><strong>兜底</strong>：<code>daily_refresh.sh</code> 新增 <strong>4.4) 封面顺序收口</strong>——文章步骤后跑 <code>reflow_cover.py</code>（幂等），有改动则 <code>CHANGED=1</code> 打 WARN「生成器 cover_at 又算错了」。报告新增「封面：」一行，变量 <code>R_COVER</code>。</p><p>验证三关都过：</p><ul><li>首页顺序相邻同封面 <strong>0</strong>；</li><li>reflow 二次 <code>--dry-run</code> <strong>0</strong> 改动；</li><li><code>cover_at</code> 预测 11-10→mva、11-11→w4d、11-12→7g4v（批量规划连续递增）。</li></ul><p>Pages 已生效：ov1107&#x3D;mva &#x2F; ov1108&#x3D;w4d &#x2F; ov1109&#x3D;7g4v。主域等 4everland 刷新。提交 <code>4a9b1b0e..53308c8e</code>。</p><h2 id="五、教训与遗留"><a href="#五、教训与遗留" class="headerlink" title="五、教训与遗留"></a>五、教训与遗留</h2><p><strong>核心结论</strong>：「静态顺序 + 外部状态」的算法必须用<strong>与展示层一致的全序</strong>（含时间），且批量执行时不能只依赖已落盘状态。</p><p><strong>遗留</strong>：</p><ul><li>主域 4everland 缓存刷新仍在路上，Pages 侧先验完；</li><li><code>cover_at</code> 新第三参目前是显式传入的「本次规划」字典——后续若引入跨日回补，需把 plan 生命周期从&quot;单次运行&quot;提到更稳的状态源（例如按周&#x2F;月落盘）；</li><li>reflow 兜底已挂到 daily_refresh.sh 4.4，但<strong>没有告警出口</strong>（只打 WARN），下次撞封面时靠人眼发现——可考虑把 <code>R_COVER</code> 非零接进播报或钉钉通道。</li></ul>]]></content>
+    
+    
+    <summary type="html">ov1107/ov1108 撞同一张 IPFS 封面，先修 cover_at 只看已落盘状态导致同批多天倒序错位；再发现 date 正则丢时间戳让同日多篇 key 相同、sort 退化。改后 reflow 二次 dry-run 零改动，首页相邻重复清零。</summary>
+    
+    
+    
+    <category term="故障排障" scheme="https://blog.demohappy.top/categories/%E6%95%85%E9%9A%9C%E6%8E%92%E9%9A%9C/"/>
+    
+    
+    <category term="博客生成" scheme="https://blog.demohappy.top/tags/%E5%8D%9A%E5%AE%A2%E7%94%9F%E6%88%90/"/>
+    
+    <category term="封面分配" scheme="https://blog.demohappy.top/tags/%E5%B0%81%E9%9D%A2%E5%88%86%E9%85%8D/"/>
+    
+    <category term="幂等收口" scheme="https://blog.demohappy.top/tags/%E5%B9%82%E7%AD%89%E6%94%B6%E5%8F%A3/"/>
+    
+  </entry>
   
   <entry>
     <title>知乎热榜选题落地与 WorkBuddy 积分自动闭环（2026-11-09）</title>
@@ -494,31 +519,6 @@
     <category term="SEO" scheme="https://blog.demohappy.top/tags/SEO/"/>
     
     <category term="Python" scheme="https://blog.demohappy.top/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>hexo deploy 把站点推成空白？因为用管道看了部署日志</title>
-    <link href="https://blog.demohappy.top/posts/hexo-deploy-wipe/"/>
-    <id>https://blog.demohappy.top/posts/hexo-deploy-wipe/</id>
-    <published>2026-10-23T03:10:00.000Z</published>
-    <updated>2026-10-23T07:48:38.412Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="现象：部署-成功-，站点消失"><a href="#现象：部署-成功-，站点消失" class="headerlink" title="现象：部署&quot;成功&quot;，站点消失"></a>现象：部署&quot;成功&quot;，站点消失</h2><p>一次例行的内容更新，跑完 <code>hexo g</code> 和 <code>hexo deploy</code>，日志最后几行是熟悉的：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INFO  Deploy done: git</span><br></pre></td></tr></table></figure><p>刷新线上地址——404。换几个文章页，全是 404。首页偶尔返回 200 但是空白。</p><p>登录 GitHub 看部署仓库，最新 commit 是：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Site updated: 2026-10-23 15:06:59</span><br></pre></td></tr></table></figure><p>时间戳是最新的，看起来推成功了。但点进去看文件树——<strong>空的</strong>。没有 <code>index.html</code>，没有 <code>posts/</code>，只有一个 <code>.git</code>。</p><h2 id="根因：工作区被清空，然后推了个空提交"><a href="#根因：工作区被清空，然后推了个空提交" class="headerlink" title="根因：工作区被清空，然后推了个空提交"></a>根因：工作区被清空，然后推了个空提交</h2><p><code>hexo-deployer-git</code> 的机制是：把 <code>.deploy_git</code> 当作一个独立的 git 工作区，每次部署时把 <code>public/</code> 的内容同步进去，然后 commit + push。</p><p>关键点在于<strong>同步的方式</strong>：它不是增量覆盖，而是先清理工作区（相当于 <code>git rm -r</code> 全部内容 + 复制新文件），再提交。这个设计本身没问题——它保证删除的文章不会残留。</p><p>问题出在<strong>中断</strong>。</p><p>如果进程在「清空工作区」之后、「复制新文件」完成之前被杀，<code>.deploy_git</code> 就处于一个中间状态：文件全没了，但没有产生新的 commit。此时仓库里躺着的还是上一次的内容，看起来正常。</p><p>然后下一次（或者被中断的那次恢复后）执行 <code>git add -A &amp;&amp; git commit</code>——如果此时工作区确实是空的，就会生成一个「删除所有文件」的提交，推上去。</p><p>线上就空了。</p><h2 id="什么会杀掉它：管道"><a href="#什么会杀掉它：管道" class="headerlink" title="什么会杀掉它：管道"></a>什么会杀掉它：管道</h2><p>最容易被忽略的诱因是这一条命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx hexo deploy | grep -E <span class="string">&quot;Deploy done&quot;</span></span><br></pre></td></tr></table></figure><p>或者任何 <code>| head</code>、<code>| tail</code> 的变体。</p><p>管道的工作方式：<code>grep</code> 匹配到第一个结果后如果退出（<code>grep -m1</code>、或者 <code>head -n5</code> 读够行数就关闭 stdin），管道读端关闭，<code>hexo</code> 进程后续再往 stdout 写就会收到 <strong><code>SIGPIPE</code><strong>（信号 13），默认行为是</strong>终止进程</strong>。</p><p><code>hexo deploy</code> 是个长流程：生成 → 复制到 <code>.deploy_git</code> → git add → git commit → git push → （如果配置了）其他部署插件。你只关心最后一行 <code>Deploy done</code>，于是 <code>grep</code> 前面的进度输出一出现就立即匹配退出，<code>hexo</code> 在复制文件的中途被杀。</p><p><strong>你以为只是少看了几行日志，实际上是给了进程一刀。</strong></p><p>这个问题在长时间部署里更容易触发——文件多、网络慢、push 耗时长，中途被杀的概率更高。</p><h2 id="修复：日志重定向到文件"><a href="#修复：日志重定向到文件" class="headerlink" title="修复：日志重定向到文件"></a>修复：日志重定向到文件</h2><p>不要用管道看部署日志。重定向到文件，跑完再读：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npx hexo deploy &gt; .workbuddy/tmp/deploy.log 2&gt;&amp;1</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;exit=$?&quot;</span></span><br><span class="line"><span class="built_in">tail</span> -20 .workbuddy/tmp/deploy.log</span><br></pre></td></tr></table></figure><p>同样地，任何可能长时间运行的构建命令都适用这条规则：<strong>先落盘，再看盘</strong>。</p><h2 id="部署后的三项核验"><a href="#部署后的三项核验" class="headerlink" title="部署后的三项核验"></a>部署后的三项核验</h2><p>日志会说谎。<code>Deploy done: git</code> 这行是在 git push 成功后打印的，但如果 push 的内容本身就是空的，它照样打印。</p><p>真正的判断要看仓库状态。三项都过才算部署成功：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> .deploy_git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1) 有新 commit，且时间戳是刚才</span></span><br><span class="line">git <span class="built_in">log</span> --oneline -1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2) 工作区干净（有未提交变更说明复制没完成）</span></span><br><span class="line">git status --short | <span class="built_in">wc</span> -l    <span class="comment"># 必须是 0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3) 关键文件确实在仓库根</span></span><br><span class="line"><span class="built_in">ls</span> index.html posts/ | <span class="built_in">head</span></span><br></pre></td></tr></table></figure><p>任何一项不对，就重跑 <code>hexo deploy</code>。</p><p>这三项检查值得写进部署脚本，作为硬性门槛而不是靠人肉记忆。</p><h2 id="一个会掩盖真实错误的干扰项"><a href="#一个会掩盖真实错误的干扰项" class="headerlink" title="一个会掩盖真实错误的干扰项"></a>一个会掩盖真实错误的干扰项</h2><p>部署日志末尾常见这个：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x27;firebase&#x27; is not recognized as an internal or external command</span><br><span class="line">FATAL Something&#x27;s wrong.</span><br><span class="line">Error: spawn firebase ENOENT</span><br><span class="line">    at notFoundError (D:\blog\node_modules\cross-spawn\lib\enoent.js:6:26)</span><br></pre></td></tr></table></figure><p>如果 <code>_config.yml</code> 里配置了 <code>hexo-deployer-firebase</code> 但本机没装 firebase CLI，每次部署都会在最后报这个错，进程退出码是 2。</p><p>这会造成两种误判：</p><ol><li><strong>看到 <code>FATAL</code> 和 exit code 2，以为整体失败</strong>——实际上 git 部分可能已经成功</li><li><strong>反过来，因为「这个错误每次都出现、是已知问题」而忽略整个日志</strong>——那么真正的中断错误也被一起忽略了</li></ol><p>处理方式是：<strong>明确知道哪些错误是可忽略的，然后只核验那三项客观指标</strong>。不要用「日志里有没有 ERROR」来判断成败，要用「仓库状态对不对」来判断。</p><p>如果不再用 firebase 部署，把 <code>_config.yml</code> 里对应的 deployer 删掉，让日志干净，比留着习惯性忽略更好。</p><h2 id="恢复步骤"><a href="#恢复步骤" class="headerlink" title="恢复步骤"></a>恢复步骤</h2><p>站点已经空了，怎么救：</p><ol><li><strong>确认 <code>public/</code> 目录还在且完整</strong>——构建产物没丢，只是没推上去</li><li>**重跑 <code>npx hexo deploy</code>**（不用 <code>hexo g</code>，产物是好的）</li><li><strong>重跑三项核验</strong></li></ol><p><code>hexo-deployer-git</code> 会把 <code>public/</code> 重新复制进 <code>.deploy_git</code> 并提交，空的提交会被新的覆盖。线上约 1 分钟内恢复（GitHub Pages 的生效时间）。</p><p>如果 <code>public/</code> 也丢了（比如 <code>hexo clean</code> 之后没重新生成），就 <code>hexo g &amp;&amp; hexo deploy</code> 走完整流程。</p><h2 id="收口"><a href="#收口" class="headerlink" title="收口"></a>收口</h2><p>这件事的本质不是 hexo 的 bug，而是<strong>用管道消费长任务的输出</strong>这个习惯性操作。</p><p>三条规则：</p><ol><li><strong>构建&#x2F;部署类命令，输出重定向到文件，不用管道</strong></li><li><strong>成败看仓库状态，不看日志关键词</strong>（新 commit + 工作区干净 + 关键文件存在）</li><li><strong>已知的噪声错误要清掉，不要训练自己忽略日志</strong></li></ol><p>第 3 条容易被当成洁癖。但「习惯性忽略某类报错」和「错过真正的事故信号」之间，只隔一次判断。</p><hr><p>同期的部署链路整理见 <a href="/posts/ov1013/">记录一次把文章、音乐、抖音日更压进 watchdog</a>，域名迁移期间的部署问题见 <a href="/posts/hexo-domain-migration/">Hexo 换域名后 canonical 和 sitemap 还指着旧域</a>。</p>]]></content>
-    
-    
-    <summary type="html">hexo deploy 跑完看似成功，线上站点却变成 404 或空白——`.deploy_git` 工作区被清空却没有产生新 commit，于是推了个空仓库。诱因是用 `hexo deploy | grep` 查看日志：grep 提前退出关闭管道，deploy 收到 SIGPIPE 被杀。本文给出复现、核验与恢复方法。</summary>
-    
-    
-    
-    <category term="故障排障" scheme="https://blog.demohappy.top/categories/%E6%95%85%E9%9A%9C%E6%8E%92%E9%9A%9C/"/>
-    
-    
-    <category term="排障" scheme="https://blog.demohappy.top/tags/%E6%8E%92%E9%9A%9C/"/>
-    
-    <category term="运维" scheme="https://blog.demohappy.top/tags/%E8%BF%90%E7%BB%B4/"/>
-    
-    <category term="Hexo" scheme="https://blog.demohappy.top/tags/Hexo/"/>
     
   </entry>
   
