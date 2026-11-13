@@ -9310,4 +9310,53 @@
         <tag>会话恢复</tag>
       </tags>
   </entry>
+  <entry>
+    <title>把 WorkBuddy 积分签到做成零配置自动闭环，顺手发了篇猫贷拆解文（2026-11-12）</title>
+    <url>/posts/ov1112/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>核心判断是：舆论最响的那个数字，恰恰是全场最没用的数字。</strong></p>
+<p>今天干了两件事。一件是把 WorkBuddy 积分助手跑完每日闭环，另一件是把知乎热榜上那条&quot;大学生免费领养小猫背上九千多元分期债务&quot;的硬新闻拆成一篇发布文。两件都不难，但各自卡在各自的坑里：一个怕重复发奖、一个怕把买卖合同说成高利贷。</p>
+<h2 id="一、积分脚本先跑完再说话"><a href="#一、积分脚本先跑完再说话" class="headerlink" title="一、积分脚本先跑完再说话"></a>一、积分脚本先跑完再说话</h2><p><strong>执行路径写死在绝对路径上。</strong><br>Python 解释器走 <code>C:/Users/Administrator/.workbuddy/binaries/python/versions/3.13.12.old.106036/python</code>，脚本是 <code>.../skills/totorosir-workbuddy-score__skillhub/scripts/buddy_station.py</code>，参数 <code>checkin --travel-auto</code>。没有环境变量、没有 <code>.env</code> 文件，登录态走通道 A 零配置读本机 cookie。</p>
+<p><strong>幂等安全不是&quot;报错&quot;。</strong><br>接口返回&quot;今日已签到&quot;时不能当失败处理——这是当日第二次触发同一请求的正常回显。脚本里把这种情况归到成功分支，日志打一行 🟡 标记，不重发奖。</p>
+<p><strong>旅行闭环是&quot;先领后派&quot;两段式。</strong><br>第一段领取 +10 积分；第二段派遣前必查每日上限，达限就跳过、绝不超发。今天回显里那个&quot;已派出&quot;是当前在途行程（商场店铺，3h 倒计时），不是新增派遣动作。推送渠道未配置时 <code>[push]</code> 静默降级，退出码还是 0。</p>
+<p><strong>结果汇报四件套。</strong><br>① 积分余额 3500（+100）；② 签到&quot;今日已签&quot;归正常；③ 旅行领了 +10、派遣达限跳过；④ 无异常。本期活动剩 49 天，全勤预计再得 4900 分，成长等级 9&#x2F;19，当前 Buddy 是星际喵（SR）。</p>
+<h2 id="二、封面先目检再发"><a href="#二、封面先目检再发" class="headerlink" title="二、封面先目检再发"></a>二、封面先目检再发</h2><p><strong>AI 生成图要过两道关。</strong><br>即梦出的冷蓝信封 + 24 条琥珀光线那张封面，发布前必须人眼扫一遍有没有伪文字或水印。这一步之前已经抓过 fake-text artifact，所以&quot;Cover generated&quot;之后紧接着就是目检，不是装饰性步骤。</p>
+<h2 id="三、选题切口：把最响的数字判成无效证据"><a href="#三、选题切口：把最响的数字判成无效证据" class="headerlink" title="三、选题切口：把最响的数字判成无效证据"></a>三、选题切口：把最响的数字判成无效证据</h2><p><strong>热榜 #21 是硬新闻。</strong><br>前 20 多为娱乐&#x2F;体育&#x2F;情感题，微博全为娱乐，按既定策略避开后选了这条法律制度类题（155 万热度）。标题落点是&quot;9552元的猫贷：不是年化131.4%太狠，是&#39;免费领养&#39;四个字没有法律定义&quot;。</p>
+<p><strong>核心判断写死在合同定性上。</strong><br>舆论两种讲法——「商家套路深」和「这是年化 131.4% 的高利贷」。第二种错得最离谱：广州天河、湖南武冈、嘉兴南湖三案一致把这份合同定性为<strong>买卖合同</strong>，不是金融借款。于是民间借贷 LPR 四倍上限（13.8%）用不上、套路贷等刑事工具失效、「断供上征信」纯属恐吓。</p>
+<h2 id="四、发布数据与核验"><a href="#四、发布数据与核验" class="headerlink" title="四、发布数据与核验"></a>四、发布数据与核验</h2><table>
+<thead>
+<tr>
+<th>项</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>标题</td>
+<td>9552元的猫贷：不是年化131.4%太狠，是&quot;免费领养&quot;四个字没有法律定义（38字）</td>
+</tr>
+<tr>
+<td>链接</td>
+<td>zhuanlan.zhihu.com&#x2F;p&#x2F;2104159226616603623</td>
+</tr>
+<tr>
+<td>正文</td>
+<td>6774 字符 &#x2F; 96 段，线上核验 7100 字符</td>
+</tr>
+<tr>
+<td>关键词</td>
+<td>51 个全部命中，3 个对照词 PASS（无误判）</td>
+</tr>
+</tbody></table>
+<h2 id="五、遗留与下一步"><a href="#五、遗留与下一步" class="headerlink" title="五、遗留与下一步"></a>五、遗留与下一步</h2><p><strong>推送渠道还是空的。</strong><br><code>[push] 未配置推送渠道</code> 这条静默跳过今天没影响主结果，但下次跑之前要补上，不然播报环节会少一截。</p>
+<p><strong>猫贷文还差一个&quot;对照词回扫&quot;的复验。</strong><br>51 个关键词全命中、3 个对照 PASS 是发布时的一次性校验；下一步要把这组词固化进选题模板，省得每次临时拼。</p>
+<p><strong>积分脚本的登录态兜底还没写。</strong><br>今天通道 A 一次通过没阻塞，但&quot;若登录态缺失或接口返回非 0&#x2F;非 2xx&quot;的降级分支在素材里只到半句就被截断，下次要补完再收进定时任务。</p>
+]]></content>
+      <categories>
+        <category>自动化运维</category>
+      </categories>
+      <tags>
+        <tag>内容运营</tag>
+        <tag>自动化脚本</tag>
+        <tag>法律常识纠偏</tag>
+      </tags>
+  </entry>
 </search>
