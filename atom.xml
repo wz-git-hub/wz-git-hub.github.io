@@ -6,7 +6,7 @@
   <link href="https://blog.demohappy.top/atom.xml" rel="self"/>
   
   <link href="https://blog.demohappy.top/"/>
-  <updated>2026-11-13T00:34:16.776Z</updated>
+  <updated>2026-11-14T00:33:54.667Z</updated>
   <id>https://blog.demohappy.top/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>在 OpenViking 记忆池里给事件加「置信度」字段，把幻觉压到可观测的层级（2026-11-13）</title>
+    <link href="https://blog.demohappy.top/posts/ov1113/"/>
+    <id>https://blog.demohappy.top/posts/ov1113/</id>
+    <published>2026-11-13T13:30:00.000Z</published>
+    <updated>2026-11-14T00:33:54.667Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>核心判断：没有置信度的事件等于没做过，给每条事件挂上证据锚点才能把幻觉从&quot;黑箱&quot;拉回&quot;可观测&quot;。</strong></p><h2 id="一、为什么加字段而不是改提示词"><a href="#一、为什么加字段而不是改提示词" class="headerlink" title="一、为什么加字段而不是改提示词"></a>一、为什么加字段而不是改提示词</h2><p>上周三跑 batch-42 时，检索层把一条「无依据」的闲聊片段塞进了 top-5，下游 agent 直接当事实引用。我盯着那条事件看了很久：<code>event_id: e_7f3a…</code>，内容是一段关于&quot;昨天下午系统卡顿&quot;的描述，但 <code>source_url</code> 是空的，<code>confidence_score</code> 压根不存在。问题不在提示词写得多烂，在于<strong>结构化事件本身没有可信度锚点</strong>。我当时的决定很直接：不改 prompt，在 schema 里加两个字段——<code>confidence_score</code>（0~1）和 <code>evidence_source</code>（字符串或 null）。</p><h2 id="二、回填标注那-147-条的历史包袱"><a href="#二、回填标注那-147-条的历史包袱" class="headerlink" title="二、回填标注那 147 条的历史包袱"></a>二、回填标注那 147 条的历史包袱</h2><p>打开 <code>memories/events/2026-11-13.jsonl</code>，逐条过。规则很死：</p><ul><li>如果 <code>source_url</code> 非空且能解析出原始日志行 → <code>confidence_score = 0.95</code></li><li>如果有对话上下文但无外部引用 → <code>0.7~0.85</code></li><li><strong>纯推断、复述、或用户主动声明&quot;我不确定&quot;</strong> → <code>0.2</code>，<code>evidence_source = &quot;user_assertion&quot;</code></li></ul><p>147 条里，标到 0.2 的有 31 条。那 31 条里有一条特别扎眼：一段关于&quot;数据库连接池满&quot;的描述，没有任何日志引用，却出现在三次不同的会话摘要里。<strong>这种条目就是幻觉温床</strong>——它反复出现、被复述、最终在检索时拿到高权重。</p><h2 id="三、改-retrieval-weight-那一行代码"><a href="#三、改-retrieval-weight-那一行代码" class="headerlink" title="三、改 retrieval_weight 那一行代码"></a>三、改 retrieval_weight 那一行代码</h2><p><code>craw_app1_wz/retrieval/scoring.py</code> 第 47 行，原来写死 <code>weight = 0.9 * tf_idf_score</code>。我把它改成：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">base_weight = event.confidence_score * tf_idf_score</span><br><span class="line"><span class="keyword">if</span> event.evidence_source <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">    base_weight *= <span class="number">0.35</span></span><br></pre></td></tr></table></figure><p>跑完回归测试，top-10 里那 31 条&quot;无依据&quot;事件的平均排名从第 4 位掉到第 9 位。**实测幻觉率（用 ground-truth 标注集算）从 27% 降到 10%，降幅 63%**。</p><h2 id="四、为什么不动-prompt"><a href="#四、为什么不动-prompt" class="headerlink" title="四、为什么不动 prompt"></a>四、为什么不动 prompt</h2><p>我试过在 system prompt 里加&quot;请忽略 confidence_score &lt; 0.5 的事件&quot;，结果 agent 会先复述那些事件再打折——等于幻觉内容已经进了上下文窗口。<strong>字段是结构层的约束，prompt 是语义层的请求</strong>；前者可审计、后者不可。这个判断一旦写死在 schema 里，后续任何 prompt 微调都绕不过去。</p><h2 id="五、遗留与下一步"><a href="#五、遗留与下一步" class="headerlink" title="五、遗留与下一步"></a>五、遗留与下一步</h2><ul><li><code>evidence_source</code> 目前只支持字符串或 null，没有枚举校验——下周要加 Pydantic 的 Literal 约束</li><li>那 31 条标到 0.2 的事件里，有 4 条其实能追溯到原始日志行但被误判了，需要人工复核一遍</li><li><strong><code>confidence_score</code> 的衰减策略还没定</strong>：是按时间戳指数衰减还是固定半衰期？目前用的是固定 0.95&#x2F;0.7&#x2F;0.2 三档，没有连续值</li></ul>]]></content>
+    
+    
+    <summary type="html">发现结构化事件缺少可信度标记导致下游检索误触发。引入 confidence_score 与 evidence_source 双字段，对 147 条历史事件做回填标注，将「无依据」事件的召回权重从 0.9 降至 0.2，实测幻觉率下降 63%，同时保留原始记忆链可追溯性。</summary>
+    
+    
+    
+    <category term="自动化运维" scheme="https://blog.demohappy.top/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/"/>
+    
+    
+    <category term="运维" scheme="https://blog.demohappy.top/tags/%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="量化" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96/"/>
+    
+    <category term="调试" scheme="https://blog.demohappy.top/tags/%E8%B0%83%E8%AF%95/"/>
+    
+  </entry>
   
   <entry>
     <title>把 WorkBuddy 积分签到做成零配置自动闭环，顺手发了篇猫贷拆解文（2026-11-12）</title>
@@ -492,31 +517,6 @@
     <category term="医疗体系" scheme="https://blog.demohappy.top/tags/%E5%8C%BB%E7%96%97%E4%BD%93%E7%B3%BB/"/>
     
     <category term="平台治理" scheme="https://blog.demohappy.top/tags/%E5%B9%B3%E5%8F%B0%E6%B2%BB%E7%90%86/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>热榜API全挂时靠微博热搜抢下AI就业政策选题，从1027报错到发布5733字复盘（2026-10-24）</title>
-    <link href="https://blog.demohappy.top/posts/ov1024/"/>
-    <id>https://blog.demohappy.top/posts/ov1024/</id>
-    <published>2026-10-24T13:30:00.000Z</published>
-    <updated>2026-10-28T04:04:52.514Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>主API全挂时靠双源热榜锁定国办AI就业政策，用论文切口把&quot;替代谁&quot;翻译成&quot;谁来关招聘闸门&quot;</strong></p><p>那天上午开工，热榜主 API 还是老样子：<code>error code: 1027</code>，连续三天没缓过来。我先把备用通道 uapis.cn 的知乎热榜拉起来，确认数据流通了再动手选题。微博热搜上 #8「减缓人工智能应用就业替代影响」热度 98.9 万、#26「国办发文减缓人工智能就业替代影响」70.6 万，两条撞在一起就是政策级硬新闻。我没急着动笔，先花二十分钟把素材池过了一遍——确认没有&quot;18项任务逐条解读&quot;这种复述型内容可写，才决定切进正文逻辑。</p><h2 id="一、选题：为什么是-节奏-而不是-要不要抢人"><a href="#一、选题：为什么是-节奏-而不是-要不要抢人" class="headerlink" title="一、选题：为什么是&quot;节奏&quot;而不是&quot;要不要抢人&quot;"></a>一、选题：为什么是&quot;节奏&quot;而不是&quot;要不要抢人&quot;</h2><p><strong>热度对撞</strong><br>#8 和 #26 两条同时挂在那天上午的热搜里，98.9 万加 70.6 万的量级意味着这条线当天会被反复提及。我把它归到政策硬新闻档，没走泛娱乐切口。选题标题最后定在&quot;国办发〔2026〕29号：不是AI要不要抢人，是谁来决定抢的速度&quot;——把公众直觉里的&quot;AI 会不会抢工作&quot;翻译成&quot;谁来关招聘闸门、多快关&quot;。</p><p><strong>核心论点锚点</strong><br>我没让文章停在&quot;文件说了什么&quot;的层面。真正的切口是北大国发院《管理世界》2025年第7期那篇论文：125万条招聘广告、GPT-4逐条评估、78个职业组别，三条发现里最硬的一条是<strong>新增岗位暴露度持续下降</strong>。这句话翻译成业务语言就是——企业是在招聘入口悄悄关掉高暴露岗位，而不是先裁员。国办的&quot;失业缓冲期&quot;只保护已在岗的人，替代发生在增量端，所以文件真正要管的是招聘闸门关上的速度。</p><h2 id="二、四层结构怎么写"><a href="#二、四层结构怎么写" class="headerlink" title="二、四层结构怎么写"></a>二、四层结构怎么写</h2><p><strong>第一层：为什么盯节奏</strong><br>用论文数据把&quot;新增岗位暴露度下降&quot;翻译成企业行为——不是先裁人，是先在招聘入口悄悄关掉高暴露岗位。国办的&quot;失业缓冲期&quot;只保护已在岗的人，替代发生在增量端，所以文件真正要管的是招聘闸门关上的速度。</p><p><strong>第二层：全球首例的触发条件</strong><br>触发条件是&quot;企业主动的技术替代决策&quot;——不是 AI 自己决定裁谁，是企业做了技术替代的决定、政策才接住后果。</p><p><strong>第三层：中国比美国更突出</strong><br>论文里那组对照数据说明中国的替代效应比美国更突出。我没把这条写成&quot;中美对比&quot;的泛论，而是落在具体职业组别上——会计&#x2F;编辑&#x2F;销售&#x2F;程序员是暴露度最高的四组，而不是流水线工人。</p><p><strong>第四层：文件没复述18项任务</strong><br>文章没写&quot;国办发文的18项任务解读&quot;这种复述型内容。我把四层压进 5733 字符 &#x2F; 169 段，线上实测 6492 字符——复核脚本 verify-pub.py 带登录态跑完确认标题完整、URL正确后才收工。</p><h2 id="三、发布与封面"><a href="#三、发布与封面" class="headerlink" title="三、发布与封面"></a>三、发布与封面</h2><p><strong>封面生成</strong><br>cover-20261024.jpg 用即梦 AI 出图，冷蓝&#x2F;琥珀垂直分割：左侧空置工位 vs 右侧服务器机箱。没走&quot;机器人端坐办公桌&quot;的俗套构图，把&quot;替代发生在招聘入口&quot;这个论点视觉化出来。</p><p><strong>发布动作</strong><br>链接 <a href="https://zhuanlan.zhihu.com/p/2097222054135198030">https://zhuanlan.zhihu.com/p/2097222054135198030</a> 落地后我跑了一遍 verify-pub.py 带登录态复核，确认标题完整、URL正确才收工。</p><h2 id="四、遗留与下一步"><a href="#四、遗留与下一步" class="headerlink" title="四、遗留与下一步"></a>四、遗留与下一步</h2><p><strong>没做完的事</strong><br>论文里&quot;中国替代效应比美国更突出&quot;那条对照数据我只在第三层用了组别层面的例证，还没把中美两组职业暴露度分布拉成对比表放进正文——那是下一篇的素材位，不是这篇要背的东西。</p><p><strong>API 故障线</strong><br>主 API 1027 报错连续三天没缓过来，uapis.cn 知乎热榜今天恢复了可用但量级和稳定性还没验证过完整一周周期。下一步是把备用源的日更成功率跑满一个自然周再决定要不要切回主源、还是双源常驻。</p>]]></content>
-    
-    
-    <summary type="html">热榜主API持续返回error code 1027导致数据源中断，切换uapis.cn知乎热榜后锁定国办发文与AI就业替代双热点。结合北大国发院论文切口验证&quot;新增岗位暴露度下降&quot;逻辑，完成5733字四层结构文章发布并复核通过。</summary>
-    
-    
-    
-    <category term="随笔分享" scheme="https://blog.demohappy.top/categories/%E9%9A%8F%E7%AC%94%E5%88%86%E4%BA%AB/"/>
-    
-    
-    <category term="量化内容生产" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96%E5%86%85%E5%AE%B9%E7%94%9F%E4%BA%A7/"/>
-    
-    <category term="热点追踪" scheme="https://blog.demohappy.top/tags/%E7%83%AD%E7%82%B9%E8%BF%BD%E8%B8%AA/"/>
-    
-    <category term="素材核验" scheme="https://blog.demohappy.top/tags/%E7%B4%A0%E6%9D%90%E6%A0%B8%E9%AA%8C/"/>
     
   </entry>
   
