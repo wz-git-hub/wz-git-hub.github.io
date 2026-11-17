@@ -6,7 +6,7 @@
   <link href="https://blog.demohappy.top/atom.xml" rel="self"/>
   
   <link href="https://blog.demohappy.top/"/>
-  <updated>2026-11-14T00:33:54.667Z</updated>
+  <updated>2026-11-17T00:36:04.974Z</updated>
   <id>https://blog.demohappy.top/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>量化巡检发现 $9,763 凭证性虚构：链上对账修复与风控口径切换（2026-11-16）</title>
+    <link href="https://blog.demohappy.top/posts/ov1116/"/>
+    <id>https://blog.demohappy.top/posts/ov1116/</id>
+    <published>2026-11-16T13:30:00.000Z</published>
+    <updated>2026-11-17T00:36:04.974Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>风控净值锚定 $220.58，而不是账面 $9,983.88——这是今天最关键的判断。</strong> 巡检发现主网实盘进程仍在运行但无人下单，更严重的是账面权益与链上余额相差 45 倍。</p><h2 id="一、五条策略线实况：活着但空转"><a href="#一、五条策略线实况：活着但空转" class="headerlink" title="一、五条策略线实况：活着但空转"></a>一、五条策略线实况：活着但空转</h2><table><thead><tr><th>策略线</th><th>账面</th><th>实际收益</th><th>笔数&#x2F;胜负</th><th>状态</th></tr></thead><tbody><tr><td>主网实盘（mainnet_smart_money）</td><td>$9,983.88</td><td><strong>-$15.32（-0.153%）</strong></td><td>40 笔 &#x2F; 13胜27负</td><td>活着，0 持仓，空转</td></tr><tr><td>主网链上钱包</td><td><strong>av $221 &#x2F; used 0 &#x2F; free $221</strong></td><td>—</td><td>—</td><td>🔴 与账面不符</td></tr><tr><td>testnet（hl_smart_money.db）</td><td>$13,155.20（+31.5%）</td><td>剔除对账补记后 <strong>-$0.14</strong></td><td>187 笔有效</td><td>8 天无成交</td></tr><tr><td>paper 模拟盘（sim_account）</td><td>$460.33（-53.97%）</td><td><strong>-$479.67</strong>，费 102.29</td><td>536 笔 &#x2F; 24.1% 胜率</td><td>paused&#x3D;1，停 62 天</td></tr><tr><td>影子做市 mm&#x2F;grid</td><td>6 个库已移入 <code>_archive/orphans_2026-09-30</code></td><td>无数据</td><td>—</td><td>已停 3.5 个月</td></tr></tbody></table><p>结论是<strong>整栈进程仍在运行，但没人下单</strong>。主网链上钱包 av $221 与账面 $9,983.88 严重不符。testnet 剔除对账补记后实际收益为负，paper 模拟盘已停 62 天，影子做市库早已归档。</p><h2 id="二、三方核对：不是漂移，是本金虚构"><a href="#二、三方核对：不是漂移，是本金虚构" class="headerlink" title="二、三方核对：不是漂移，是本金虚构"></a>二、三方核对：不是漂移，是本金虚构</h2><p>链上实际只有 <strong>$6.99 USDC</strong>（perp 为 0），但 trader 报告 av&#x3D;$220.58。先查清这个 $221 是谁的数字。</p><table><thead><tr><th>核对项</th><th>数值</th><th>来源</th></tr></thead><tbody><tr><td>链上真实入金</td><td><strong>$220.794012</strong>（9.994 + 209.8 + 1.0 三笔）</td><td><code>userNonFundingLedgerUpdates</code></td></tr><tr><td>链上 16 笔成交净额</td><td><strong>-$0.212440</strong>（closedPnl -0.006 − fee 0.2064）</td><td><code>userFills</code></td></tr><tr><td>恒等式验算</td><td>220.794012 − 0.212440 &#x3D; <strong>220.581572</strong></td><td>对上 spot 余额 220.581655（差 0.00008）</td></tr><tr><td>账本 <code>initial_usdc</code></td><td><strong>10000.00</strong></td><td><code>sm_account</code></td></tr></tbody></table><p><strong>根本问题不是漂移，而是账本本金从未与链上同步。</strong> <code>$9,763.30</code> 差额是凭证性虚构，不是交易亏出来的。<code>db.py</code> 建表默认值 <code>initial_usdc=10000.00</code> 从未代表真实资金。</p><h2 id="三、风控口径切换：故意不动日亏损熔断"><a href="#三、风控口径切换：故意不动日亏损熔断" class="headerlink" title="三、风控口径切换：故意不动日亏损熔断"></a>三、风控口径切换：故意不动日亏损熔断</h2><p>改动方案的关键约束：<strong>日亏损熔断不能更换口径</strong>。若把 baseline 换成链上 $221，会立刻算出 97% 回撤并写入 <code>halted=1</code>，当天永久停开仓。只把 <strong>sizing 与敞口、保证金闸门</strong>切换到 <code>min(账本, 链上 av)</code>。</p><table><thead><tr><th>位置</th><th>改动</th><th>判别作用</th></tr></thead><tbody><tr><td><code>_resolve_risk_equity()</code>（新增）</td><td>mainnet 取 <code>min(账本, 链上av)</code>；av 取不到 → 返回 <code>None</code> &#x3D; fail-closed</td><td>账本 $9983 + 链上 $221 时，风控净值锚定 <strong>$220.58</strong>，不再按 $9983</td></tr><tr><td><code>check_portfolio_risk(risk_equity=)</code></td><td>闸门2 总敞口 &#x2F; 闸门4 保证金 改用风控净值</td><td>同一笔 $400：旧口径 0.04x 放行 → 新口径 1.81x 拦截</td></tr><tr><td>闸门1 日亏损熔断</td><td><strong>故意不动</strong>，仍用账本 equity</td><td>若换成 221，<code>total_equity</code> 从 9987 掉到 221 → 算出 97.8% 回撤 → 触发 3% 熔断并写 <code>halted=1</code></td></tr><tr><td><code>_size_for_signal(chain_av=)</code></td><td>cap 从「仅 withdrawable」扩到 <code>min(withdrawable, av)</code></td><td>unified 账户下 withdrawable 可能虚高，av 才是本账户净值</td></tr></tbody></table><p>主网已确认生效：<code>risk_equity=$220.58(src=mode_min)</code>。同时发现一个覆盖漏洞：<strong>背离告警只在有信号时体检</strong>，无信号时会漏检。补到周期状态里。</p><h2 id="四、展示层修复与-TTL-缓存快照模块"><a href="#四、展示层修复与-TTL-缓存快照模块" class="headerlink" title="四、展示层修复与 TTL 缓存快照模块"></a>四、展示层修复与 TTL 缓存快照模块</h2><table><thead><tr><th>位置</th><th>改前</th><th>改后（实测值）</th></tr></thead><tbody><tr><td>A 块主网指标</td><td>「账户权益 $9,983.88 · <strong>-0.16%</strong> vs 初始 $10,000」</td><td>「<strong>链上权益（真钱）$220.58</strong> &#x2F; 纸面账本 $9,983.88 &#x2F; <strong>凭证差额 $+9,763.30</strong>」+ 判定行「差额与登记基线一致，漂移 $0.00」</td></tr><tr><td>纸面权益算法</td><td>直接把 <code>current_usdc</code> 当权益（少算在仓名义）</td><td><code>current_usdc + 未实现 + 在仓名义</code>，与 <code>daily_health</code> 同口径</td></tr><tr><td>每日体检</td><td>只有账本口径</td><td>增 <code>chain_av_usd / chain_source / chain_stale / chain_drift_usd / chain_verdict / paper_basis</code>；链上变动 &gt;$0.5 也计入&quot;状态变化&quot;；<code>chain_verdict</code> 为 crit 时进&quot;需要关注&quot;</td></tr><tr><td>页面取数</td><td>—</td><td>新增 <code>chain_equity.py</code>：TTL 300s 缓存 + 四级降级（live → 过期缓存 → 对账基线 → 不可用），<strong>从不抛异常</strong>，30 秒 rerun 不会打爆交易所接口</td></tr></tbody></table><p>展示层确实把 <code>initial_usdc=10000</code> 当成真实本金在展示。准备做一个带 TTL 缓存的链上权益快照模块，供网页和日报共用，避免每个 30 秒的 rerun 都直接请求交易所接口。</p><h2 id="五、yunpan-hub-虚惊：multiprocessing-父子对不是双开"><a href="#五、yunpan-hub-虚惊：multiprocessing-父子对不是双开" class="headerlink" title="五、yunpan_hub 虚惊：multiprocessing 父子对不是双开"></a>五、yunpan_hub 虚惊：multiprocessing 父子对不是双开</h2><p>关键发现：**<code>E:\yunpan_hub</code> 根本不是双开**。明细如下：</p><table><thead><tr><th>PID</th><th>角色</th><th>证据</th></tr></thead><tbody><tr><td>27228 → 27224</td><td><code>server.py</code> <strong>父→子</strong></td><td>父进程派生 multiprocessing 子进程，监听 8800 的只有子进程 27224（1 个端口 1 个持有者）</td></tr><tr><td>26344 → 26444</td><td><code>book_gate.py</code> <strong>父→子</strong></td><td>同上，监听 8801 的只有 26444</td></tr><tr><td>18928</td><td><code>watchdog_window.py</code></td><td>仅 1 实例（pythonw 托盘）</td></tr></tbody></table><p>之前判「双开」是数了相同命令行但没看父子关系——这两个是典型的 multiprocessing 父子对（子进程重跑同脚本所以 cmdline 一样），每个端口只有一个持有者，<strong>不需要也不应该杀</strong>。上一轮在 defi_dashboard 杀的那批是不同的：那批的父进程是两个不同的 <code>watchdog.py</code>，是真重复。</p><h2 id="六、遗留与下一步"><a href="#六、遗留与下一步" class="headerlink" title="六、遗留与下一步"></a>六、遗留与下一步</h2><ol><li><strong>账本重建（sm_account 按链上重置）</strong> — 技术上不建议现在做：日亏损熔断故意保留账本口径，直接把 9983 改成 220 会让熔断算出 97% 回撤写 <code>halted=1</code>。差额登记为已知 offset，只监控<strong>差额自身的漂移</strong>。</li><li><strong>背离告警覆盖漏洞</strong> — 补到周期状态里，无信号时也体检。</li><li><strong>watchdog_mainnet.py 双开核实</strong> ✅ — 完成，结论是虚惊，无动作。</li></ol>]]></content>
+    
+    
+    <summary type="html">账面权益 $9,983.88 与链上实际余额相差 45 倍，告警指向&quot;漂移&quot;但根因是建表默认值从未同步。引入 min(账本, 链上av) 风控口径切换、差额登记基线与 TTL 缓存快照模块，杜绝熔断误触发和接口打爆。</summary>
+    
+    
+    
+    <category term="故障排障" scheme="https://blog.demohappy.top/categories/%E6%95%85%E9%9A%9C%E6%8E%92%E9%9A%9C/"/>
+    
+    
+    <category term="运维" scheme="https://blog.demohappy.top/tags/%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="量化" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96/"/>
+    
+    <category term="对账" scheme="https://blog.demohappy.top/tags/%E5%AF%B9%E8%B4%A6/"/>
+    
+  </entry>
   
   <entry>
     <title>在 OpenViking 记忆池里给事件加「置信度」字段，把幻觉压到可观测的层级（2026-11-13）</title>
@@ -492,31 +517,6 @@
     <category term="统计推断" scheme="https://blog.demohappy.top/tags/%E7%BB%9F%E8%AE%A1%E6%8E%A8%E6%96%AD/"/>
     
     <category term="风控" scheme="https://blog.demohappy.top/tags/%E9%A3%8E%E6%8E%A7/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>96万索赔只判1.3万：不是法院算错了账，是这段转院的路从来没人负责（2026-10-25）</title>
-    <link href="https://blog.demohappy.top/posts/ov1025/"/>
-    <id>https://blog.demohappy.top/posts/ov1025/</id>
-    <published>2026-10-25T13:30:00.000Z</published>
-    <updated>2026-10-28T04:04:52.514Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>1.3万不是这条命的价钱，是现有制度能算出来的全部。</strong> 这句话在昨晚的复盘里被反复验证。今天的工作重心不在写代码，而在把这篇冲上知乎热榜首的文章从本地草稿推送到线上，并确认其逻辑链条是否站得住脚。</p><h2 id="一、发布与复核闭环"><a href="#一、发布与复核闭环" class="headerlink" title="一、发布与复核闭环"></a>一、发布与复核闭环</h2><p>上午十点过几分，我把本地那份5381字符、共189段的长文推到了知乎专栏 <code>zhuanlan.zhihu.com/p/2097585156043363895</code>。上线后立刻跑了 <code>verify-pub.py</code> 脚本进行带登录态的复核，确认作者页显示为&quot;默默工程师&quot;，且线上实测字符数涨到了6398字——这说明平台在渲染时做了一些自动排版或元数据注入。</p><p>选题定的是知乎热榜#1，热度273万。这个量级意味着接下来几小时内的流量会非常猛，任何逻辑上的软肋都会被放大审视。所以复核不只是确认&quot;发出去了”，而是确认“经得起扒皮”。</p><h2 id="二、判决书里的四个变量"><a href="#二、判决书里的四个变量" class="headerlink" title="二、判决书里的四个变量"></a>二、判决书里的四个变量</h2><p>文章没有停在“司机见死不救赔8000”这种情绪化叙事上，而是往上推了一层。我重新拉了判决书原文，发现它算的其实是四个变量：<strong>过错</strong>、<strong>因果关系</strong>、<strong>原因力</strong>、以及<strong>受害人自身因素</strong>。</p><p>这四个词全是人身上能称量的东西。法院判1.3万，不是因为法官心善或心恶，而是因为在这套算法里，只有这几个字段有值。而“转院这条路该归谁修”这个根本性的责任归属问题，压根不在判决书的计算域里。这就是为什么读者会觉得荒谬——你在用一套工业逻辑去算一个伦理问题。</p><h2 id="三、责任真空的三段路径"><a href="#三、责任真空的三段路径" class="headerlink" title="三、责任真空的三段路径"></a>三、责任真空的三段路径</h2><p>这是今天最花时间的部分。我把这条线拆成了三段：</p><ul><li><strong>第一段</strong>：医生称“未达危急重症标准，建议自行拨120”。</li><li><strong>第二段</strong>：《院前医疗急救管理办法》明确禁止120做非急救转运。</li><li><strong>第三段</strong>：正规非急救运力严重不足。广州仅2家民营机构，约80%的需求被“三无”黑车垄断。</li></ul><p>三段走完，家属手里只剩打车软件。这不是个人的选择失误，是制度供给的真空地带。我在文中特意把这三步列出来，就是为了证明这条断链不是偶发事件，而是结构性的必然结果。</p><h2 id="四、平台端的结构性缺陷"><a href="#四、平台端的结构性缺陷" class="headerlink" title="四、平台端的结构性缺陷"></a>四、平台端的结构性缺陷</h2><p>司机端的问题更隐蔽。我查了那个网约车平台的审核逻辑，发现算法里<strong>没有“危重乘客”这个字段</strong>。这意味着系统里没有识别—干预—熔断的完整链路。</p><p>而且，司机无证这件事是事后才查出来的。也就是说，审核在出事之后才完成。这跟平台宣称的&quot;安全风控&quot;完全是两码事——它本质上是个事后归档系统，不是事前拦截器。</p><h2 id="五、激励层而非品德层"><a href="#五、激励层而非品德层" class="headerlink" title="五、激励层而非品德层"></a>五、激励层而非品德层</h2><p>最后一段收得比较狠：司机怕的不是座椅脏，是脏了被扣分。这句话把讨论从道德审判拉回了机制设计。我不写“他坏心肠”，我只写“他的行为在算法里是安全的”。因为只要激励机制没动，换个人来开这个车，大概率还是同样的结果。</p><h2 id="六、遗留与下一步"><a href="#六、遗留与下一步" class="headerlink" title="六、遗留与下一步"></a>六、遗留与下一步</h2><p>目前这篇文章已经挂上了热榜#1的位置，但数据还在爬坡。接下来要盯两件事：一是评论区有没有针对&quot;广州仅2家民营机构&quot;的数据质疑；二是如果热度持续破300万，要不要追加一篇关于《院前医疗急救管理办法》具体条款的拆解文来对冲可能的杠精流量。</p><p>遗留的事是本地那份草稿里的几个脚注引用还没最终校对完，特别是关于“三无”黑车垄断比例的那个80%数字，我还在跟原始报道源核对其严谨性，怕被法务或同行挑刺。</p>]]></content>
-    
-    
-    <summary type="html">广州司机见死不救案判决仅赔1.3万引发热议。本文不纠结于赔偿金额本身，而是拆解判决书的四变量逻辑、责任真空的三段路径及平台算法缺陷，揭示制度漏洞如何导致&quot;转院路无人负责&quot;的核心矛盾。</summary>
-    
-    
-    
-    <category term="随笔分享" scheme="https://blog.demohappy.top/categories/%E9%9A%8F%E7%AC%94%E5%88%86%E4%BA%AB/"/>
-    
-    
-    <category term="法律分析" scheme="https://blog.demohappy.top/tags/%E6%B3%95%E5%BE%8B%E5%88%86%E6%9E%90/"/>
-    
-    <category term="医疗体系" scheme="https://blog.demohappy.top/tags/%E5%8C%BB%E7%96%97%E4%BD%93%E7%B3%BB/"/>
-    
-    <category term="平台治理" scheme="https://blog.demohappy.top/tags/%E5%B9%B3%E5%8F%B0%E6%B2%BB%E7%90%86/"/>
     
   </entry>
   
