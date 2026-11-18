@@ -9575,4 +9575,48 @@
         <tag>对账</tag>
       </tags>
   </entry>
+  <entry>
+    <title>工时采集 PPT 项目从临时工作区迁入 E:\work（2026-11-17）</title>
+    <url>/posts/ov1117/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>一句话：PPT 从临时工作区搬进 E:\work，记忆和检索一起跟上。</strong><br>这件事本身不复杂，真正麻烦的是别让后续改动散落在两个地方。</p>
+<h2 id="一、迁移范围与判断"><a href="#一、迁移范围与判断" class="headerlink" title="一、迁移范围与判断"></a>一、迁移范围与判断</h2><p>当天「产线员工实动工时采集策划方案 Word→PPT」任务在 <code>C:\Users\Administrator\WorkBuddy\2026-11-17-14-44-14</code> 生成，PPT 已 <strong>52 页 &#x2F; 9 章</strong>：</p>
+<ul>
+<li>01 现状痛点 → 02 架构 → 03 采集方式 → 04 数据链 → 05 实施 → 06 效益</li>
+<li>07 先进技术延伸 → 08 标准工时推荐系统 → 09 工时报表体系（三层九表）</li>
+</ul>
+<p>设计沿用纯白底 + <strong>工业灰蓝 #1F3A5F</strong> + 品牌红 <strong>#D50030</strong>，字体微软雅黑。临时工作区只剩空 <code>memory</code> 目录，弃用；后续所有改动都在 <code>E:\work</code> 下做。</p>
+<h2 id="二、记忆迁移路径"><a href="#二、记忆迁移路径" class="headerlink" title="二、记忆迁移路径"></a>二、记忆迁移路径</h2><p>把原日志原样搬进项目空间，只在顶部加迁移说明：</p>
+<ul>
+<li><code>E:\work\.workbuddy\memory\2026-11-17.md</code>（49 行 &#x2F; 6.8KB）</li>
+<li><code>E:\work\.workbuddy\memory\MEMORY.md</code>（项目长期要点）</li>
+</ul>
+<p>原日志保住了关键上下文：<strong>52 页 &#x2F; 9 章结构</strong>、<strong>6 字滑窗覆盖率校验 247 单元</strong>、截图实测数据 <strong>216 BOM &#x2F; 185 物料 &#x2F; 170,659 秒</strong>，以及 <code>SaveKeyframe: presentation is not open</code> 的恢复办法。</p>
+<h2 id="三、OpenViking-归档"><a href="#三、OpenViking-归档" class="headerlink" title="三、OpenViking 归档"></a>三、OpenViking 归档</h2><p>把资源放进检索体系，标签统一为 <code>project=gongshi_ppt</code>：</p>
+<ul>
+<li><code>viking://resources/gongshi_ppt/CONTEXT/CONTEXT.md</code></li>
+<li><code>viking://resources/gongshi_ppt/SESSION_LOG/SESSION_LOG.md</code></li>
+</ul>
+<p>后续查该项目先走 OpenViking 的 <code>gongshi_ppt</code> 资源，而不是翻临时目录。</p>
+<h2 id="四、PPT-内容结构核对"><a href="#四、PPT-内容结构核对" class="headerlink" title="四、PPT 内容结构核对"></a>四、PPT 内容结构核对</h2><p>原 Word 方案逐页转成 PPT，正文文字没有删减：</p>
+<ul>
+<li><strong>01–07</strong>：项目背景 &#x2F; 总体方案 &#x2F; 实施计划 &#x2F; 资源投入 &#x2F; 风险 &#x2F; 收益保障 &#x2F; 先进技术延伸</li>
+<li><strong>08</strong>：标准工时推荐系统（上传→核对→插入→搜索→汇总）</li>
+<li><strong>09</strong>：工时报表体系，三层九表</li>
+</ul>
+<p>第 09 章新增 9 页，放在第 43–51 页，封底移到第 52 页。每张表只写「决策问题 + 载体 + 频次」，指标血缘标出 <code>act_min</code>、<code>std_sec</code> 等系统字段名。</p>
+<h2 id="五、遗留与下一步"><a href="#五、遗留与下一步" class="headerlink" title="五、遗留与下一步"></a>五、遗留与下一步</h2><ul>
+<li><strong>临时目录只剩空 memory</strong>：PPT 文件已全在 <code>E:\work\产线员工实动工时采集策划方案\</code> 下</li>
+<li><strong>MEMORY.md</strong> 需要继续补充产物路径、设计规范、9 章结构、硬性约束和常见坑</li>
+<li><strong>OpenViking</strong> 资源检索可用，后续改动先查再写</li>
+</ul>
+]]></content>
+      <categories>
+        <category>工厂数字化</category>
+      </categories>
+      <tags>
+        <tag>运维</tag>
+        <tag>量化</tag>
+        <tag>项目归档</tag>
+      </tags>
+  </entry>
 </search>
