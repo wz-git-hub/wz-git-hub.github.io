@@ -6,7 +6,7 @@
   <link href="https://blog.demohappy.top/atom.xml" rel="self"/>
   
   <link href="https://blog.demohappy.top/"/>
-  <updated>2026-11-18T00:34:44.702Z</updated>
+  <updated>2026-11-19T00:35:19.195Z</updated>
   <id>https://blog.demohappy.top/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>把纸面工时方案接上已跑的系统底座（2026-11-18）</title>
+    <link href="https://blog.demohappy.top/posts/ov1118/"/>
+    <id>https://blog.demohappy.top/posts/ov1118/</id>
+    <published>2026-11-18T13:30:00.000Z</published>
+    <updated>2026-11-19T00:35:19.195Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>金句：09 章从纸面愿望清单变成路线图，底座已在跑。</strong></p><h2 id="一、把-09-章接到真实底座上"><a href="#一、把-09-章接到真实底座上" class="headerlink" title="一、把 09 章接到真实底座上"></a>一、把 09 章接到真实底座上</h2><p><code>产线员工实动工时采集策划方案-v2-看板整合.pptx</code> 改完，54 页（原 52）。核心是新增两页：第 46 页“别从零搭”，给出 <code>work_load_0521</code> 全表 <strong>5,728,901 行</strong>逐行校验、<code>WORKLOAD = 人数×10</code> 吻合率 100.0000%；第 47 页“口径不是写出来的，是事故逼出来的”，列五条真实事故。改动三页：9.1 九张表加「已建 &#x2F; 部分 &#x2F; 待建」标签，9.2 原子层字段换成真实口径 <code>plan_sec</code>（人数×班时×班次）。</p><h2 id="二、把-Excel-空白格补完"><a href="#二、把-Excel-空白格补完" class="headerlink" title="二、把 Excel 空白格补完"></a>二、把 Excel 空白格补完</h2><p><code>生产技术部部门重点工作20261116.xlsx</code> 共 <strong>18 个空格全部填上</strong>，另有 9 处已填内容修订。F 列「控制&#x2F;检测手段」从第 8 行起整段空白逐行补齐（9 格），同时补了第 3–7 行的 5 格。例如：第 14 行“3 种场景试点”写 AI 与秒表实测逐班比对；第 16 行“监控-分析机制”写月度例会 + 口径对账。</p><h2 id="三、给-REGIME-闸门补日志记录"><a href="#三、给-REGIME-闸门补日志记录" class="headerlink" title="三、给 REGIME 闸门补日志记录"></a>三、给 REGIME 闸门补日志记录</h2><p>原 <code>smart_money_trader.py</code> regime 分支静默 return，现在拦截时打 <code>[REGIME_BLOCK]</code> 日志并调 <code>_log_blocked_signal</code> 写 <code>sm_signals_log(acted=0)</code>。新增 <code>_regime_block_reason()</code>：原因串带具体数值如 <code>REGIME_GATE risk-OFF: BTC px=64694.0 ma=77776.6 (px &lt; MA100)</code>，缓存缺失时退化为简短串不抛异常。防刷屏复用现有退避表 <code>_set_block_backoff</code>（15 分钟），30s 轮询下每币每个退避周期只记一次。</p><h2 id="四、上线实测与巡检"><a href="#四、上线实测与巡检" class="headerlink" title="四、上线实测与巡检"></a>四、上线实测与巡检</h2><p>重启后<strong>第一个 tick 就拦了三笔并全部落库</strong>：BTC&#x2F;ETH&#x2F;SOL LONG score&#x3D;0.418，blocked: REGIME_GATE risk-OFF: BTC px&#x3D;64694.0 ma&#x3D;77776.6 (px &lt; MA100)。巡检（只读）一切正常：进程 watchdog&#x2F;guard&#x2F;采集器&#x2F;signal&#x2F;app 各 1，trader 2；watchdog 盲区探针全绿 oos 77s 前有产出。主网链上真钱 <strong>$220.58</strong>，风控按 <code>risk_equity=$220.58(src=mode_min)</code> 无漂移。</p><h2 id="五、量化出口距离测算"><a href="#五、量化出口距离测算" class="headerlink" title="五、量化出口距离测算"></a>五、量化出口距离测算</h2><p>市场事件 → ①信号源产出 → ②trader 接收 → ③REGIME闸门(只拦LONG) → ④组合风控 → 下单。当前只剩 sentiment（LONG）和 factor_ic（LONG 样本不足 &#x2F; SHORT 被 HALT）。出口 ①：BTC 重新站上 100 日均线，现价 $64,641 vs MA100 $77,776，缺口 -16.9%（需 +20.3%）；若横盘不动 MA100 自然降约 <strong>~400 天</strong>（MA 每天只吸收 1% 新权重）。结论：<strong>这个出口只有 BTC 真反弹越过 $77.8k 才会打开</strong>。</p><h2 id="六、遗留与下一步"><a href="#六、遗留与下一步" class="headerlink" title="六、遗留与下一步"></a>六、遗留与下一步</h2><ul><li><code>factor_ic</code> SHORT 被 HALT，需补样本或改阈值。</li><li>第 46 页右侧“已建 2 · 部分 3 · 待建 4”的九表缺口未落到字段级映射，下次迭代补齐。</li></ul>]]></content>
+    
+    
+    <summary type="html">产线实动工时采集策划方案此前只是三层九表的纯纸面设计，而 factory_dashboard_deploy 已上线 v3.7.2、实测 572 万行。整合的核心是把 9 章从“要做哪些报表”改成“底座已在跑，如何把口径固化成表”，新增两页并补齐 Excel 空白格与闸门日志记录。</summary>
+    
+    
+    
+    <category term="工厂数字化" scheme="https://blog.demohappy.top/categories/%E5%B7%A5%E5%8E%82%E6%95%B0%E5%AD%97%E5%8C%96/"/>
+    
+    
+    <category term="运维" scheme="https://blog.demohappy.top/tags/%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="制造" scheme="https://blog.demohappy.top/tags/%E5%88%B6%E9%80%A0/"/>
+    
+    <category term="系统" scheme="https://blog.demohappy.top/tags/%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
   
   <entry>
     <title>工时采集 PPT 项目从临时工作区迁入 E:\work（2026-11-17）</title>
@@ -490,31 +515,6 @@
     <category term="写作" scheme="https://blog.demohappy.top/tags/%E5%86%99%E4%BD%9C/"/>
     
     <category term="自动化流程" scheme="https://blog.demohappy.top/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>俄钓4脚本鱼护满自动卖鱼的触发时机与阈值校准（2026-10-27）</title>
-    <link href="https://blog.demohappy.top/posts/ov1027/"/>
-    <id>https://blog.demohappy.top/posts/ov1027/</id>
-    <published>2026-10-27T13:30:00.000Z</published>
-    <updated>2026-10-28T04:04:52.516Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>核心判断：不要重写卖鱼路线，复用 <code>goToMap()</code> 既有闭环 + 「重启」机制才是正解。</strong> 因为 <code>goToMap()</code> 里早已内置完整卖鱼链路（relogin→咖啡厅→鱼市→卖鱼→复位→回钓点），只是只在程序启动&#x2F;重启时跑一次；挂机中途鱼护满了根本不会触发它。</p><h2 id="一、缺口定位与上游排查"><a href="#一、缺口定位与上游排查" class="headerlink" title="一、缺口定位与上游排查"></a>一、缺口定位与上游排查</h2><p><strong>需求硬缺口</strong>：<code>goToMap()</code> 的卖鱼闭环只在「进入地图前」执行，日常挂机时鱼护满了不会触发——这就是唯一未满足的需求。</p><p>先做上游排查。我按 GitHub API 实测了所有候选（不是看搜索摘要），逐个克隆后做代码级比对：</p><ul><li>changchang700（233 提交，2025-11-05）✅ <strong>已是全家族最新</strong></li><li>Acker777 | 2025-10-31 | ❌ 换过去是倒退</li><li>lzsforge | 代码停在 2025-12-31 | ⚠️ 只有小幅增量</li><li>fyodorrss（真上游）| <strong>404 已删库</strong> | ❌</li><li>smluntan&#x2F;RussianFishing4-Tool | 2026-06-28 | ❌ 反编译产物+致命逻辑错误</li><li>dereklee0310 RF4S | 2026-10 活跃 | ❌ 只有 en&#x2F;ru 界面</li></ul><p><strong>结论已清晰：现有 rf4_cc 已是全网最优，不要换源。</strong> changchang700 那 233 个提交已包含 fyodorrss 上游全部历史（含 11-02 &quot;ui&quot;、11-15 的画面要求更新）。真正停更的是<strong>上游仓库被删库</strong>。Acker777 与基线差异只有 <code>gui_config.py</code> 89 行——纯 GUI 主题美化，无功能价值。</p><h2 id="二、方案设计：复用而非重写"><a href="#二、方案设计：复用而非重写" class="headerlink" title="二、方案设计：复用而非重写"></a>二、方案设计：复用而非重写</h2><p><strong>关键洞察</strong>：缺的只是<strong>挂机中途的鱼护计数触发器</strong>。方案定型：<strong>新增独立模块 <code>stages/keepnet_sell.py</code>，承担三件事</strong>——① 鱼护计数检查（节流+OCR）② 复用 <code>goToMap()</code> 已验证的卖鱼路线 ③ 触发重启卖鱼闭环。</p><table><thead><tr><th>环节</th><th>做法</th></tr></thead><tbody><tr><td>计数来源</td><td><code>get_fish_count_other()</code>（OCR 读 HUD 鱼护 <code>X/Y</code>，无需开界面）</td></tr><tr><td>触发点</td><td><code>lure()</code>&#x2F;<code>bottom()</code> 的 <code>throw_rod()</code> 里，抛竿前检查（安全时机，不会打断搏鱼）</td></tr><tr><td>阈值</td><td>新增 <code>config.KEEPNET_SELL_RATIO</code>（默认 0.8）+ 绝对值下限，防小鱼护误触发</td></tr><tr><td>执行</td><td>复用「重启」机制：达阈值 → 触发重启 → <code>goToMap()</code> 自动完成卖鱼+复位+回钓点</td></tr><tr><td>失败熔断</td><td>基于「上次触发时的数量」判定成败；最多尝试 3 次后停止</td></tr></tbody></table><h2 id="三、OCR-读取与坐标校准"><a href="#三、OCR-读取与坐标校准" class="headerlink" title="三、OCR 读取与坐标校准"></a>三、OCR 读取与坐标校准</h2><p><strong>关键疑点</strong>：<code>region_fish_quantity</code> 在 (2165, 967)——这是 2560 宽的副屏绝对坐标（右侧 HUD）。屏幕 2800×1260，HUD 鱼护计数区域存在，可 OCR。</p><p><strong>决定性证据</strong>：日志显示卖鱼链路实际跑过，且暴露了严重问题——鱼护容量是 <strong>100</strong>（不是我假设的小值）；「退出咖啡厅出错」<strong>刷了上百次</strong>——死循环。<strong>完整时序拿到了</strong>：<strong>卖鱼全流程实测通过</strong>（21:45:57 重登成功 → 21:46:43 退出咖啡厅 → 21:47:03 退出鱼市 → 21:47:04 回钓点）。总耗时约 <strong>67 秒</strong>。</p><p><strong>关键数据点</strong>：<strong>鱼护容量 100</strong>，且卖鱼时鱼护只有 21 条——说明原作者是<strong>定期清护</strong>（配合 3 小时休息），不是满护才卖。现在按真实数据重新校准阈值设计。<strong>80% &#x3D; 80 条才卖，太晚</strong>。</p><h2 id="四、实现细节与陷阱规避"><a href="#四、实现细节与陷阱规避" class="headerlink" title="四、实现细节与陷阱规避"></a>四、实现细节与陷阱规避</h2><p><strong>OCR 内部已自动应用偏移</strong>（第 81-87 行）。我的 <code>read_keepnet_count()</code> 又手动加了一次偏移——虽然当前 OFFSET 为 0 无害，但切档案时会<strong>双重偏移导致读错位置</strong>。立即修正。</p><p><strong><code>goToMap()</code> 若 <code>get_fish_count_other()</code> 返回 None，会 <code>continue</code> 死循环</strong>（第 838 行）。这是既有缺陷，但在重启路径下风险放大。加一个有限的失败计数保护——只在这个循环里加，不动其它逻辑。</p><p><strong>熔断逻辑完全正确</strong>：最多尝试 3 次，之后停止。此前「失败」是我的测试期望值写错（写成 2），代码是对的。<strong>触发时不做判断</strong>（无法立即知道结果），而是在<strong>下一次检查</strong>时，用「当前数量 vs 上次触发数量」来判定成败。</p><h2 id="五、GUI-配置持久化与加载路径"><a href="#五、GUI-配置持久化与加载路径" class="headerlink" title="五、GUI 配置持久化与加载路径"></a>五、GUI 配置持久化与加载路径</h2><p><strong><code>save_config_to_file()</code> 是白名单式写入</strong>——不在列表里的键会丢失。我的新配置项如果不加进去，GUI 保存时会消失。<strong>加载端用 <code>data.get(key, 默认值)</code> ——安全</strong>，缺 key 会回落 config.py 的默认值。<strong>补齐两端，保证 GUI 保存后配置不丢</strong>。</p><p><strong>又抓到一个真实 bug</strong>：<code>_skip_mode_warned</code> 在函数内被读取时，Python 判定它是局部变量（因为 <code>global</code> 声明里漏了它），导致 <code>UnboundLocalError</code>。这正是&quot;仅水底&#x2F;仅路亚&quot;模式下会<strong>每次抛竿都崩溃</strong>的严重问题。立即修复。</p><h2 id="六、实战验证闭环"><a href="#六、实战验证闭环" class="headerlink" title="六、实战验证闭环"></a>六、实战验证闭环</h2><p><strong>完整闭环已在实战中验证通过</strong>：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">21:47:03 鱼市已退出（卖鱼完成）</span><br><span class="line">21:47:53 重新登录成功 → 21:47:55 开始路亚 → 21:48:03 已更新 lure_last_position_index = 0（回到钓点）</span><br><span class="line">21:50:07 抬竿 → 21:50:27 入护 → 继续正常挂机 ✅</span><br></pre></td></tr></table></figure><p>从触发到恢复挂机全程 <strong>约 3 分钟</strong>。方案成立。</p><p><strong>GUI 完全正常，验证通过</strong>：</p><ul><li>✅ 复选框行末尾：<strong>「鱼护满自动卖鱼」</strong> 已勾选（显示 ☑）</li><li>✅ <strong>「鱼护自动卖鱼设置」</strong> 分组框完整显示：触发比例 <code>0.8</code>、最少条数 <code>10</code>、检查间隔 <code>120</code>，说明文字清晰</li><li>✅ 无重叠、无截断、布局规整</li><li>✅ 配置已正确加载：<code>自动模式=全天路亚-换点-卖鱼</code>、<code>路亚地图=埃尔克湖</code>、<code>点位编号=65,93</code> — 与实际使用场景完全一致</li></ul><h2 id="七、改动清单与遗留"><a href="#七、改动清单与遗留" class="headerlink" title="七、改动清单与遗留"></a>七、改动清单与遗留</h2><table><thead><tr><th>文件</th><th>改动</th></tr></thead><tbody><tr><td><code>stages/keepnet_sell.py</code></td><td><strong>新增</strong> 272 行，核心模块（计数检查+触发重启）</td></tr><tr><td><code>corestages/corestages_bottom_lure.py</code></td><td><code>lure()</code>&#x2F;<code>bottom()</code> 的抛竿前接入 keepnet_sell 检查</td></tr><tr><td><code>config.py</code> &#x2F; GUI</td><td>补齐白名单两端；新增 KEEPNET_SELL_RATIO 等配置项</td></tr></tbody></table><p><strong>遗留</strong>：模式 3&#x2F;4（仅水底&#x2F;仅路亚）静默跳过时没有任何日志——用户会困惑。已加一条提示日志。<strong>若 HUD 读不到容量，用一次面板读取来建立容量缓存</strong>——此兜底通道默认关闭，改为纯 HUD 读取；若 HUD 读不出容量，用一次面板读取建立容量缓存，之后靠缓存。</p>]]></content>
-    
-    
-    <summary type="html">针对俄钓4挂机中鱼护满了无法中途卖鱼的硬缺口，复用 goToMap() 既有闭环而非重写路线。关键在 OCR 读 HUD、重启机制复用小退复位+咖啡厅+鱼市链路、以及基于容量 100 的阈值校准与失败熔断计数。最终 GUI 勾选生效，实战验证从触发到恢复挂机约 3 分钟。</summary>
-    
-    
-    
-    <category term="自动化运维" scheme="https://blog.demohappy.top/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/"/>
-    
-    
-    <category term="量化" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96/"/>
-    
-    <category term="调试" scheme="https://blog.demohappy.top/tags/%E8%B0%83%E8%AF%95/"/>
-    
-    <category term="自动化" scheme="https://blog.demohappy.top/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/"/>
     
   </entry>
   

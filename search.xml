@@ -9619,4 +9619,27 @@
         <tag>项目归档</tag>
       </tags>
   </entry>
+  <entry>
+    <title>把纸面工时方案接上已跑的系统底座（2026-11-18）</title>
+    <url>/posts/ov1118/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>金句：09 章从纸面愿望清单变成路线图，底座已在跑。</strong></p>
+<h2 id="一、把-09-章接到真实底座上"><a href="#一、把-09-章接到真实底座上" class="headerlink" title="一、把 09 章接到真实底座上"></a>一、把 09 章接到真实底座上</h2><p><code>产线员工实动工时采集策划方案-v2-看板整合.pptx</code> 改完，54 页（原 52）。核心是新增两页：第 46 页“别从零搭”，给出 <code>work_load_0521</code> 全表 <strong>5,728,901 行</strong>逐行校验、<code>WORKLOAD = 人数×10</code> 吻合率 100.0000%；第 47 页“口径不是写出来的，是事故逼出来的”，列五条真实事故。改动三页：9.1 九张表加「已建 &#x2F; 部分 &#x2F; 待建」标签，9.2 原子层字段换成真实口径 <code>plan_sec</code>（人数×班时×班次）。</p>
+<h2 id="二、把-Excel-空白格补完"><a href="#二、把-Excel-空白格补完" class="headerlink" title="二、把 Excel 空白格补完"></a>二、把 Excel 空白格补完</h2><p><code>生产技术部部门重点工作20261116.xlsx</code> 共 <strong>18 个空格全部填上</strong>，另有 9 处已填内容修订。F 列「控制&#x2F;检测手段」从第 8 行起整段空白逐行补齐（9 格），同时补了第 3–7 行的 5 格。例如：第 14 行“3 种场景试点”写 AI 与秒表实测逐班比对；第 16 行“监控-分析机制”写月度例会 + 口径对账。</p>
+<h2 id="三、给-REGIME-闸门补日志记录"><a href="#三、给-REGIME-闸门补日志记录" class="headerlink" title="三、给 REGIME 闸门补日志记录"></a>三、给 REGIME 闸门补日志记录</h2><p>原 <code>smart_money_trader.py</code> regime 分支静默 return，现在拦截时打 <code>[REGIME_BLOCK]</code> 日志并调 <code>_log_blocked_signal</code> 写 <code>sm_signals_log(acted=0)</code>。新增 <code>_regime_block_reason()</code>：原因串带具体数值如 <code>REGIME_GATE risk-OFF: BTC px=64694.0 ma=77776.6 (px &lt; MA100)</code>，缓存缺失时退化为简短串不抛异常。防刷屏复用现有退避表 <code>_set_block_backoff</code>（15 分钟），30s 轮询下每币每个退避周期只记一次。</p>
+<h2 id="四、上线实测与巡检"><a href="#四、上线实测与巡检" class="headerlink" title="四、上线实测与巡检"></a>四、上线实测与巡检</h2><p>重启后<strong>第一个 tick 就拦了三笔并全部落库</strong>：BTC&#x2F;ETH&#x2F;SOL LONG score&#x3D;0.418，blocked: REGIME_GATE risk-OFF: BTC px&#x3D;64694.0 ma&#x3D;77776.6 (px &lt; MA100)。巡检（只读）一切正常：进程 watchdog&#x2F;guard&#x2F;采集器&#x2F;signal&#x2F;app 各 1，trader 2；watchdog 盲区探针全绿 oos 77s 前有产出。主网链上真钱 <strong>$220.58</strong>，风控按 <code>risk_equity=$220.58(src=mode_min)</code> 无漂移。</p>
+<h2 id="五、量化出口距离测算"><a href="#五、量化出口距离测算" class="headerlink" title="五、量化出口距离测算"></a>五、量化出口距离测算</h2><p>市场事件 → ①信号源产出 → ②trader 接收 → ③REGIME闸门(只拦LONG) → ④组合风控 → 下单。当前只剩 sentiment（LONG）和 factor_ic（LONG 样本不足 &#x2F; SHORT 被 HALT）。出口 ①：BTC 重新站上 100 日均线，现价 $64,641 vs MA100 $77,776，缺口 -16.9%（需 +20.3%）；若横盘不动 MA100 自然降约 <strong>~400 天</strong>（MA 每天只吸收 1% 新权重）。结论：<strong>这个出口只有 BTC 真反弹越过 $77.8k 才会打开</strong>。</p>
+<h2 id="六、遗留与下一步"><a href="#六、遗留与下一步" class="headerlink" title="六、遗留与下一步"></a>六、遗留与下一步</h2><ul>
+<li><code>factor_ic</code> SHORT 被 HALT，需补样本或改阈值。</li>
+<li>第 46 页右侧“已建 2 · 部分 3 · 待建 4”的九表缺口未落到字段级映射，下次迭代补齐。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>工厂数字化</category>
+      </categories>
+      <tags>
+        <tag>运维</tag>
+        <tag>制造</tag>
+        <tag>系统</tag>
+      </tags>
+  </entry>
 </search>
