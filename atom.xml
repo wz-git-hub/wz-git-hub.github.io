@@ -6,7 +6,7 @@
   <link href="https://blog.demohappy.top/atom.xml" rel="self"/>
   
   <link href="https://blog.demohappy.top/"/>
-  <updated>2026-11-19T00:35:19.195Z</updated>
+  <updated>2026-11-20T00:34:37.343Z</updated>
   <id>https://blog.demohappy.top/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>testnet REGIME 闸门关闭实验与 fail-open 漏洞复盘（2026-11-19）</title>
+    <link href="https://blog.demohappy.top/posts/ov1119/"/>
+    <id>https://blog.demohappy.top/posts/ov1119/</id>
+    <published>2026-11-19T13:30:00.000Z</published>
+    <updated>2026-11-20T00:34:37.343Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="一、为什么要把闸门关掉"><a href="#一、为什么要把闸门关掉" class="headerlink" title="一、为什么要把闸门关掉"></a>一、为什么要把闸门关掉</h2><p><strong>结论先行：分层架构本身合理，大部分闸门有真实亏损证据背书；但「数据饥饿」是当前真正的系统性代价。</strong></p><p>REGIME 闸门的规则是 BTC 价格高于 MA100 才允许做多。当前缺口 -16.9%，源自熊市抄底亏损教训（10-15 引入）。sentiment 门槛经过三次解锁调参：buy_ratio≥0.55、金额≥$10k、score≥0.30，每次都有逐次数据支撑。相关性组上限「majors 组同向 ≤2」来自「3 倍下注同一个赌注」的教训。日亏熔断 5%、敞口 2.5x、保证金 75%，标准风控；此前曾因口径 bug 恒放行，已修。</p><p>但 regime gate 有一个设计上的取舍：取数失败时 <strong>fail-open</strong>（按设计放行）。这意味着如果网络断了，闸门会放行而不是拒绝——这是故意的，因为「数据饥饿」比「过度保守」更贵。今天的任务就是把这个 fail-open 行为在 testnet 上做一次对照实验：<strong>把 SM_REGIME_GATE&#x3D;0 配上</strong>。</p><h2 id="二、实施细节：为什么只重启-trader-没用"><a href="#二、实施细节：为什么只重启-trader-没用" class="headerlink" title="二、实施细节：为什么只重启 trader 没用"></a>二、实施细节：为什么只重启 trader 没用</h2><p><strong>关键事实：<code>_start_trader</code> 只校验不注入——trader 的环境变量来自 watchdog 进程自己的 <code>os.environ</code>（由 <code>_ensure_env</code> 在启动时 setdefault）。</strong></p><p>所以光杀 trader 再拉起一个，env 还是旧的。必须重启 <strong>watchdog_testnet 本身</strong>。实际执行了完整重启链：</p><ol><li>杀旧 wd (PID 13692) + trader</li><li>跑幂等的 <code>ensure_watchdogs.ps1</code>（由 guard 周期调用，杀掉后会自动拉回）</li><li>新 watchdog PID <strong>37048</strong> 拉起 trader PID <strong>34884</strong></li></ol><p>启动横幅确认：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[10:09:20] === 聪明钱信号交易器启动 ===</span><br><span class="line">           HL_NETWORK=testnet HL_DRY_RUN=0</span><br><span class="line">           REGIME_GATE=off (SM_REGIME_GATE=0)</span><br></pre></td></tr></table></figure><p>mainnet 未受影响，最新横幅仍是 <code>REGIME_GATE=on MA=100d [risk-OFF]</code>。注释里写明：<strong>实验结论落地前 mainnet 不得加同一行</strong>。</p><h2 id="三、PID-文件漂移：ensure-脚本的幂等隐患"><a href="#三、PID-文件漂移：ensure-脚本的幂等隐患" class="headerlink" title="三、PID 文件漂移：ensure 脚本的幂等隐患"></a>三、PID 文件漂移：ensure 脚本的幂等隐患</h2><p><strong>新 watchdog (37048) 已运行，但 <code>watchdog_testnet.pid</code> 还是旧值 13692。</strong></p><p>这会让 ensure 脚本误判缺失再拉一个重复实例。排查发现 <code>start_testnet_watchdog.ps1</code> 应该写 pid 文件但实际没写——提权会话下可能静默失败。手动修正了 PID 文件并复核 ensure 幂等性，确认不会拉起第二份 watchdog。</p><h2 id="四、fail-open-漏洞留下的真实对照仓"><a href="#四、fail-open-漏洞留下的真实对照仓" class="headerlink" title="四、fail-open 漏洞留下的真实对照仓"></a>四、fail-open 漏洞留下的真实对照仓</h2><p><strong>重要发现：数据库出现新行 id&#x3D;214 BTC LONG $18.99，是 11-18 21:09 开的——当时闸门还是开的。</strong></p><p>回溯日志后浮出关键事实：<strong>11-18 21:05 regime 取数遇网络错误 → fail-open 放行</strong>，随后多笔挂单因 HL 连接中断失败（「HL 连接 60s 无成功调用」正确拦住 ETH&#x2F;SOL），但 BTC 在 21:09 重试成功了。</p><p>也就是说 id&#x3D;214 是 <strong>昨天 21:09 经 fail-open 漏洞意外开出的真实对照仓</strong>——闸门关闭前它不该存在，但因为取数失败被放行了。今天 10:01 daemon 刚出过 AVAX LONG（score&#x3D;0.746），闸门关着但还没等到下一波信号触发实际下单。</p><h2 id="五、仪表盘适配：把缺口读数从横幅换成拦截记录"><a href="#五、仪表盘适配：把缺口读数从横幅换成拦截记录" class="headerlink" title="五、仪表盘适配：把缺口读数从横幅换成拦截记录"></a>五、仪表盘适配：把缺口读数从横幅换成拦截记录</h2><p><strong>数据全部取到，但发现展示质量问题：主网 gap 用的是启动横幅（昨天 16:38 px&#x3D;64694），而最近拦截记录里已有更新鲜的读数。</strong></p><p>改为优先用最新拦截记录的 px&#x2F;ma。0 号落地页新增「🚦 策略闸门状态」区块，三列直接回答&quot;为什么没交易 &#x2F; 实验进行到哪&quot;：</p><table><thead><tr><th>列</th><th>内容（当前实测值）</th></tr></thead><tbody><tr><td>🏠 主网 REGIME 闸门</td><td><code>ON</code> + risk-OFF；BTC $62,851 vs MA100 → 缺口 -19.2%；今日拦截 <strong>55 波</strong>；最近拦截 <code>10:01 AVAX LONG score=0.75</code></td></tr><tr><td>🧪 测试网反事实实验</td><td><code>OFF (SM_REGIME_GATE=0)</code>；当前 open <strong>1</strong> 笔（昨天 fail-open 意外开出的 BTC $19 仓）</td></tr><tr><td>🧬 factor_ic OOS 判定</td><td>LONG <code>NO_ACTION</code>（n&#x3D;3 攒样本）· SHORT <code>HALT</code>（regime 37%）</td></tr></tbody></table><p>全量回归 <strong>801 passed</strong>（792 基线 + 9 例新增），失败项仍是既有问题（collector_freshness×2 + three_source×7），与本改动无关。仪表盘 health 200，已重启上线 <code>http://127.0.0.1:8501/</code>。</p><h2 id="六、遗留与下一步"><a href="#六、遗留与下一步" class="headerlink" title="六、遗留与下一步"></a>六、遗留与下一步</h2><ul><li><strong>等下一波信号</strong>：闸门关闭后 testnet 是否真的会开仓，今天 daemon 从 10:16 起 0 信号，需要观察实际行为</li><li><strong>fail-open 漏洞的正式处置</strong>：id&#x3D;214 是意外对照仓而非设计内行为，是否需要加告警或把 fail-open 改成可配置参数（目前是按设计放行）</li><li><strong>PID 写入修复</strong>：<code>start_testnet_watchdog.ps1</code> 提权会话下静默失败的问题需要补上写 PID 的兜底逻辑</li></ul>]]></content>
+    
+    
+    <summary type="html">量化交易器的 regime gate 在取数失败时按设计放行，导致意外开仓。本文记录将 SM_REGIME_GATE=0 写入 watchdog_testnet 默认环境、重启完整链条以关闭闸门做反事实实验的过程，以及发现昨日 fail-open 漏洞留下的真实对照仓与 PID 文件漂移问题。</summary>
+    
+    
+    
+    <category term="自动化运维" scheme="https://blog.demohappy.top/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/"/>
+    
+    
+    <category term="运维" scheme="https://blog.demohappy.top/tags/%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="量化" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96/"/>
+    
+    <category term="调试" scheme="https://blog.demohappy.top/tags/%E8%B0%83%E8%AF%95/"/>
+    
+  </entry>
   
   <entry>
     <title>把纸面工时方案接上已跑的系统底座（2026-11-18）</title>
@@ -490,31 +515,6 @@
     <category term="量化" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96/"/>
     
     <category term="复盘" scheme="https://blog.demohappy.top/tags/%E5%A4%8D%E7%9B%98/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>把知乎热榜#6的银行错输事件写成一篇机制复盘文（2026-10-28）</title>
-    <link href="https://blog.demohappy.top/posts/ov1028/"/>
-    <id>https://blog.demohappy.top/posts/ov1028/</id>
-    <published>2026-10-28T13:30:00.000Z</published>
-    <updated>2026-10-28T04:04:52.516Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>那块牌子在法律上判了14年无效，却一次都没消失过——它真正保护的人从未被讨论。</strong></p><p>今天跑完 hot list → topic → research → write → cover → publish → verify 全流程。知乎热榜主源 <code>uapis.cn</code> 正常返回 15KB &#x2F; 30条，前7条里有12条是姆巴佩代言解约事件，涉外交敏感全部避开。最终锁定 <strong>#6「银行将存2500元错输成25000元」</strong>（111万热度），法律&#x2F;制度类硬新闻，可升维到&quot;柜面差错责任分配&quot;的机制空白。</p><h2 id="一、为什么是这层递进而不是复述案情"><a href="#一、为什么是这层递进而不是复述案情" class="headerlink" title="一、为什么是这层递进而不是复述案情"></a>一、为什么是这层递进而不是复述案情</h2><p>所有报道都在讲同一个故事：储户贪心、法院判还。真正的切口是三层递进：第一层，这块牌子被法律判无效已经14年，却一次都没消失过——2012年农行慈溪支行还说&quot;早就取消了&quot;、记者走访7家网点都没看见，2017年山东高院官微评&quot;显然应该退出历史舞台&quot;，结果 2017岱山、2020建宁、2025松滋案里它照样长在柜台上。结论是：它不是没被撤下，是它从来不需要撤下。第二层，<strong>它真正保护的不是储户，是柜员</strong>——农行内部规矩&quot;长款归公、短款自赔&quot;，甘肃案柜员当场自掏 48700元填坑，浙江岱山柜员先垫付 3.6万再追偿。第三层才落到机制空白：对储户无效的那块牌子，对柜员依然有效，而这一层没有任何报道提过。</p><h2 id="二、封面三次迭代与线上复核"><a href="#二、封面三次迭代与线上复核" class="headerlink" title="二、封面三次迭代与线上复核"></a>二、封面三次迭代与线上复核</h2><p>封面走即梦AI生成，第一版无人民币元素，第二版有 RMB 但玻璃上告示牌文字乱码（出现&quot;老梁租金&quot;），第三版才拿到干净泛黄空白告示牌 + 人民币构图定稿。发布后跑 <code>verify-pub.py</code> 带登录态脚本确认：标题完整、作者页显示&quot;默默工程师&quot;、正文 5408字符与线上实测一致。（输出里的 <code>NO</code> keyword lines 是 verify-pub.py 的 hardcoded stale words，属预期行为而非失败。）</p><h2 id="三、今天真正验证的判断"><a href="#三、今天真正验证的判断" class="headerlink" title="三、今天真正验证的判断"></a>三、今天真正验证的判断</h2><p><strong>这块牌子从来不是被撤下过的问题，而是它根本不需要被撤下。</strong> 法律判了14年无效，但柜员自赔机制让它在操作层继续有效。文章把&quot;储户贪心&quot;的表层叙事翻过来，落到责任分配的制度空白上——这是选题从热榜#6升维成机制复盘的核心动作。</p><h2 id="四、遗留与下一步"><a href="#四、遗留与下一步" class="headerlink" title="四、遗留与下一步"></a>四、遗留与下一步</h2><ul><li><code>MEMORY.md</code> 已写入今日记录 + 可复用的封面生成教训（乱码文字需重抽）。</li><li>松滋案后续判罚细节尚未回填到正文，待补充后看是否触发一次线上小改。</li><li>verify-pub.py 的 stale words 列表该清一轮，免得每次复核都带一堆预期 NO 行。</li></ul>]]></content>
-    
-    
-    <summary type="html">当天从知乎热榜选定&quot;银行将存2500元错输成25000元&quot;条目，避开姆巴佩代言解约等敏感选题。写作角度切入柜面差错责任分配机制空白：那块&quot;离柜概不负责&quot;的牌子在法律上已无效14年却从未真正消失过，且它保护的不是储户而是柜员。最终发布标题《2500元存成25000元》，正文4309字符，封面经三次迭代定稿。</summary>
-    
-    
-    
-    <category term="自动化运维" scheme="https://blog.demohappy.top/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/"/>
-    
-    
-    <category term="选题" scheme="https://blog.demohappy.top/tags/%E9%80%89%E9%A2%98/"/>
-    
-    <category term="写作" scheme="https://blog.demohappy.top/tags/%E5%86%99%E4%BD%9C/"/>
-    
-    <category term="自动化流程" scheme="https://blog.demohappy.top/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/"/>
     
   </entry>
   

@@ -9642,4 +9642,64 @@
         <tag>系统</tag>
       </tags>
   </entry>
+  <entry>
+    <title>testnet REGIME 闸门关闭实验与 fail-open 漏洞复盘（2026-11-19）</title>
+    <url>/posts/ov1119/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="一、为什么要把闸门关掉"><a href="#一、为什么要把闸门关掉" class="headerlink" title="一、为什么要把闸门关掉"></a>一、为什么要把闸门关掉</h2><p><strong>结论先行：分层架构本身合理，大部分闸门有真实亏损证据背书；但「数据饥饿」是当前真正的系统性代价。</strong></p>
+<p>REGIME 闸门的规则是 BTC 价格高于 MA100 才允许做多。当前缺口 -16.9%，源自熊市抄底亏损教训（10-15 引入）。sentiment 门槛经过三次解锁调参：buy_ratio≥0.55、金额≥$10k、score≥0.30，每次都有逐次数据支撑。相关性组上限「majors 组同向 ≤2」来自「3 倍下注同一个赌注」的教训。日亏熔断 5%、敞口 2.5x、保证金 75%，标准风控；此前曾因口径 bug 恒放行，已修。</p>
+<p>但 regime gate 有一个设计上的取舍：取数失败时 <strong>fail-open</strong>（按设计放行）。这意味着如果网络断了，闸门会放行而不是拒绝——这是故意的，因为「数据饥饿」比「过度保守」更贵。今天的任务就是把这个 fail-open 行为在 testnet 上做一次对照实验：<strong>把 SM_REGIME_GATE&#x3D;0 配上</strong>。</p>
+<h2 id="二、实施细节：为什么只重启-trader-没用"><a href="#二、实施细节：为什么只重启-trader-没用" class="headerlink" title="二、实施细节：为什么只重启 trader 没用"></a>二、实施细节：为什么只重启 trader 没用</h2><p><strong>关键事实：<code>_start_trader</code> 只校验不注入——trader 的环境变量来自 watchdog 进程自己的 <code>os.environ</code>（由 <code>_ensure_env</code> 在启动时 setdefault）。</strong></p>
+<p>所以光杀 trader 再拉起一个，env 还是旧的。必须重启 <strong>watchdog_testnet 本身</strong>。实际执行了完整重启链：</p>
+<ol>
+<li>杀旧 wd (PID 13692) + trader</li>
+<li>跑幂等的 <code>ensure_watchdogs.ps1</code>（由 guard 周期调用，杀掉后会自动拉回）</li>
+<li>新 watchdog PID <strong>37048</strong> 拉起 trader PID <strong>34884</strong></li>
+</ol>
+<p>启动横幅确认：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[10:09:20] === 聪明钱信号交易器启动 ===</span><br><span class="line">           HL_NETWORK=testnet HL_DRY_RUN=0</span><br><span class="line">           REGIME_GATE=off (SM_REGIME_GATE=0)</span><br></pre></td></tr></table></figure>
+
+<p>mainnet 未受影响，最新横幅仍是 <code>REGIME_GATE=on MA=100d [risk-OFF]</code>。注释里写明：<strong>实验结论落地前 mainnet 不得加同一行</strong>。</p>
+<h2 id="三、PID-文件漂移：ensure-脚本的幂等隐患"><a href="#三、PID-文件漂移：ensure-脚本的幂等隐患" class="headerlink" title="三、PID 文件漂移：ensure 脚本的幂等隐患"></a>三、PID 文件漂移：ensure 脚本的幂等隐患</h2><p><strong>新 watchdog (37048) 已运行，但 <code>watchdog_testnet.pid</code> 还是旧值 13692。</strong></p>
+<p>这会让 ensure 脚本误判缺失再拉一个重复实例。排查发现 <code>start_testnet_watchdog.ps1</code> 应该写 pid 文件但实际没写——提权会话下可能静默失败。手动修正了 PID 文件并复核 ensure 幂等性，确认不会拉起第二份 watchdog。</p>
+<h2 id="四、fail-open-漏洞留下的真实对照仓"><a href="#四、fail-open-漏洞留下的真实对照仓" class="headerlink" title="四、fail-open 漏洞留下的真实对照仓"></a>四、fail-open 漏洞留下的真实对照仓</h2><p><strong>重要发现：数据库出现新行 id&#x3D;214 BTC LONG $18.99，是 11-18 21:09 开的——当时闸门还是开的。</strong></p>
+<p>回溯日志后浮出关键事实：<strong>11-18 21:05 regime 取数遇网络错误 → fail-open 放行</strong>，随后多笔挂单因 HL 连接中断失败（「HL 连接 60s 无成功调用」正确拦住 ETH&#x2F;SOL），但 BTC 在 21:09 重试成功了。</p>
+<p>也就是说 id&#x3D;214 是 <strong>昨天 21:09 经 fail-open 漏洞意外开出的真实对照仓</strong>——闸门关闭前它不该存在，但因为取数失败被放行了。今天 10:01 daemon 刚出过 AVAX LONG（score&#x3D;0.746），闸门关着但还没等到下一波信号触发实际下单。</p>
+<h2 id="五、仪表盘适配：把缺口读数从横幅换成拦截记录"><a href="#五、仪表盘适配：把缺口读数从横幅换成拦截记录" class="headerlink" title="五、仪表盘适配：把缺口读数从横幅换成拦截记录"></a>五、仪表盘适配：把缺口读数从横幅换成拦截记录</h2><p><strong>数据全部取到，但发现展示质量问题：主网 gap 用的是启动横幅（昨天 16:38 px&#x3D;64694），而最近拦截记录里已有更新鲜的读数。</strong></p>
+<p>改为优先用最新拦截记录的 px&#x2F;ma。0 号落地页新增「🚦 策略闸门状态」区块，三列直接回答&quot;为什么没交易 &#x2F; 实验进行到哪&quot;：</p>
+<table>
+<thead>
+<tr>
+<th>列</th>
+<th>内容（当前实测值）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>🏠 主网 REGIME 闸门</td>
+<td><code>ON</code> + risk-OFF；BTC $62,851 vs MA100 → 缺口 -19.2%；今日拦截 <strong>55 波</strong>；最近拦截 <code>10:01 AVAX LONG score=0.75</code></td>
+</tr>
+<tr>
+<td>🧪 测试网反事实实验</td>
+<td><code>OFF (SM_REGIME_GATE=0)</code>；当前 open <strong>1</strong> 笔（昨天 fail-open 意外开出的 BTC $19 仓）</td>
+</tr>
+<tr>
+<td>🧬 factor_ic OOS 判定</td>
+<td>LONG <code>NO_ACTION</code>（n&#x3D;3 攒样本）· SHORT <code>HALT</code>（regime 37%）</td>
+</tr>
+</tbody></table>
+<p>全量回归 <strong>801 passed</strong>（792 基线 + 9 例新增），失败项仍是既有问题（collector_freshness×2 + three_source×7），与本改动无关。仪表盘 health 200，已重启上线 <code>http://127.0.0.1:8501/</code>。</p>
+<h2 id="六、遗留与下一步"><a href="#六、遗留与下一步" class="headerlink" title="六、遗留与下一步"></a>六、遗留与下一步</h2><ul>
+<li><strong>等下一波信号</strong>：闸门关闭后 testnet 是否真的会开仓，今天 daemon 从 10:16 起 0 信号，需要观察实际行为</li>
+<li><strong>fail-open 漏洞的正式处置</strong>：id&#x3D;214 是意外对照仓而非设计内行为，是否需要加告警或把 fail-open 改成可配置参数（目前是按设计放行）</li>
+<li><strong>PID 写入修复</strong>：<code>start_testnet_watchdog.ps1</code> 提权会话下静默失败的问题需要补上写 PID 的兜底逻辑</li>
+</ul>
+]]></content>
+      <categories>
+        <category>自动化运维</category>
+      </categories>
+      <tags>
+        <tag>运维</tag>
+        <tag>量化</tag>
+        <tag>调试</tag>
+      </tags>
+  </entry>
 </search>
