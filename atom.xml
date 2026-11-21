@@ -6,7 +6,7 @@
   <link href="https://blog.demohappy.top/atom.xml" rel="self"/>
   
   <link href="https://blog.demohappy.top/"/>
-  <updated>2026-11-20T00:34:37.343Z</updated>
+  <updated>2026-11-21T00:36:27.668Z</updated>
   <id>https://blog.demohappy.top/</id>
   
   <author>
@@ -15,6 +15,56 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>同一天两份黎曼猜想证明各缺一半：Lean形式化与人类手稿的验证鸿沟（2026-11-21）</title>
+    <link href="https://blog.demohappy.top/posts/ov1121/"/>
+    <id>https://blog.demohappy.top/posts/ov1121/</id>
+    <published>2026-11-21T13:30:00.000Z</published>
+    <updated>2026-11-21T00:36:27.668Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>同一天两份证明各缺一半，且&quot;缺的那一半&quot;都没人认领——评审成了唯一没有预算、没有委员会、没有截止日期的那一环。</strong> 07:30触发新选题时，秦岭篇刚发完一小时，黎曼猜想双热点还没被任何人拆开看。</p><h2 id="一、两条路各扔掉了一半"><a href="#一、两条路各扔掉了一半" class="headerlink" title="一、两条路各扔掉了一半"></a>一、两条路各扔掉了一半</h2><p>11月20日同一天，黎曼猜想来了两份证明，形态几乎相反：Alpöge+Claude那条线交出25万页人类可读文本（作者自称&quot;slop&quot;）加1737万行Lean代码；Masullo那条线交出940页纯人类手稿。</p><table><thead><tr><th></th><th>Alpöge + Claude</th><th>Masullo</th></tr></thead><tbody><tr><td>人类可读文本</td><td>250,000+ 页（未公开）</td><td>940 页</td></tr><tr><td>形式化</td><td>175,187 个 Lean 文件 &#x2F; 1737 万行</td><td>未开始</td></tr><tr><td>周期</td><td>41 天</td><td>12 年</td></tr><tr><td>缺的那一半</td><td>没人读过</td><td>没人验过</td></tr></tbody></table><p><strong>验证成本没有消失，它只是从一个账户挪到了另一个账户——而今天两个账户的余额都是零。</strong> Alpöge自称尚未掌握论证周围的大量数学，Vakil亲口承认人类那份原计划打磨一年、现改&quot;匆忙&quot;发草稿。Clay三条门槛全以&quot;一篇论文&quot;为单位，产出放大266倍后，评审成了那个没人兜底的环。</p><h2 id="二、核验报告把账钉死"><a href="#二、核验报告把账钉死" class="headerlink" title="二、核验报告把账钉死"></a>二、核验报告把账钉死</h2><p>Sutherland的核验报告拿到手：4个独立内核、17.5万模块、公理审计、逐字节比对。Alpöge那份Lean代码在形式化层面是扎实的，但25万页人类文本没人读过——这不是&quot;AI写错了&quot;，是<strong>产出放大后评审环节没有预算、没有委员会、没有截止日期</strong>。Masullo那940页呢？12年打磨的纯人类手稿，没人验过。两份证明各缺一半，且缺的那一半都没人认领。</p><h2 id="三、制度背景不是装饰"><a href="#三、制度背景不是装饰" class="headerlink" title="三、制度背景不是装饰"></a>三、制度背景不是装饰</h2><p>Anthropic上市次日，90人联名抵制信，Vakil&quot;匆忙&quot;公告——这三件事同一天落地，构成完整制度背景。2018年Atiyah案例是前例：形式化证明在学界被当作独立工作而非草稿处理。Buzzard那个100万英镑对照也补进去了：OpenAI论文与Lean代码不一致的教训说明，<strong>机器能验不等于人能读</strong>。</p><h2 id="四、二次增补把金句钉进正文"><a href="#四、二次增补把金句钉进正文" class="headerlink" title="四、二次增补把金句钉进正文"></a>四、二次增补把金句钉进正文</h2><p>Thomas Bloom的金句、Elliot Glazer的具体表述、费马大定理形式化是9月4日（不是11月20日）——逐条核实后补入。标题39字，线上9388字符，核验通过。二次编辑更新完成。</p><h2 id="五、遗留与下一步"><a href="#五、遗留与下一步" class="headerlink" title="五、遗留与下一步"></a>五、遗留与下一步</h2><p>秦岭篇（&#x2F;p&#x2F;2107369632625596017）和黎曼篇（&#x2F;p&#x2F;2107377291668079842）今天各占一个班。Alpöge那25万页&quot;slop&quot;到底能不能读、Masullo的940页后续验不验得动，这两条线都还悬着。Vakil说的那一年打磨期没到，评审那个环还是空的——<strong>谁来做第一个独立读者，目前没人。</strong></p>]]></content>
+    
+    
+    <summary type="html">知乎热榜#1「AI配合证明黎曼猜想」撞上微博#9，同一天Alpöge用Claude产出1737万行Lean代码、Masullo交出940页纯人类手稿。两份证明各缺一半——前者没人读过，后者没人验过。核验报告与制度背景补齐后，定位评审环节为唯一无预算无委员会的断点，完成二次增补发布。</summary>
+    
+    
+    
+    <category term="自动化运维" scheme="https://blog.demohappy.top/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/"/>
+    
+    
+    <category term="量化" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96/"/>
+    
+    <category term="选题" scheme="https://blog.demohappy.top/tags/%E9%80%89%E9%A2%98/"/>
+    
+    <category term="事实核查" scheme="https://blog.demohappy.top/tags/%E4%BA%8B%E5%AE%9E%E6%A0%B8%E6%9F%A5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>watchdog_bookhub.sh 新增 WorkBuddy 每日 07:00 守护步骤 +（2026-11-20）</title>
+    <link href="https://blog.demohappy.top/posts/ov1120/"/>
+    <id>https://blog.demohappy.top/posts/ov1120/</id>
+    <published>2026-11-20T13:30:00.000Z</published>
+    <updated>2026-11-21T00:38:17.946Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>当天最关键的判断：watchdog 的「心跳正常」不能当单实例凭证，得另加一把原子锁。</strong></p><p>早上把需求落进 <code>.workbuddy/scripts/watchdog_bookhub.sh</code>。这个脚本每 30 秒跑一轮；要新增的是步骤 4——每天 7 点查 WorkBuddy 在不在跑、没在跑就拉起来。顺手排查时发现：有两个 watchdog 进程同时在跑（PID 14004 创建于 11-14 17:49，PID 35768 创建于 11-19 23:49），两边心跳都「正常」。</p><h2 id="一、WorkBuddy-守护逻辑"><a href="#一、WorkBuddy-守护逻辑" class="headerlink" title="一、WorkBuddy 守护逻辑"></a>一、WorkBuddy 守护逻辑</h2><p><strong>判断是否运行</strong>：<code>tasklist //FI &quot;IMAGENE eq WorkBuddy.exe&quot; //NH</code> + <code>grep -qi</code>。Electron 主进程&#x2F;渲染&#x2F;GPU 同名，任一存在即算在跑；主进程死了子进程会随之退出。</p><p><strong>触发条件</strong>：<code>HM &gt;= 700</code>（不是 <code>== 700</code>）。watchdog 每 30s 一轮撞不准整点，且睡眠&#x2F;关机错过 7 点后唤醒会自动补检。</p><p><strong>状态文件</strong> <code>tmp/wb.check</code>：格式为 <code>日期 已确认(0/1) 尝试次数 时间戳</code></p><ul><li>当天一旦确认「在运行」就整天不再动（用户主动关掉不会被反复拉起）</li><li>启动失败每 10 分钟重试，最多 3 次，之后 ALERT 熔断</li></ul><p><strong>启动命令</strong>：<code>cmd //c start &quot;&quot; &quot;$WB_EXE&quot;</code>——注意空 <code>&quot;&quot;</code> 是 start 的窗口标题位，不能省。然后 20×2s 轮询检测，最多等 40s（&lt; 120s 心跳阈值）。</p><p><strong>刹车机制</strong>：<code>tmp/.wb_off</code> 存在则完全不动作。</p><h2 id="二、实测验证与踩坑"><a href="#二、实测验证与踩坑" class="headerlink" title="二、实测验证与踩坑"></a>二、实测验证与踩坑</h2><p>用 notepad.exe 做替身测过（真 WorkBuddy 正在跑，关了对话就断）：</p><ul><li>进程不在 → 启动 ✓ 2s 内检测到</li><li>已确认 → 不再动作 ✓ SKIP</li><li>伪造次数&#x3D;3 → 熔断 ✓ 只 ALERT 一次，第二次 WAIT</li></ul><p>踩的坑：</p><ol><li><code>charmap.exe</code> 不能当替身——Win10+ 是 UWP 转发，进程名不是 charmap.exe。notepad &#x2F; mstsc 才是标准 win32 GUI。</li><li><strong>从 Bash 调 PowerShell 被安全策略硬拦</strong>（<code>Invoking PowerShell from Bash bypasses PowerShell security checks</code>）。检测逻辑不能用 <code>Get-CimInstance</code> 内联，改用纯 bash 的 <code>mkdir</code> 原子锁。</li><li>已在运行的 WorkBuddy 再 <code>start</code> 一次：单实例锁生效，进程数不变，无副作用。</li></ol><h2 id="三、双实例并存问题排查与修复"><a href="#三、双实例并存问题排查与修复" class="headerlink" title="三、双实例并存问题排查与修复"></a>三、双实例并存问题排查与修复</h2><p>心跳只能判「多久没动静」，两个实例被同时拉起时双方看到的是同一个旧心跳，于是都进来了。修法是在心跳之外加 <code>mkdir</code> 原子锁 <code>tmp/.watchdog.lock</code>：</p><ul><li><code>mkdir</code> 成功 &#x3D; 抢到锁，进循环</li><li>失败则看锁目录 mtime：&lt;120s 退出；≥120s 先 <code>rmdir</code> 再抢，抢不到退出</li><li>循环里每轮 <code>touch &quot;$LOCK&quot;</code> 续命</li></ul><p><strong>实测第二次 mkdir 正确失败</strong>。重启步骤（以后换脚本要照做）：</p><ol><li><code>Get-CimInstance Win32_Process | ?&#123;$_.CommandLine -like &#39;*watchdog_bookhub*&#39;&#125;</code> 拿到全部 PID（含两层 <code>bash -c</code> 壳）</li><li><code>Stop-Process -Force</code> 全杀</li><li>删 <code>tmp/watchdog.heartbeat</code> 与 <code>tmp/.watchdog.lock</code></li><li><code>Start-ScheduledTask -TaskName BlogWatchdog</code></li><li>验：心跳 30s 内刷新 + <code>.watchdog.lock</code> mtime 跟着动 + 进程 3 个（2 壳 + 1 脚本）</li></ol><h2 id="四、当前状态与遗留"><a href="#四、当前状态与遗留" class="headerlink" title="四、当前状态与遗留"></a>四、当前状态与遗留</h2><p>pid&#x3D;150291，11:22:53 启动。日志已出现 <code>[OK] WorkBuddy 07:00 检查：已在运行</code>；<code>wb.check</code> &#x3D; <code>2026-11-20 1 0 ...</code>。测试脚本保留在 <code>.workbuddy/tmp/test_wb_step.sh</code>（notepad 替身，手动回归用）。</p><p><strong>遗留</strong>：真 WorkBuddy 没被杀过（关了对话就断），所以「进程不在 → 启动」这条分支只靠 notepad 测过；下次维护窗口再补一次真实拉起验证。</p>]]></content>
+    
+    
+    <summary type="html">需求是每天 7 点检查 WorkBuddy 是否在跑，没在跑就拉起来。实现用 tasklist /FI &quot;IMAGENAME eq&quot; + grep -qi 判进程、cmd //c start &quot;&quot; &quot;$WB_EXE&quot; 启动、HM &gt;= 700 触发（每 30s 一轮撞不准整点）、当天确认过就不再动作；</summary>
+    
+    
+    
+    <category term="自动化运维" scheme="https://blog.demohappy.top/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/"/>
+    
+    
+    <category term="运维" scheme="https://blog.demohappy.top/tags/%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="调试" scheme="https://blog.demohappy.top/tags/%E8%B0%83%E8%AF%95/"/>
+    
+    <category term="守护脚本" scheme="https://blog.demohappy.top/tags/%E5%AE%88%E6%8A%A4%E8%84%9A%E6%9C%AC/"/>
+    
+  </entry>
   
   <entry>
     <title>testnet REGIME 闸门关闭实验与 fail-open 漏洞复盘（2026-11-19）</title>
@@ -465,56 +515,6 @@
     <category term="自动化" scheme="https://blog.demohappy.top/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/"/>
     
     <category term="财经分析" scheme="https://blog.demohappy.top/tags/%E8%B4%A2%E7%BB%8F%E5%88%86%E6%9E%90/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>排查 OpenViking 记忆池在冷启动阶段的字段缺失与索引漂移问题（2026-10-30）</title>
-    <link href="https://blog.demohappy.top/posts/ov1030/"/>
-    <id>https://blog.demohappy.top/posts/ov1030/</id>
-    <published>2026-10-30T13:30:00.000Z</published>
-    <updated>2026-10-31T00:34:33.225Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>核心判断：当结构化事件抽取出现字段缺失时，必须优先怀疑上游日志解析器的容错逻辑而非下游存储层。</strong></p><p>今天主要在处理 OpenViking 记忆池的冷启动阶段遇到的异常。上午十点开始跑批发现 <code>memories/events/</code> 目录下生成的 JSON 结构里，部分事件的 <code>timestamp</code> 和 <code>source_ref</code> 字段为空值，且向量索引与原始日志之间存在明显的语义漂移。这直接导致下游检索召回率从预期的 94% 掉到了 72%，这在低置信度场景下是不可接受的。</p><h2 id="一、现象定位与初步假设"><a href="#一、现象定位与初步假设" class="headerlink" title="一、现象定位与初步假设"></a>一、现象定位与初步假设</h2><p><strong>异常表征</strong><br>问题最先暴露在 <code>resources/craw_app1_wz/</code> 落盘的日志里。我拉取了当天 09:30 到 11:00 的原始会话片段，发现当输入语料包含多模态混合内容时，解析器抛出了非预期的 JSONDecodeError。</p><p><strong>假设路径</strong><br>初步怀疑是上游 ETL 管道在预处理阶段丢失了时间戳元数据，导致下游 <code>workbuddy/memory/</code> 摘要生成时无法对齐原始会话 ID。如果仅靠猜测，容易陷入“改字段名”的误区，必须拿到真实报错堆栈才能定界。</p><h2 id="二、日志比对与根因锁定"><a href="#二、日志比对与根因锁定" class="headerlink" title="二、日志比对与根因锁定"></a>二、日志比对与根因锁定</h2><p><strong>关键断点</strong><br>我直接对比了 <code>workbuddy/session/2026-10-30</code> 的原始对话输出和落盘后的结构化事件文件。发现当输入文本中出现非标准换行符时，解析器的正则表达式没有匹配到预期的分隔符，导致整个 chunk 被吞掉。</p><p><strong>字段映射验证</strong><br>进一步检查 <code>workbuddy/memory/</code> 的工作日志摘要，确认了缺失的正是 <code>source_ref</code> 这一引用锚点。这证实了问题不在向量存储层，而在数据清洗阶段的 fallback 逻辑——当解析失败时，系统没有抛出明确异常，而是静默生成了空字段对象。</p><h2 id="三、修复实施与配置调整"><a href="#三、修复实施与配置调整" class="headerlink" title="三、修复实施与配置调整"></a>三、修复实施与配置调整</h2><p><strong>补丁策略</strong><br>我修改了 ETL 管道中 <code>preprocess</code> 步骤的容错配置，将原本的 <code>pass-through</code> 改为显式报错并写入审计日志。同时为 <code>source_ref</code> 添加了基于原始会话哈希值的 fallback 生成规则，确保即使解析失败也能保留可追溯性。</p><p><strong>索引重建</strong><br>配置热重载后，我执行了增量索引的重建命令。针对漂移问题，调整了向量分块策略的 chunk_size 从默认的 512 tokens 降至 256 tokens，强制对语义边界更敏感的内容进行细粒度切分。这一步直接消除了因长文本截断导致的语义丢失。</p><h2 id="四、验证与召回率回升"><a href="#四、验证与召回率回升" class="headerlink" title="四、验证与召回率回升"></a>四、验证与召回率回升</h2><p><strong>量化指标</strong><br>修复后重新跑批，<code>memories/events/</code> 的字段填充率达到 100%。针对核心检索场景复测，召回率从 72% 直接拉回至 94%，且误报项中因时间戳缺失导致的排序偏差全部消失。</p><p><strong>稳定性确认</strong><br>连续运行三小时无异常中断，验证了冷启动阶段在低置信度输入下的容错机制已闭环。当前状态满足上线标准。</p><h2 id="五、遗留与下一步动作"><a href="#五、遗留与下一步动作" class="headerlink" title="五、遗留与下一步动作"></a>五、遗留与下一步动作</h2><p><strong>未覆盖边界</strong><br>目前修复仅覆盖了文本模态的解析容错，对于图像类记忆片段的引用锚点生成逻辑尚未完全对齐，这部分需要下周补充测试用例。</p><p><strong>监控建议</strong><br>建议在 <code>workbuddy/memory/</code> 摘要层增加针对空字段的每日巡检告警，避免静默失败再次进入生产环境。</p>]]></content>
-    
-    
-    <summary type="html">针对 OpenViking 记忆池冷启动时 `memories/events/` 结构化事件抽取失败、时间戳字段为空以及向量索引与原始日志存在漂移的问题，通过比对 `workbuddy/memory/` 工作日志摘要与会话原始记录定位到 ETL 管道中缺失的 fallback 逻辑。</summary>
-    
-    
-    
-    <category term="故障排障" scheme="https://blog.demohappy.top/categories/%E6%95%85%E9%9A%9C%E6%8E%92%E9%9A%9C/"/>
-    
-    
-    <category term="运维" scheme="https://blog.demohappy.top/tags/%E8%BF%90%E7%BB%B4/"/>
-    
-    <category term="量化" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96/"/>
-    
-    <category term="调试" scheme="https://blog.demohappy.top/tags/%E8%B0%83%E8%AF%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>中资网贷印度亏损70亿复盘与WorkBuddy自动闭环（2026-10-29）</title>
-    <link href="https://blog.demohappy.top/posts/ov1029/"/>
-    <id>https://blog.demohappy.top/posts/ov1029/</id>
-    <published>2026-10-29T13:30:00.000Z</published>
-    <updated>2026-10-30T00:35:30.470Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="一、选题切入：反直觉的数据证伪"><a href="#一、选题切入：反直觉的数据证伪" class="headerlink" title="一、选题切入：反直觉的数据证伪"></a>一、选题切入：反直觉的数据证伪</h2><p><strong>先破「印度人不还钱」这条全网叙事，再在制度层面重建。</strong></p><p>今天盯着知乎热榜第4条“百家中资网贷出海印度亏损70亿退场”，热度197万。表面看是资金盘崩了，但真正值得写的是：为什么印度本土fintech没跟着死？助手拉了一组硬数据——印度央行2026年6月《金融稳定报告》里，金融科技逾期率6.4%、NBFC 5.7%、银行4.1%，对比国内某些平台坏账率飙到50%-80%。更扎心的是，本土fintech在2026年3月拿下56.8%市场份额，余额同比+41.6%。<strong>人走了，市场没萎缩，反而长得更快</strong>。</p><p>这里有个极易踩坑的细节：很多文章把“逾期率6.4%”直接写成“坏账率”，这是两把尺子硬碰硬。印度牌照机构的bad-debt rate确实低，但那是overdue rate的口径差异。文中明确指出了这一点，且没拿它做论据，避免混淆视听。</p><h2 id="二、WorkBuddy-自动闭环：先领后派"><a href="#二、WorkBuddy-自动闭环：先领后派" class="headerlink" title="二、WorkBuddy 自动闭环：先领后派"></a>二、WorkBuddy 自动闭环：先领后派</h2><p><strong>通道 A 零配置，脚本静默降级。</strong></p><p>下午顺手把 WorkBuddy 积分助手跑了一遍。命令直接指向 <code>C:/Users/Administrator/.workbuddy/binaries/python/versions/3.13.12.old.106036/python</code> 执行 <code>scripts/buddy_station.py checkin --travel-auto</code>。脚本自动读取本机登录态，无需任何授权配置。</p><p>签到接口幂等安全，当日首签返回“✅ 签到成功”，非重复发奖。旅行闭环逻辑很稳：Buddy 当前在「咖啡馆」，约2小时0分到达倒计时，可领10分（未到点暂不领取）。今日派遣已达上限，脚本正确跳过新派遣、绝不超发，回显“已派出前往咖啡馆”是既有行程而非新增。最终积分余额定格在 <strong>2100</strong>，本周4&#x2F;7天记录，无异常报错。桌面系统通知尝试弹了一次但失败静默降级，不影响主结果。</p><h2 id="三、封面生成：拒绝Lorem-Ipsum"><a href="#三、封面生成：拒绝Lorem-Ipsum" class="headerlink" title="三、封面生成：拒绝Lorem Ipsum"></a>三、封面生成：拒绝Lorem Ipsum</h2><p><strong>几何箭头+断裂石柱，冷蓝琥珀深色新闻风。</strong></p><p>配图走了两轮。第一版构图不错（悬浮手机+断裂石柱），但手机屏上全是 <code>Lorem</code> &#x2F; <code>BONITRE</code> 乱码，卢比纸币上的假字母也露馅了。重生成时加了更严的约束：手机只允许显示一个几何箭头，底座必须是可见的物理碎裂效果。最终版干净无乱码，落盘为 <code>cover-20261029.jpg</code>。</p><h2 id="四、发布校验与哈希冻结"><a href="#四、发布校验与哈希冻结" class="headerlink" title="四、发布校验与哈希冻结"></a>四、发布校验与哈希冻结</h2><p><strong>4905字符实测，已知stale keywords不视为失败。</strong></p><p>文章推上去后，线上实测4905字符（本地文件是4173字符&#x2F;158段）。日志里出现的 <code>kw NO lines</code> 其实是10-17日遗留的硬编码stale keywords，不是本次发布失败信号。标题、作者名、正文均复核无误。</p><h2 id="五、来也-APA：确定性执行与AI智能体"><a href="#五、来也-APA：确定性执行与AI智能体" class="headerlink" title="五、来也 APA：确定性执行与AI智能体"></a>五、来也 APA：确定性执行与AI智能体</h2><p><strong>传统RPA内核+AI自然语言生成。</strong></p><p>下午还查了“来也科技”的产品线能否在WorkBuddy里白嫖。严格说，Laiye是独立厂商，不内置于WorkBuddy，但它的 <strong>UiBot Creator（现升级为 Laiye Automation Creator V1.5 社区版）</strong> 提供永久免费的在线&#x2F;离线激活方案。核心能力是用自然语言或录屏生成可执行流程，底层仍是确定性、版本化、可审计的RPA内核，而非飘忽的概率性Agent。V1.5还加了弹窗自愈和知识沉淀为可复用Skill，对高价值重复流程很友好。</p><h2 id="六、遗留与下一步"><a href="#六、遗留与下一步" class="headerlink" title="六、遗留与下一步"></a>六、遗留与下一步</h2><p><strong>事故事实两处修正，同类漏洞未堵。</strong></p><p>上午那份 <code>xverify44</code> 审计报告（针对2026-10-28 21:56生产事故）还挂着。实测发现：① 所谓“交互式会话注销”实为 <strong>ScMonitorPower</strong>（显示器电源切换），全窗口无任何注销事件；② “6个进程同一时刻死”至少分两波，guard在21:56:40还活着并经ensure拉起主看门狗后才二次死亡。另外启动文件夹里还挂着 <code>start-defi-trading.bat</code> 等交互式登录项，同类风险未堵上。<strong>下一步得把这几个bat文件从启动目录挪走</strong>，否则下次开机还是会双开实例。</p>]]></content>
-    
-    
-    <summary type="html">先破「印度人不还钱」的流行叙事，再用制度层面重建逻辑；随后完成 WorkBuddy 每日签到、猫猫旅行自动派发的完整闭环。核心依赖 Python 脚本 `buddy_station.py` 与通道 A 登录态，最终积分余额稳定在 2100，无异常报错。</summary>
-    
-    
-    
-    <category term="自动化运维" scheme="https://blog.demohappy.top/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/"/>
-    
-    
-    <category term="运维" scheme="https://blog.demohappy.top/tags/%E8%BF%90%E7%BB%B4/"/>
-    
-    <category term="量化" scheme="https://blog.demohappy.top/tags/%E9%87%8F%E5%8C%96/"/>
-    
-    <category term="复盘" scheme="https://blog.demohappy.top/tags/%E5%A4%8D%E7%9B%98/"/>
     
   </entry>
   
